@@ -10,7 +10,7 @@
 | UWA ID   | Name         | GitHub Username |
 |----------|--------------|-----------------|
 | 24154773 | Ethan He     | *[GitHubUsername]* |
-| 24004729 | Manas Rawat  | *[GitHubUsername]* |
+| 24004729 | Manas Rawat  | *ManasR10* |
 | 24100783 | Stewie Yang  | *YYHshift* |
 | 24201533 | Xin Wang     | *[GitHubUsername]* |
 
