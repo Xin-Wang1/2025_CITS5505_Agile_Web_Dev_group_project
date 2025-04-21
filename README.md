@@ -11,7 +11,7 @@
 |----------|--------------|-----------------|
 | 24154773 | Ethan He     | *[GitHubUsername]* |
 | 24004729 | Manas Rawat  | *[GitHubUsername]* |
-| 24100783 | Stewie Yang  | *[GitHubUsername]* |
+| 24100783 | Stewie Yang  | *[YYHshift]* |
 | 24201533 | Xin Wang     | *[GitHubUsername]* |
 
 ## 3. How to Launch the Application
