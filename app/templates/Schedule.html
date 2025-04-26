@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block title %}Schedule{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Generated Schedule</h2>
+
+<!-- Weekly Calendar -->
+<div class="table-responsive">
+    <table class="table table-bordered text-center">
+      <thead class="table-light">
+        <tr>
+          <th>Time</th>
+          <th>Monday</th>
+          <th>Tuesday</th>
+          <th>Wednesday</th>
+          <th>Thursday</th>
+          <th>Friday</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for hour in range(8, 21) %}
+        <tr>
+          <td>{{ hour }}:00 - {{ hour + 1 }}:00</td>
+          <td id="monday-{{ hour }}"></td>
+          <td id="tuesday-{{ hour }}"></td>
+          <td id="wednesday-{{ hour }}"></td>
+          <td id="thursday-{{ hour }}"></td>
+          <td id="friday-{{ hour }}"></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+ 
+
+<!-- Selected Units -->
+<h3>Selected Units</h3>
+<ul class="list-group mb-4">
+  <li class="list-group-item">
+    <strong>Introduction to Programming</strong>
+    <p>Credits: 3</p>
+    <p>Time Slots: Tuesday 9:00 AM - 10:30 AM, Monday 11:00 AM - 12:30 PM</p>
+  </li>
+  <li class="list-group-item">
+    <strong>Data Structures</strong>
+    <p>Credits: 3</p>
+    <p>Time Slots:Monday 11:00 AM - 12:30 PM, Wednesday 2:00 PM - 3:30 PM</p>
+  </li>
+  <li class="list-group-item">
+    <strong>Software Engineering</strong>
+    <p>Credits: 4</p>
+    <p>Time Slots:Friday 2:00 PM - 3:30 PM, Thursday 3:30 PM - 5:00 PM</p>
+  </li>
+</ul>
+
+<!-- Total Credits -->
+<div class="alert alert-info">
+  <strong>Total Credits:</strong> 10
+</div>
+
+<hr class="my-4">
+
+<!-- Adjust Preferences -->
+<h3>Adjust Preferences</h3>
+<form method="POST" action="/adjust-schedule">
+  <div class="mb-3">
+    <label for="unavailable-day" class="form-label">Mark a Day as Unavailable</label>
+    <select class="form-select" id="unavailable-day" name="unavailable-day">
+      <option value="Monday">Monday</option>
+      <option value="Tuesday">Tuesday</option>
+      <option value="Wednesday">Wednesday</option>
+      <option value="Thursday">Thursday</option>
+      <option value="Friday">Friday</option>
+    </select>
+  </div>
+  <div class="mb-3">
+    <label for="unavailable-time" class="form-label">Mark a Time Slot as Unavailable</label>
+    <input type="text" class="form-control" id="unavailable-time" name="unavailable-time" placeholder="e.g., 10:00 - 12:00">
+  </div>
+  <button type="submit" class="btn btn-primary">Update Preferences</button>
+</form>
+
+
+<script>
+    const scheduleData = [
+      { course: "Introduction to Programming", day: "Monday", time: "9:00 - 10:30", credits: 3 },
+      { course: "Data Structures", day: "Tuesday", time: "11:00 - 12:30", credits: 3 },
+      { course: "Software Engineering", day: "Wednesday", time: "14:00 - 15:30", credits: 4 },
+    ];
+  
+    // Populate the calendar with mock data
+    scheduleData.forEach(item => {
+      const [startHour, endHour] = item.time.split(" - ").map(t => parseInt(t.split(":")[0]));
+      const cell = document.getElementById(`${item.day.toLowerCase()}-${startHour}`);
+      if (cell) {
+        cell.innerHTML = `
+          <div class="bg-primary text-white p-2 rounded">
+            <strong>${item.course}</strong><br>
+            Credits: ${item.credits}<br>
+            ${item.time}<br>
+            ${item.day}
+          </div>
+        `;
+      }
+    });
+  </script>
+  
+{% endblock %}
