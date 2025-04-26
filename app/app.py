@@ -47,6 +47,16 @@ def logout():
     logout_user()
     return redirect(url_for('login'))
 
+@app.route('/unit')
+@login_required
+def unit():
+    return render_template('Unit.html')
+
+@app.route('/schedule')
+@login_required
+def schedule():
+    return render_template('Schedule.html')
+
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
