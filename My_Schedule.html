@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Schedule</title>
+  <!-- Bootstrap CSS for responsive design -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body {
+      font-family: 'Arial', sans-serif; /* Use Arial for modern, professional typography */
+      background-color: #f8f9fa;
+      padding-top: 60px; /* Offset for fixed navbar */
+    }
+    /* Navbar styling, inspired by UWA's dark blue */
+    .navbar {
+      background-color: #003087;
+      padding: 15px;
+      position: fixed; /* Fix navbar at top */
+      top: 0;
+      width: 100%;
+      z-index: 1000; /* Ensure navbar is above other elements */
+    }
+    .navbar-brand, .nav-link {
+      color: #fff !important;
+      font-weight: 500;
+    }
+    .navbar-brand:hover, .nav-link:hover {
+      color: #f8d030 !important; /* UWA gold hover effect */
+    }
+    /* Sidebar styling */
+    .sidebar {
+      background-color: #003087;
+      border-right: 1px solid #dee2e6;
+      position: fixed; /* Fix sidebar */
+      top: 60px; /* Below navbar */
+      width: 16.67%; /* Match col-md-2 width */
+      height: calc(100vh - 60px); /* Fill remaining height */
+      padding-top: 20px;
+      z-index: 999; /* Below navbar, above content */
+    }
+    .sidebar .nav-link {
+      color: #003087; /* Default font color for sidebar links */
+      padding: 10px 20px;
+      font-weight: 500; /* Ensure text is bold and clear */
+    }
+    .sidebar .nav-link:hover {
+      background-color: #e9ecef;
+      border-radius: 5px;
+      color: #003087; /* Maintain same color on hover */
+    }
+    .sidebar .nav-link.active {
+      color: #003087;
+      font-weight: 700; /* Bold for active link */
+    }
+    /* Main content container */
+    .main-content {
+      margin-left: 16.67%; /* Offset for fixed sidebar */
+      padding-top: 20px; /* Space below navbar */
+    }
+    /* Timetable container */
+    .timetable {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    /* Timetable slot styling */
+    .slot {
+      background-color: #e9ecef;
+      margin: 2px;
+      padding: 10px;
+      border-radius: 4px;
+      font-size: 0.9em;
+      min-height: 60px;
+    }
+    .slot-lecture {
+      background-color: #007bff;
+      color: #fff;
+    }
+    .slot-tutorial {
+      background-color: #28a745;
+      color: #fff;
+    }
+    .slot-lab {
+      background-color: #fd7e14;
+      color: #fff;
+    }
+    /* Button styling */
+    .btn-primary {
+      background-color: #003087;
+      border-color: #003087;
+    }
+    .btn-primary:hover {
+      background-color: #00205b;
+      border-color: #00205b;
+    }
+    /* Table styling */
+    .table th, .table td {
+      vertical-align: middle;
+      text-align: center;
+    }
+    .table th {
+      background-color: #003087;
+      color: #fff;
+    }
+    /* Search bar */
+    .search-bar {
+      max-width: 300px;
+    }
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      body {
+        padding-top: 0; /* Remove offset for mobile */
+      }
+      .navbar {
+        position: static; /* Unfix navbar on mobile */
+      }
+      .sidebar {
+        position: static; /* Unfix sidebar on mobile */
+        height: auto;
+        width: 100%; /* Full width */
+        border-right: none;
+        border-bottom: 1px solid #dee2e6;
+      }
+      .main-content {
+        margin-left: 0; /* Remove offset */
+        padding-top: 10px;
+      }
+      .timetable {
+        padding: 10px;
+      }
+      .slot {
+        font-size: 0.8em;
+        padding: 5px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg">
+    <a class="navbar-brand" href="#">My University</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <span class="nav-link">Welcome, [Student Name]</span>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Logout</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container-fluid">
+    <div class="row">
+      <!-- Sidebar -->
+      <div class="col-md-2 sidebar">
+        <ul class="nav flex-column">
+          <li class="nav-item"><a class="nav-link active" href="#">My Schedule</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Preference Entry</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Timetable Planner</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Help</a></li>
+        </ul>
+      </div>
+
+      <!-- Main content -->
+      <div class="col-md-10 main-content">
+        <h1>My Schedule</h1>
+        <!-- Search bar -->
+        <div class="mb-3">
+          <input type="text" class="form-control search-bar" placeholder="Search by course code" id="searchInput">
+        </div>
+        <!-- Timetable -->
+        <div class="timetable">
+          <!-- Calendar view -->
+          <table class="table table-bordered" id="timetable">
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Monday</th>
+                <th>Tuesday</th>
+                <th>Wednesday</th>
+                <th>Thursday</th>
+                <th>Friday</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- 8 AM to 5 PM, hourly slots -->
+              <tr>
+                <td>8:00 AM</td>
+                <td id="mon-8"></td>
+                <td id="tue-8"></td>
+                <td id="wed-8"></td>
+                <td id="thu-8"></td>
+                <td id="fri-8"></td>
+              </tr>
+              <tr>
+                <td>9:00 AM</td>
+                <td id="mon-9"></td>
+                <td id="tue-9"></td>
+                <td id="wed-9"></td>
+                <td id="thu-9"></td>
+                <td id="fri-9"></td>
+              </tr>
+              <tr>
+                <td>10:00 AM</td>
+                <td id="mon-10"></td>
+                <td id="tue-10"></td>
+                <td id="wed-10"></td>
+                <td id="thu-10"></td>
+                <td id="fri-10"></td>
+              </tr>
+              <tr>
+                <td>11:00 AM</td>
+                <td id="mon-11"></td>
+                <td id="tue-11"></td>
+                <td id="wed-11"></td>
+                <td id="thu-11"></td>
+                <td id="fri-11"></td>
+              </tr>
+              <tr>
+                <td>12:00 PM</td>
+                <td id="mon-12"></td>
+                <td id="tue-12"></td>
+                <td id="wed-12"></td>
+                <td id="thu-12"></td>
+                <td id="fri-12"></td>
+              </tr>
+              <tr>
+                <td>1:00 PM</td>
+                <td id="mon-13"></td>
+                <td id="tue-13"></td>
+                <td id="wed-13"></td>
+                <td id="thu-13"></td>
+                <td id="fri-13"></td>
+              </tr>
+              <tr>
+                <td>2:00 PM</td>
+                <td id="mon-14"></td>
+                <td id="tue-14"></td>
+                <td id="wed-14"></td>
+                <td id="thu-14"></td>
+                <td id="fri-14"></td>
+              </tr>
+              <tr>
+                <td>3:00 PM</td>
+                <td id="mon-15"></td>
+                <td id="tue-15"></td>
+                <td id="wed-15"></td>
+                <td id="thu-15"></td>
+                <td id="fri-15"></td>
+              </tr>
+              <tr>
+                <td>4:00 PM</td>
+                <td id="mon-16"></td>
+                <td id="tue-16"></td>
+                <td id="wed-16"></td>
+                <td id="thu-16"></td>
+                <td id="fri-16"></td>
+              </tr>
+              <tr>
+                <td>5:00 PM</td>
+                <td id="mon-17"></td>
+                <td id="tue-17"></td>
+                <td id="wed-17"></td>
+                <td id="thu-17"></td>
+                <td id="fri-17"></td>
+              </tr>
+            </tbody>
+          </table>
+          <!-- View toggle and export buttons -->
+          <button class="btn btn-primary mr-2" id="toggleView">Switch to List View</button>
+          <button class="btn btn-primary" id="exportPDF">Export as PDF</button>
+        </div>
+        <!-- List view (hidden by default) -->
+        <div class="timetable mt-3 d-none" id="listView">
+          <h3>List View</h3>
+          <ul class="list-group" id="listViewContent"></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- jQuery and Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <!-- jsPDF for PDF export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script>
+    // Sample timetable data (replace with API call in production)
+    const timetableData = [
+      { day: 'mon', time: 8, course: 'COMP101', type: 'lecture', location: 'Room 101' },
+      { day: 'tue', time: 9, course: 'MATH201', type: 'tutorial', location: 'Room 202' },
+      { day: 'wed', time: 10, course: 'PHYS301', type: 'lab', location: 'Lab A' },
+      { day: 'thu', time: 11, course: 'COMP101', type: 'tutorial', location: 'Room 103' },
+      { day: 'fri', time: 14, course: 'MATH201', type: 'lecture', location: 'Room 204' }
+    ];
+
+    // Render timetable on page load
+    function renderTimetable() {
+      timetableData.forEach(slot => {
+        $(`#${slot.day}-${slot.time}`).html(
+          `<div class="slot slot-${slot.type}">${slot.course} - ${slot.type}<br>Location: ${slot.location}</div>`
+        );
+      });
+    }
+
+    // Render list view
+    function renderListView() {
+      const listViewContent = $('#listViewContent');
+      listViewContent.empty();
+      timetableData.forEach(slot => {
+        listViewContent.append(
+          `<li class="list-group-item">${slot.course} - ${slot.type} (${slot.day.charAt(0).toUpperCase() + slot.day.slice(1)} ${slot.time}:00, ${slot.location})</li>`
+        );
+      });
+    }
+
+    // Toggle between calendar and list view
+    $('#toggleView').click(function() {
+      const isListView = $('#listView').hasClass('d-none');
+      $('#listView').toggleClass('d-none', !isListView);
+      $('#timetable').toggleClass('d-none', isListView);
+      $(this).text(isListView ? 'Switch to Calendar View' : 'Switch to List View');
+      if (isListView) renderListView();
+    });
+
+    // Search functionality
+    $('#searchInput').on('input', function() {
+      const query = $(this).val().toLowerCase();
+      $('.slot').each(function() {
+        const text = $(this).text().toLowerCase();
+        $(this).parent().toggle(text.includes(query));
+      });
+    });
+
+    // Export timetable as PDF
+    $('#exportPDF').click(function() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      doc.text('My Schedule', 10, 10);
+      let y = 20;
+      timetableData.forEach(slot => {
+        doc.text(`${slot.course} - ${slot.type} (${slot.day.charAt(0).toUpperCase() + slot.day.slice(1)} ${slot.time}:00, ${slot.location})`, 10, y);
+        y += 10;
+      });
+      doc.save('timetable.pdf');
+    });
+
+    // Initialize timetable
+    $(document).ready(function() {
+      renderTimetable();
+    });
+  </script>
+</body>
+</html>
