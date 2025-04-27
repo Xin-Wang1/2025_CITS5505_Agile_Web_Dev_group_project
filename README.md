@@ -9,10 +9,10 @@
 ## 2. Group Members
 | UWA ID   | Name         | GitHub Username |
 |----------|--------------|-----------------|
-| 24154773 | Ethan He     | *[GitHubUsername]* |
+| 24154773 | Ethan He     | *YuaHe0* |
 | 24004729 | Manas Rawat  | *ManasR10* |
 | 24100783 | Stewie Yang  | *YYHshift* |
-| 24201533 | Xin Wang     | *[GitHubUsername]* |
+| 24201533 | Xin Wang     | *Xin-Wang1* |
 
 ## 3. How to Launch the Application
 
