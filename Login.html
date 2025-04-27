@@ -148,7 +148,7 @@
 <body>
   <div class="container-fluid h-100">
     <div class="row h-100">
-      <!-- 左侧 -->
+      <!-- Left side -->
       <div class="col-md-4 d-none d-md-flex p-0 glass-container">
         <div class="content">
           <div>
@@ -158,7 +158,7 @@
         </div>
       </div>
 
-      <!-- 右侧 -->
+      <!-- right side -->
       <div class="col-12 col-md-8 glass-container">
         <div class="header">
           <a href="Home.html" class="logo">
@@ -171,7 +171,7 @@
         <div class="content">
           
           <div class="login-card">
-            <!-- 登录/注册/重置 密码 Tab -->
+            <!-- Sign in / Sign up / Reset Password Tabs -->
             <ul class="nav nav-tabs mb-4" id="loginTab" role="tablist">
               <li class="nav-item" role="presentation">
                 <button class="nav-link active" id="signin-tab" data-bs-toggle="tab" data-bs-target="#signin"
@@ -181,7 +181,7 @@
                 <button class="nav-link" id="signup-tab" data-bs-toggle="tab" data-bs-target="#signup" type="button"
                   role="tab">Sign up</button>
               </li>
-              <li class="nav-item d-none" role="presentation"> <!-- ✅ 单独隐藏 Reset按钮 -->
+              <li class="nav-item d-none" role="presentation">
                 <button class="nav-link" id="reset-tab" data-bs-toggle="tab" data-bs-target="#reset" type="button"
                   role="tab">Reset Password</button>
               </li>
@@ -189,7 +189,7 @@
 
 
             <div class="tab-content" id="loginTabContent">
-              <!-- 登录页 -->
+              <!-- Sign in Form -->
               <div class="tab-pane fade show active" id="signin" role="tabpanel">
                 <form>
                   <div class="mb-3">
@@ -209,7 +209,7 @@
                 </div>
               </div>
 
-              <!-- 注册页 -->
+              <!-- Sign up Form -->
               <div class="tab-pane fade" id="signup" role="tabpanel">
                 <form>
                   <div class="mb-3">
@@ -230,7 +230,7 @@
                 </form>
               </div>
 
-              <!-- 忘记密码页 -->
+              <!-- Reset Password Form -->
               <div class="tab-pane fade" id="reset" role="tabpanel">
                 <form>
                   <div class="mb-3">
@@ -255,7 +255,7 @@
   </div>
 
   <script>
-    // 密码可见/隐藏
+    // Passwords are visible/hidden
     document.querySelectorAll('.toggle-icon').forEach(icon => {
       icon.addEventListener('click', function () {
         const targetId = this.getAttribute('data-target');
@@ -267,13 +267,13 @@
       });
     });
 
-    // 点击 Forgot Password
+    // Forgot Password
     document.getElementById('forgotPasswordLink').addEventListener('click', function () {
       var resetTab = new bootstrap.Tab(document.getElementById('reset-tab'));
       resetTab.show();
     });
 
-    // 点击 Back to Login
+    // Back to Login
     document.getElementById('backToLoginLink').addEventListener('click', function (e) {
       e.preventDefault();
       var signinTab = new bootstrap.Tab(document.getElementById('signin-tab'));
