@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
+
+  <style>
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      background: linear-gradient(135deg, #d0e6ff, #a1c4fd, #f3e5f5, #c5cae9);
+      background-size: 400% 400%;
+      animation: gradientMove 15s ease infinite;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    @keyframes gradientMove {
+      0% {
+        background-position: 0% 50%;
+      }
+
+      50% {
+        background-position: 100% 50%;
+      }
+
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    .glass-container {
+      background: rgba(255, 255, 255, 0.5);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 15px;
+      min-height: 100vh;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .header .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: bold;
+      font-size: 1.5rem;
+      color: #003087;
+      text-decoration: none;
+    }
+
+    .header .nav-link {
+      color: #003087;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .header .nav-link:hover {
+      color: #0056b3;
+      text-decoration: underline;
+    }
+
+    .content {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 400px;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 10px;
+      padding: 2rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .nav-tabs {
+      border-bottom: none;
+      justify-content: center;
+    }
+
+    .nav-tabs .nav-link {
+      border: none;
+      color: #666;
+      font-weight: bold;
+    }
+
+    .nav-tabs .nav-link.active {
+      color: #003087;
+      border-bottom: 2px solid #003087;
+    }
+
+    .btn-primary-custom {
+      background-color: #003087;
+      border: none;
+      color: #fff;
+    }
+
+    .btn-primary-custom:hover {
+      background-color: #0056b3;
+      color: #fff;
+    }
+
+    .forgot-link {
+      font-size: 0.9rem;
+      color: #003087;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .forgot-link:hover {
+      color: #0056b3;
+      text-decoration: underline;
+    }
+
+    .password-toggle {
+      position: relative;
+    }
+
+    .password-toggle .toggle-icon {
+      position: absolute;
+      top: 50%;
+      right: 10px;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: #666;
+    }
+  </style>
+
+</head>
+
+<body>
+  <div class="container-fluid h-100">
+    <div class="row h-100">
+      <!-- Left side -->
+      <div class="col-md-4 d-none d-md-flex p-0 glass-container">
+        <div class="content">
+          <div>
+            <h1 class="display-5 fw-bold">Welcome!</h1>
+            <p class="lead">Smart Course Selection Tool</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- right side -->
+      <div class="col-12 col-md-8 glass-container">
+        <div class="header">
+          <a href="Home.html" class="logo">
+            <i class="bi bi-grid" style="font-size: 2rem;"></i>
+            Smart Course Selection Tool
+          </a>
+          <a href="Home.html" class="nav-link">Home</a>
+        </div>
+
+        <div class="content">
+
+          <div class="login-card">
+            <!-- Sign in / Sign up / Reset Password Tabs -->
+            <ul class="nav nav-tabs mb-4" id="loginTab" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="signin-tab" data-bs-toggle="tab" data-bs-target="#signin"
+                  type="button" role="tab">Sign in</button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="signup-tab" data-bs-toggle="tab" data-bs-target="#signup" type="button"
+                  role="tab">Sign up</button>
+              </li>
+              <li class="nav-item d-none" role="presentation">
+                <button class="nav-link" id="reset-tab" data-bs-toggle="tab" data-bs-target="#reset" type="button"
+                  role="tab">Reset Password</button>
+              </li>
+            </ul>
+
+
+            <div class="tab-content" id="loginTabContent">
+              <!-- Sign in Form -->
+              <div class="tab-pane fade show active" id="signin" role="tabpanel">
+                <form>
+                  <div class="mb-3">
+                    <input type="text" class="form-control" placeholder="Email/Phone/Account">
+                  </div>
+                  <div class="mb-3 password-toggle">
+                    <input type="password" class="form-control" id="signin-password" placeholder="Password">
+                    <i class="bi bi-eye-slash toggle-icon" data-target="signin-password"></i>
+                  </div>
+                  <div class="d-grid">
+                    <button type="submit" class="btn btn-primary-custom w-100">Sign in</button>
+                  </div>
+                </form>
+
+                <div class="text-center mt-3">
+                  <span class="forgot-link" id="forgotPasswordLink">Forgot password?</span>
+                </div>
+              </div>
+
+              <!-- Sign up Form -->
+              <div class="tab-pane fade" id="signup" role="tabpanel">
+                <form>
+                  <div class="mb-3">
+                    <input type="text" class="form-control" placeholder="Email/Phone">
+                  </div>
+                  <div class="mb-3 password-toggle">
+                    <input type="password" class="form-control" id="signup-password" placeholder="Password">
+                    <i class="bi bi-eye-slash toggle-icon" data-target="signup-password"></i>
+                  </div>
+                  <div class="mb-3 password-toggle">
+                    <input type="password" class="form-control" id="signup-password-confirm"
+                      placeholder="Enter your Password again">
+                    <i class="bi bi-eye-slash toggle-icon" data-target="signup-password-confirm"></i>
+                  </div>
+                  <div class="d-grid">
+                    <button type="submit" class="btn btn btn-primary-custom w-100">Sign up</button>
+                  </div>
+                </form>
+              </div>
+
+              <!-- Reset Password Form -->
+              <div class="tab-pane fade" id="reset" role="tabpanel">
+                <form>
+                  <div class="mb-3">
+                    <input type="email" class="form-control" placeholder="Enter your registered email">
+                  </div>
+                  <div class="d-grid">
+                    <button type="submit" class="btn btn btn-primary-custom w-100">Reset Password</button>
+                  </div>
+                  <div class="text-center mt-3">
+                    <a href="#" class="forgot-link" id="backToLoginLink">Back to Login</a>
+                  </div>
+                </form>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // Passwords are visible/hidden
+    document.querySelectorAll('.toggle-icon').forEach(icon => {
+      icon.addEventListener('click', function () {
+        const targetId = this.getAttribute('data-target');
+        const input = document.getElementById(targetId);
+        const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+        input.setAttribute('type', type);
+        this.classList.toggle('bi-eye');
+        this.classList.toggle('bi-eye-slash');
+      });
+    });
+
+    // Forgot Password
+    document.getElementById('forgotPasswordLink').addEventListener('click', function () {
+      var resetTab = new bootstrap.Tab(document.getElementById('reset-tab'));
+      resetTab.show();
+    });
+
+    // Back to Login
+    document.getElementById('backToLoginLink').addEventListener('click', function (e) {
+      e.preventDefault();
+      var signinTab = new bootstrap.Tab(document.getElementById('signin-tab'));
+      signinTab.show();
+    });
+    document.addEventListener('DOMContentLoaded', function () {
+      const urlParams = new URLSearchParams(window.location.search);
+      const tab = urlParams.get('tab');
+
+      if (tab === 'signup') {
+        var tabTrigger = new bootstrap.Tab(document.querySelector('#signup-tab'));
+        tabTrigger.show();
+      } else if (tab === 'signin') {
+        var tabTrigger = new bootstrap.Tab(document.querySelector('#signin-tab'));
+        tabTrigger.show();
+      }
+    });
+  </script>
+</body>
+
+</html>
