@@ -17,9 +17,12 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 @app.route('/')
-@login_required
 def home():
-    return render_template('home.html', name=current_user.username)
+    if current_user.is_authenticated:
+        return render_template('home.html', name=current_user.username)
+    else:
+        return render_template('home.html', name="Guest")
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -27,25 +30,59 @@ def login():
         user = User.query.filter_by(username=request.form['username']).first()
         if user and check_password_hash(user.password, request.form['password']):
             login_user(user)
-            return redirect(url_for('home'))
+            return redirect(url_for('dashboard'))
         flash('Invalid credentials')
     return render_template('login.html')
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        hashed_pw = generate_password_hash(request.form['password'])
-        new_user = User(username=request.form['username'], password=hashed_pw)
+        username = request.form['username']
+        password = request.form['password']
+        confirm_password = request.form['confirm_password']
+
+        if password != confirm_password:
+            flash('Passwords do not match', 'danger')
+            return render_template('register.html')
+
+        existing_user = User.query.filter_by(username=username).first()
+        if existing_user:
+            flash('Username already taken', 'danger')
+            return render_template('register.html')
+
+        hashed_pw = generate_password_hash(password)
+        new_user = User(username=username, password=hashed_pw)
         db.session.add(new_user)
         db.session.commit()
+        flash('Registration successful. You can now log in.', 'success')
         return redirect(url_for('login'))
+
     return render_template('register.html')
+
+
+@app.route('/resetpw', methods=['GET', 'POST'])
+def resetpw():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        if email:
+            # 这里可以加发送重置密码邮件的逻辑
+            flash('If the email is registered, a reset link has been sent.', 'info')
+            return redirect(url_for('login'))
+        else:
+            flash('Please enter your email address.', 'danger')
+    return render_template('resetpw.html')
+
+@app.route('/dashboard')
+@login_required
+def dashboard():
+    return render_template('dashboard.html', name=current_user.username)
 
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('login'))
+    return redirect(url_for('home'))
 
 @app.route('/unit')
 @login_required
