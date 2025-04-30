@@ -4,154 +4,123 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>My Schedule</title>
-  <!-- Bootstrap CSS for responsive design -->
+  <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
   <style>
     body {
-      font-family: 'Arial', sans-serif; /* Use Arial for modern, professional typography */
-      background-color: #f8f9fa;
-      padding-top: 60px; /* Offset for fixed navbar */
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding-top: 60px;
+      background: linear-gradient(-45deg, #a1c4fd, #c2e9fb, #fbc2eb, #fad0c4);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
     }
-    /* Navbar styling, inspired by UWA's dark blue */
+
+    @keyframes gradientBG {
+      0% {background-position: 0% 50%;}
+      50% {background-position: 100% 50%;}
+      100% {background-position: 0% 50%;}
+    }
+
     .navbar {
-      background-color: #003087;
-      padding: 15px;
-      position: fixed; /* Fix navbar at top */
-      top: 0;
-      width: 100%;
-      z-index: 1000; /* Ensure navbar is above other elements */
+      background-color: rgba(0, 48, 135, 0.8);
+      backdrop-filter: blur(10px);
     }
-    .navbar-brand {
+
+    .navbar-brand, .nav-link {
       color: #fff !important;
       font-weight: 500;
     }
-    .navbar-brand:hover {
-      color: #f8d030 !important; /* UWA gold hover effect */
+
+    .nav-link:hover {
+      color: #f8d030 !important;
     }
-    .navbar-nav .nav-link {
-      color: #fff !important; /* Default white for visibility on dark background */
-      font-weight: 500;
-      padding: 10px 15px;
-    }
-    .navbar-nav .nav-link:hover {
-      color: #f8d030 !important; /* UWA gold hover effect */
-    }
-    .navbar-nav .nav-link.active {
-      color: #fff !important;
-      font-weight: 700; /* Bold for active link */
-    }
-    /* Main content container */
+
     .main-content {
-      padding-top: 20px; /* Space below navbar */
+      padding-top: 20px;
     }
-    /* Timetable container */
-    .timetable {
-      background-color: #fff;
+
+    .timetable, #listView {
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(12px);
       padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      border-radius: 15px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
     }
-    /* Timetable slot styling */
+
     .slot {
-      background-color: #e9ecef;
-      margin: 2px;
+      background-color: rgba(233, 236, 239, 0.7);
+      border-radius: 8px;
       padding: 10px;
-      border-radius: 4px;
       font-size: 0.9em;
-      min-height: 60px;
+      color: #333;
     }
-    .slot-lecture {
-      background-color: #007bff;
-      color: #fff;
-    }
-    .slot-tutorial {
-      background-color: #28a745;
-      color: #fff;
-    }
-    .slot-lab {
-      background-color: #fd7e14;
-      color: #fff;
-    }
-    /* Button styling */
+
+    .slot-lecture { background-color: rgba(0, 123, 255, 0.9); color: #fff; }
+    .slot-tutorial { background-color: rgba(40, 167, 69, 0.9); color: #fff; }
+    .slot-lab { background-color: rgba(253, 126, 20, 0.9); color: #fff; }
+
     .btn-primary {
       background-color: #003087;
       border-color: #003087;
+      border-radius: 10px;
     }
+
     .btn-primary:hover {
       background-color: #00205b;
-      border-color: #00205b;
     }
-    /* Table styling */
-    .table th, .table td {
-      vertical-align: middle;
-      text-align: center;
-    }
+
     .table th {
       background-color: #003087;
       color: #fff;
     }
-    /* Search bar */
+
+    .table td, .table th {
+      text-align: center;
+      vertical-align: middle;
+    }
+
     .search-bar {
       max-width: 300px;
     }
-    /* Responsive adjustments */
+
     @media (max-width: 768px) {
-      body {
-        padding-top: 0; /* Remove offset for mobile */
-      }
       .navbar {
-        position: static; /* Unfix navbar on mobile */
+        position: static;
       }
-      .main-content {
-        padding-top: 10px;
-      }
-      .timetable {
+      .timetable, #listView {
         padding: 10px;
       }
       .slot {
         font-size: 0.8em;
-        padding: 5px;
       }
     }
   </style>
 </head>
 <body>
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg">
-    <a class="navbar-brand" href="#">My University</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+  <nav class="navbar navbar-expand-lg fixed-top">
+    <a class="navbar-brand" href="#"><i class="bi bi-calendar-week"></i> My University</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ml-auto">
-        <li class="nav-item">
-          <span class="nav-link">Welcome, [Student Name]</span>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="ShareSchedule.html">SharedSchedule</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Help</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Logout</a>
-        </li>
+        <li class="nav-item"><span class="nav-link">Welcome, [Student Name]</span></li>
+        <li class="nav-item"><a class="nav-link" href="ShareSchedule.html">Shared Schedule</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Help</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Logout</a></li>
       </ul>
     </div>
   </nav>
 
   <div class="container-fluid">
     <div class="row">
-      <!-- Main content -->
       <div class="col-12 main-content">
-        <h1>My Schedule</h1>
-        <!-- Search bar -->
-        <div class="mb-3">
-          <input type="text" class="form-control search-bar" placeholder="Search by course code" id="searchInput">
-        </div>
-        <!-- Timetable -->
+        <h1 class="text-white mb-3">My Schedule</h1>
+        <input type="text" class="form-control search-bar mb-3" placeholder="Search by course code" id="searchInput">
         <div class="timetable">
-          <!-- Calendar view -->
           <table class="table table-bordered" id="timetable">
             <thead>
               <tr>
@@ -164,94 +133,21 @@
               </tr>
             </thead>
             <tbody>
-              <!-- 8 AM to 5 PM, hourly slots -->
-              <tr>
-                <td>8:00 AM</td>
-                <td id="mon-8"></td>
-                <td id="tue-8"></td>
-                <td id="wed-8"></td>
-                <td id="thu-8"></td>
-                <td id="fri-8"></td>
-              </tr>
-              <tr>
-                <td>9:00 AM</td>
-                <td id="mon-9"></td>
-                <td id="tue-9"></td>
-                <td id="wed-9"></td>
-                <td id="thu-9"></td>
-                <td id="fri-9"></td>
-              </tr>
-              <tr>
-                <td>10:00 AM</td>
-                <td id="mon-10"></td>
-                <td id="tue-10"></td>
-                <td id="wed-10"></td>
-                <td id="thu-10"></td>
-                <td id="fri-10"></td>
-              </tr>
-              <tr>
-                <td>11:00 AM</td>
-                <td id="mon-11"></td>
-                <td id="tue-11"></td>
-                <td id="wed-11"></td>
-                <td id="thu-11"></td>
-                <td id="fri-11"></td>
-              </tr>
-              <tr>
-                <td>12:00 PM</td>
-                <td id="mon-12"></td>
-                <td id="tue-12"></td>
-                <td id="wed-12"></td>
-                <td id="thu-12"></td>
-                <td id="fri-12"></td>
-              </tr>
-              <tr>
-                <td>1:00 PM</td>
-                <td id="mon-13"></td>
-                <td id="tue-13"></td>
-                <td id="wed-13"></td>
-                <td id="thu-13"></td>
-                <td id="fri-13"></td>
-              </tr>
-              <tr>
-                <td>2:00 PM</td>
-                <td id="mon-14"></td>
-                <td id="tue-14"></td>
-                <td id="wed-14"></td>
-                <td id="thu-14"></td>
-                <td id="fri-14"></td>
-              </tr>
-              <tr>
-                <td>3:00 PM</td>
-                <td id="mon-15"></td>
-                <td id="tue-15"></td>
-                <td id="wed-15"></td>
-                <td id="thu-15"></td>
-                <td id="fri-15"></td>
-              </tr>
-              <tr>
-                <td>4:00 PM</td>
-                <td id="mon-16"></td>
-                <td id="tue-16"></td>
-                <td id="wed-16"></td>
-                <td id="thu-16"></td>
-                <td id="fri-16"></td>
-              </tr>
-              <tr>
-                <td>5:00 PM</td>
-                <td id="mon-17"></td>
-                <td id="tue-17"></td>
-                <td id="wed-17"></td>
-                <td id="thu-17"></td>
-                <td id="fri-17"></td>
-              </tr>
+              <!-- Rows dynamically filled -->
+              <script>
+                const times = [...Array(10)].map((_, i) => 8 + i);
+                const days = ['mon', 'tue', 'wed', 'thu', 'fri'];
+                document.write(times.map(t => `
+                  <tr><td>${t}:00</td>
+                    ${days.map(d => `<td id="${d}-${t}"></td>`).join('')}
+                  </tr>`).join(''));
+              </script>
             </tbody>
           </table>
-          <!-- View toggle and export buttons -->
           <button class="btn btn-primary mr-2" id="toggleView">Switch to List View</button>
           <button class="btn btn-primary" id="exportPDF">Export as PDF</button>
         </div>
-        <!-- List view (hidden by default) -->
+
         <div class="timetable mt-3 d-none" id="listView">
           <h3>List View</h3>
           <ul class="list-group" id="listViewContent"></ul>
@@ -260,13 +156,10 @@
     </div>
   </div>
 
-  <!-- jQuery and Bootstrap JS -->
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  <!-- jsPDF for PDF export -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script>
-    // Sample timetable data (replace with API call in production)
     const timetableData = [
       { day: 'mon', time: 8, course: 'COMP101', type: 'lecture', location: 'Room 101' },
       { day: 'tue', time: 9, course: 'MATH201', type: 'tutorial', location: 'Room 202' },
@@ -275,7 +168,6 @@
       { day: 'fri', time: 14, course: 'MATH201', type: 'lecture', location: 'Room 204' }
     ];
 
-    // Render timetable on page load
     function renderTimetable() {
       timetableData.forEach(slot => {
         $(`#${slot.day}-${slot.time}`).html(
@@ -284,7 +176,6 @@
       });
     }
 
-    // Render list view
     function renderListView() {
       const listViewContent = $('#listViewContent');
       listViewContent.empty();
@@ -295,7 +186,6 @@
       });
     }
 
-    // Toggle between calendar and list view
     $('#toggleView').click(function() {
       const isListView = $('#listView').hasClass('d-none');
       $('#listView').toggleClass('d-none', !isListView);
@@ -304,7 +194,6 @@
       if (isListView) renderListView();
     });
 
-    // Search functionality
     $('#searchInput').on('input', function() {
       const query = $(this).val().toLowerCase();
       $('.slot').each(function() {
@@ -313,7 +202,6 @@
       });
     });
 
-    // Export timetable as PDF
     $('#exportPDF').click(function() {
       const { jsPDF } = window.jspdf;
       const doc = new jsPDF();
@@ -326,7 +214,6 @@
       doc.save('timetable.pdf');
     });
 
-    // Initialize timetable
     $(document).ready(function() {
       renderTimetable();
     });
