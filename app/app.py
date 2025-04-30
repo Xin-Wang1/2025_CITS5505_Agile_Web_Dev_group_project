@@ -94,6 +94,16 @@ def unit():
 def schedule():
     return render_template('Schedule.html')
 
+@app.route('/My_Schedule')
+@login_required
+def My_Schedule():
+    return render_template('My_Schedule.html')
+
+@app.route('/ShareSchedule')
+@login_required
+def ShareSchedule():
+    return render_template('ShareSchedule.html')
+
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
