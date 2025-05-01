@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
+        @keyframes flow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        #main-header.scrolled {
+            background-color: rgba(0, 0, 0, 0.8);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .card:hover {
+            transform: scale(1.03);
+            transition: transform 0.3s ease;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            text-align: center;
+        }
+
+        .calendar-day {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .calendar-event {
+            background-color: #a1c4fd;
+            color: white;
+            padding: 5px;
+            margin: 2px 0;
+            border-radius: 3px;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <header id="main-header" class="navbar navbar-expand-md navbar-light fixed-top"
+            style="background: transparent; backdrop-filter: blur(10px);">
+        <div class="container-fluid d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3">
+            <div class="col-md-3 mb-2 mb-md-0">
+                <a href="{{ url_for('home') }}" class="d-inline-flex link-body-emphasis text-decoration-none">
+                    <i class="bi bi-grid" style="font-size: 1.5rem;"> Smart Course Selection Tool</i>
+                </a>
+            </div>
+            <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+                <li><a href="{{ url_for('home') }}" class="nav-link px-2 link-secondary">Home</a></li>
+                <li><a href="{{ url_for('unit') }}" class="nav-link px-2">Upload Units</a></li>
+                <li><a href="{{ url_for('schedule') }}" class="nav-link px-2">Schedule</a></li>
+                <li><a href="#" class="nav-link px-2">Share</a></li>
+                <li><a href="#" class="nav-link px-2 active">Dashboard</a></li>
+            </ul>
+            <div class="col-md-3 text-end">
+                <a href="{{ url_for('login') }}" class="btn btn-outline-primary me-2">Login</a>
+                <a href="{{ url_for('register') }}" class="btn btn-primary">Sign Up</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- User Overview Section -->
+    <div class="container-fluid d-flex flex-column justify-content-center align-items-center text-center text-white"
+         style="padding-top: 100px; min-height: 50vh; background: linear-gradient(-45deg, #d0e6ff, #a1c4fd, #f3e5f5, #c5cae9); background-size: 600% 600%; animation: flow 10s ease infinite;">
+        <h1 class="display-4 fw-bold">Welcome back, [User]!</h1>
+        <p class="lead mt-3">You're managing 5 courses for Spring 2025. Let's optimize your schedule!</p>
+        <a href="#dashboard" class="btn btn-light btn-lg mt-4">View Dashboard</a>
+    </div>
+
+    <!-- Dashboard Content -->
+    <div id="dashboard" class="container py-5">
+        <div class="row g-4">
+            <!-- Course Overview -->
+            <div class="col-md-4">
+                <div class="card h-100 text-center border-0 shadow-sm">
+                    <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                        <div class="mb-3">
+                            <i class="bi bi-book" style="font-size: 4rem; color: #6a11cb;"></i>
+                        </div>
+                        <h5 class="card-title fw-bold">Course Overview</h5>
+                        <p class="card-text">Manage your courses.</p>
+                        <div class="w-100">
+                            <div class="card mb-2">
+                                <div class="card-body p-2">
+                                    <strong>CS101</strong> - 3 credits, Mon 9:00-10:30
+                                    <a href="#" class="btn btn-sm btn-outline-primary ms-2">Edit</a>
+                                </div>
+                            </div>
+                            <div class="card mb-2">
+                                <div class="card-body p-2">
+                                    <strong>MATH202</strong> - 4 credits, Wed 13:00-14:30
+                                    <a href="#" class="btn btn-sm btn-outline-primary ms-2">Edit</a>
+                                </div>
+                            </div>
+                            <a href="{{ url_for('unit') }}" class="btn btn-primary w-100">Add Course</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Schedule Preview -->
+            <div class="col-md-8">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="card-title fw-bold">Schedule Preview</h5>
+                            <a href="{{ url_for('schedule') }}" class="btn btn-outline-primary">View Full Schedule</a>
+                        </div>
+                        <div class="calendar-grid">
+                            <div class="calendar-day"><strong>Mon</strong></div>
+                            <div class="calendar-day"><strong>Tue</strong></div>
+                            <div class="calendar-day"><strong>Wed</strong></div>
+                            <div class="calendar-day"><strong>Thu</strong></div>
+                            <div class="calendar-day"><strong>Fri</strong></div>
+                            <div class="calendar-day"><strong>Sat</strong></div>
+                            <div class="calendar-day"><strong>Sun</strong></div>
+                            <div class="calendar-day">
+                                <div class="calendar-event">CS101 9:00-10:30</div>
+                            </div>
+                            <div class="calendar-day"></div>
+                            <div class="calendar-day">
+                                <div class="calendar-event">MATH202 13:00-14:30</div>
+                            </div>
+                            <div class="calendar-day"></div>
+                            <div class="calendar-day"></div>
+                            <div class="calendar-day"></div>
+                            <div class="calendar-day"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="col-md-6">
+                <div class="card h-100 text-center border-0 shadow-sm">
+                    <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                        <div class="mb-3">
+                            <i class="bi bi-lightning" style="font-size: 4rem; color: #2575fc;"></i>
+                        </div>
+                        <h5 class="card-title fw-bold">Quick Actions</h5>
+                        <p class="card-text">Get started with these actions.</p>
+                        <div class="d-flex flex-wrap justify-content-center gap-2">
+                            <a href="{{ url_for('unit') }}" class="btn btn-primary">Upload Course</a>
+                            <a href="{{ url_for('schedule') }}" class="btn btn-outline-primary">Generate Schedule</a>
+                            <a href="#" class="btn btn-outline-primary">Share Schedule</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tasks & Notifications -->
+            <div class="col-md-6">
+                <div class="card h-100 text-center border-0 shadow-sm">
+                    <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                        <div class="mb-3">
+                            <i class="bi bi-bell" style="font-size: 4rem; color: #6a11cb;"></i>
+                        </div>
+                        <h5 class="card-title fw-bold">Tasks & Notifications</h5>
+                        <p class="card-text">Stay on top of your tasks.</p>
+                        <ul class="list-group w-100">
+                            <li class="list-group-item">Complete CS101 upload by May 3</li>
+                            <li class="list-group-item">Review MATH202 schedule</li>
+                            <li class="list-group-item">Share schedule with group</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white text-center py-4 mt-5">
+        <div class="container">
+            <p class="mb-1">© 2025 Smart Course Selector. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        window.addEventListener('scroll', function () {
+            const header = document.getElementById('main-header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+    </script>
+</body>
+</html>
