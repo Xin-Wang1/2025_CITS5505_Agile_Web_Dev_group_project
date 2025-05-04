@@ -1,0 +1,11 @@
+# ignore the actual DB file
+*.db
+instance/
+
+# ignore Python artifacts
+__pycache__/
+*.pyc
+
+# ignore virtual environment
+venv/
+.env
