@@ -4,100 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>My Schedule</title>
-  <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <!-- Bootstrap Icons -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
-  <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
-      padding-top: 60px;
-      background: linear-gradient(-45deg, #a1c4fd, #c2e9fb, #fbc2eb, #fad0c4);
-      background-size: 400% 400%;
-      animation: gradientBG 15s ease infinite;
-    }
 
-    @keyframes gradientBG {
-      0% {background-position: 0% 50%;}
-      50% {background-position: 100% 50%;}
-      100% {background-position: 0% 50%;}
-    }
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" >
 
-    .navbar {
-      background-color: rgba(0, 48, 135, 0.8);
-      backdrop-filter: blur(10px);
-    }
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" >
 
-    .navbar-brand, .nav-link {
-      color: #fff !important;
-      font-weight: 500;
-    }
+  <link href="../static/css/myschedule.css" rel="stylesheet">
 
-    .nav-link:hover {
-      color: #f8d030 !important;
-    }
 
-    .main-content {
-      padding-top: 20px;
-    }
-
-    .timetable, #listView {
-      background: rgba(255, 255, 255, 0.75);
-      backdrop-filter: blur(12px);
-      padding: 20px;
-      border-radius: 15px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-    }
-
-    .slot {
-      background-color: rgba(233, 236, 239, 0.7);
-      border-radius: 8px;
-      padding: 10px;
-      font-size: 0.9em;
-      color: #333;
-    }
-
-    .slot-lecture { background-color: rgba(0, 123, 255, 0.9); color: #fff; }
-    .slot-tutorial { background-color: rgba(40, 167, 69, 0.9); color: #fff; }
-    .slot-lab { background-color: rgba(253, 126, 20, 0.9); color: #fff; }
-
-    .btn-primary {
-      background-color: #003087;
-      border-color: #003087;
-      border-radius: 10px;
-    }
-
-    .btn-primary:hover {
-      background-color: #00205b;
-    }
-
-    .table th {
-      background-color: #003087;
-      color: #fff;
-    }
-
-    .table td, .table th {
-      text-align: center;
-      vertical-align: middle;
-    }
-
-    .search-bar {
-      max-width: 300px;
-    }
-
-    @media (max-width: 768px) {
-      .navbar {
-        position: static;
-      }
-      .timetable, #listView {
-        padding: 10px;
-      }
-      .slot {
-        font-size: 0.8em;
-      }
-    }
-  </style>
 </head>
 <body>
   <nav class="navbar navbar-expand-lg fixed-top">
