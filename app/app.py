@@ -1,12 +1,18 @@
 from flask import Flask, render_template, redirect, url_for, request, flash
-from models import db, User
+from models import User, Unit, Classtime, Schedule
 from config import Config
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
-
+from insert_sample_data import insert_sample_data
+from routes.unit import unit_bp
+from models import db
+from flask_migrate import Migrate
 app = Flask(__name__)
 app.config.from_object(Config)
+
+# Initialize db and migrate
 db.init_app(app)
+migrate = Migrate(app, db)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -84,11 +90,6 @@ def logout():
     logout_user()
     return redirect(url_for('home'))
 
-@app.route('/unit')
-@login_required
-def unit():
-    return render_template('Unit.html')
-
 @app.route('/schedule')
 @login_required
 def schedule():
@@ -103,8 +104,11 @@ def My_Schedule():
 @login_required
 def ShareSchedule():
     return render_template('ShareSchedule.html')
+ 
+app.register_blueprint(unit_bp, url_prefix='/unit')
 
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
+        #insert_sample_data(db)
     app.run(debug=True)
