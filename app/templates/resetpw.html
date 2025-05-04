@@ -8,6 +8,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
   <link href="{{ url_for('static', filename='css/resetpw.css') }}" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="{{ url_for('static', filename='js/resetpw.js') }}"></script>
 </head>
 <body>
   <div class="container-fluid h-100">
@@ -35,9 +36,9 @@
 
             <div class="alert alert-info" style="display: none;"></div>
 
-            <form method="POST" action="resetpw.html">
+            <form method="POST" action="resetpw.html" id="resetPasswordForm">
               <div class="mb-3">
-                <input type="email" name="email" class="form-control" placeholder="Enter your registered email" required>
+                <input type="email" name="email" class="form-control" placeholder="Enter your registered email" required id="emailInput">
               </div>
               <div class="d-grid">
                 <button type="submit" class="btn btn-primary-custom w-100">Reset Password</button>
