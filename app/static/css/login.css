@@ -1,0 +1,93 @@
+  html, body {
+      height: 100%;
+      margin: 0;
+      background: linear-gradient(135deg, #d0e6ff, #a1c4fd, #f3e5f5, #c5cae9);
+      background-size: 400% 400%;
+      animation: gradientMove 15s ease infinite;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .glass-container {
+      background: rgba(255, 255, 255, 0.5);
+      backdrop-filter: blur(12px);
+      border-radius: 15px;
+      min-height: 100vh;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 1rem;
+    }
+
+    .header .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: bold;
+      font-size: 1.5rem;
+      color: #003087;
+      text-decoration: none;
+    }
+
+    .header .nav-link {
+      color: #003087;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .header .nav-link:hover {
+      color: #0056b3;
+      text-decoration: underline;
+    }
+
+    .content {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 400px;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 10px;
+      padding: 2rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-primary-custom {
+      background-color: #003087;
+      border: none;
+      color: #fff;
+    }
+
+    .btn-primary-custom:hover {
+      background-color: #0056b3;
+      color: #fff;
+    }
+
+    .password-toggle {
+      position: relative;
+    }
+
+    .password-toggle .toggle-icon {
+      position: absolute;
+      top: 50%;
+      right: 10px;
+      transform: translateY(-50%);
+      cursor: pointer;
+      font-size: 1.2rem;
+      color: #666;
+    }
