@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Share Schedule Forum</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f8f9fa;
+      padding-top: 70px;
+    }
+    .navbar {
+      background-color: #003087;
+      padding: 15px;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+    }
+    .navbar-brand, .navbar-nav .nav-link {
+      color: #fff !important;
+      font-weight: 500;
+    }
+    .navbar-brand:hover, .navbar-nav .nav-link:hover {
+      color: #f8d030 !important;
+    }
+    .main-content {
+      padding-top: 20px;
+    }
+    .card {
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .comment {
+      background-color: #e9ecef;
+      padding: 8px 12px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+    }
+    .post-meta {
+      font-size: 0.9rem;
+      color: #666;
+    }
+    .img-preview {
+      max-width: 100%;
+      height: auto;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg">
+    <a class="navbar-brand" href="#">My University</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="My_Schedule.html">MySchedule</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Help</a>
+        </li>
+        <li class="nav-item">
+          <span class="nav-link">[Student Name]'s Schedule</span>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12 main-content">
+        <h1>Share Your Timetable</h1>
+        <p class="text-muted">Post your schedule and comment below.</p>
+
+        <!-- Posts List -->
+        <div id="postsList" class="mb-4"></div>
+
+        <!-- New Post Form -->
+        <div class="card mb-4">
+          <div class="card-body">
+            <h5 class="card-title">Post a New Timetable</h5>
+            <form id="postForm">
+              <div class="form-group">
+                <label for="postUser">Your Name</label>
+                <input type="text" class="form-control" id="postUser" placeholder="Enter your name" required>
+              </div>
+              <div class="form-group">
+                <label for="postTitle">Title</label>
+                <input type="text" class="form-control" id="postTitle" placeholder="Enter post title" required>
+              </div>
+              <div class="form-group">
+                <label for="postContent">Timetable Details</label>
+                <textarea class="form-control" id="postContent" rows="4" placeholder="Paste or describe your timetable..." required></textarea>
+              </div>
+              <div class="form-group">
+                <label for="postFile">Attach a File (optional)</label>
+                <input type="file" class="form-control-file" id="postFile">
+              </div>
+              <button type="submit" class="btn btn-primary">Post</button>
+            </form>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- JS -->
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+  <script>
+    const posts = [];
+
+    function renderPosts() {
+      const postsList = $('#postsList');
+      postsList.empty();
+
+      posts.forEach((post, postIndex) => {
+        const commentsHtml = post.comments.map((comment, commentIndex) => {
+          return `
+            <div class="comment">
+              <strong>${comment.user}</strong>: ${comment.text}
+              ${comment.file ? generateFilePreview(comment.file) : ''}
+              <button class="btn btn-sm btn-danger mt-1" onclick="deleteComment(${postIndex}, ${commentIndex})">Delete Comment</button>
+            </div>
+          `;
+        }).join('');
+
+        const postCard = $(`
+          <div class="card mb-4">
+            <div class="card-body">
+              <h5 class="card-title">${post.title}</h5>
+              <p class="post-meta">Posted by <strong>${post.user}</strong></p>
+              <p class="card-text">${post.content}</p>
+              ${post.file ? generateFilePreview(post.file) : ''}
+              <button class="btn btn-sm btn-danger mb-3" onclick="deletePost(${postIndex})">Delete Post</button>
+              <hr>
+              <h6>Comments</h6>
+              <div id="comments-${postIndex}" class="mb-3">
+                ${commentsHtml}
+              </div>
+              <div class="form-group">
+                <input type="text" class="form-control mb-2" id="commentUser-${postIndex}" placeholder="Your Name" required>
+                <input type="text" class="form-control mb-2" id="commentInput-${postIndex}" placeholder="Write a comment...">
+                <input type="file" class="form-control-file mb-2" id="commentFile-${postIndex}">
+                <button class="btn btn-outline-primary btn-sm" onclick="addComment(${postIndex})">Comment</button>
+              </div>
+            </div>
+          </div>
+        `);
+
+        postsList.append(postCard);
+      });
+    }
+
+    function generateFilePreview(fileUrl) {
+      const isImage = /\.(jpg|jpeg|png|gif)$/i.test(fileUrl);
+      if (isImage) {
+        return `<img src="${fileUrl}" class="img-preview">`;
+      } else {
+        return `<p>Attachment: <a href="${fileUrl}" download>Download File</a></p>`;
+      }
+    }
+
+    $('#postForm').submit(function(e) {
+      e.preventDefault();
+      const user = $('#postUser').val().trim();
+      const title = $('#postTitle').val().trim();
+      const content = $('#postContent').val().trim();
+      const fileInput = $('#postFile')[0];
+      let fileUrl = '';
+
+      if (fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+        fileUrl = URL.createObjectURL(file);
+      }
+
+      if (user && title && content) {
+        posts.unshift({ user, title, content, file: fileUrl, comments: [] });
+        $('#postForm')[0].reset();
+        renderPosts();
+      }
+    });
+
+    function addComment(postIndex) {
+      const userInput = $(`#commentUser-${postIndex}`);
+      const textInput = $(`#commentInput-${postIndex}`);
+      const fileInput = $(`#commentFile-${postIndex}`)[0];
+      const commentUser = userInput.val().trim();
+      const commentText = textInput.val().trim();
+      let fileUrl = '';
+
+      if (fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+        fileUrl = URL.createObjectURL(file);
+      }
+
+      if (commentUser && (commentText || fileUrl)) {
+        posts[postIndex].comments.push({ user: commentUser, text: commentText, file: fileUrl });
+        userInput.val('');
+        textInput.val('');
+        fileInput.value = '';
+        renderPosts();
+      }
+    }
+
+    function deletePost(index) {
+      if (confirm('Are you sure you want to delete this post?')) {
+        posts.splice(index, 1);
+        renderPosts();
+      }
+    }
+
+    function deleteComment(postIndex, commentIndex) {
+      if (confirm('Are you sure you want to delete this comment?')) {
+        posts[postIndex].comments.splice(commentIndex, 1);
+        renderPosts();
+      }
+    }
+
+    $(document).ready(function() {
+      renderPosts();
+    });
+  </script>
+
+</body>
+</html>

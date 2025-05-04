@@ -4,7 +4,7 @@
 
 {% block content %}
 <h2 class="mb-4">Upload Unit Details</h2>
-<form method="POST" action="/upload-unit" enctype="multipart/form-data">
+<form method="POST" action="{{ url_for('unit.upload_unit') }}" enctype="multipart/form-data">
   <div class="mb-3">
     <label for="file" class="form-label">Upload CSV/Excel File</label>
     <input type="file" class="form-control" id="file" name="file" accept=".csv, .xlsx" required>
@@ -19,22 +19,12 @@
   <input type="text" class="form-control" id="search" placeholder="Search for a unit..." onkeyup="filterUnits()">
 </div>
 <ul class="list-group" id="unit-list">
+  {% for unit in units %}
   <li class="list-group-item d-flex justify-content-between align-items-center">
-    <span>Introduction to Programming</span>
-    <button class="btn btn-sm btn-secondary" onclick="selectUnit('Introduction to Programming', '3', ['Tuesday 9:00 AM - 10:30 AM', 'Monday 11:00 AM - 12:30 PM', 'Friday 2:00 PM - 3:30 PM'])">Select</button>
+    <span>{{ unit.name }}</span>
+    <button class="btn btn-sm btn-secondary" onclick="selectUnit('{{ unit.name }}', '{{ unit.credit_points }}', [])">Select</button>
   </li>
-  <li class="list-group-item d-flex justify-content-between align-items-center">
-    <span>Data Structures</span>
-    <button class="btn btn-sm btn-secondary" onclick="selectUnit('Data Structures', '3', ['Monday 8:00 AM - 9:30 AM', 'Thursday 10:00 AM - 11:30 AM', 'Wednesday 1:00 PM - 2:30 PM'])">Select</button>
-  </li>
-  <li class="list-group-item d-flex justify-content-between align-items-center">
-    <span>Software Engineering</span>
-    <button class="btn btn-sm btn-secondary" onclick="selectUnit('Software Engineering', '4', ['Monday 9:00 AM - 10:30 AM', 'Wednesday 1:00 PM - 1:30 PM', 'Wednesday 3:00 PM - 4:30 PM'])">Select</button>
-  </li>
-  <li class="list-group-item d-flex justify-content-between align-items-center">
-    <span>Database Systems</span>
-    <button class="btn btn-sm btn-secondary" onclick="selectUnit('Database Systems', '3', ['Friday 10:00 AM - 11:30 AM', 'Thursday 1:00 PM - 2:30 PM', 'Monday 4:00 PM - 5:30 PM'])">Select</button>
-  </li>
+  {% endfor %}
 </ul>
 
 <hr class="my-4">
