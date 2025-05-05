@@ -4,100 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>My Schedule</title>
-  <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <!-- Bootstrap Icons -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
-  <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
-      padding-top: 60px;
-      background: linear-gradient(-45deg, #a1c4fd, #c2e9fb, #fbc2eb, #fad0c4);
-      background-size: 400% 400%;
-      animation: gradientBG 15s ease infinite;
-    }
 
-    @keyframes gradientBG {
-      0% {background-position: 0% 50%;}
-      50% {background-position: 100% 50%;}
-      100% {background-position: 0% 50%;}
-    }
-
-    .navbar {
-      background-color: rgba(0, 48, 135, 0.8);
-      backdrop-filter: blur(10px);
-    }
-
-    .navbar-brand, .nav-link {
-      color: #fff !important;
-      font-weight: 500;
-    }
-
-    .nav-link:hover {
-      color: #f8d030 !important;
-    }
-
-    .main-content {
-      padding-top: 20px;
-    }
-
-    .timetable, #listView {
-      background: rgba(255, 255, 255, 0.75);
-      backdrop-filter: blur(12px);
-      padding: 20px;
-      border-radius: 15px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-    }
-
-    .slot {
-      background-color: rgba(233, 236, 239, 0.7);
-      border-radius: 8px;
-      padding: 10px;
-      font-size: 0.9em;
-      color: #333;
-    }
-
-    .slot-lecture { background-color: rgba(0, 123, 255, 0.9); color: #fff; }
-    .slot-tutorial { background-color: rgba(40, 167, 69, 0.9); color: #fff; }
-    .slot-lab { background-color: rgba(253, 126, 20, 0.9); color: #fff; }
-
-    .btn-primary {
-      background-color: #003087;
-      border-color: #003087;
-      border-radius: 10px;
-    }
-
-    .btn-primary:hover {
-      background-color: #00205b;
-    }
-
-    .table th {
-      background-color: #003087;
-      color: #fff;
-    }
-
-    .table td, .table th {
-      text-align: center;
-      vertical-align: middle;
-    }
-
-    .search-bar {
-      max-width: 300px;
-    }
-
-    @media (max-width: 768px) {
-      .navbar {
-        position: static;
-      }
-      .timetable, #listView {
-        padding: 10px;
-      }
-      .slot {
-        font-size: 0.8em;
-      }
-    }
-  </style>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="{{ url_for('static', filename='css/myshcedule.css') }}" rel="stylesheet">
 </head>
 <body>
   <nav class="navbar navbar-expand-lg fixed-top">
@@ -132,16 +42,8 @@
                 <th>Friday</th>
               </tr>
             </thead>
-            <tbody>
-              <!-- Rows dynamically filled -->
-              <script>
-                const times = [...Array(10)].map((_, i) => 8 + i);
-                const days = ['mon', 'tue', 'wed', 'thu', 'fri'];
-                document.write(times.map(t => `
-                  <tr><td>${t}:00</td>
-                    ${days.map(d => `<td id="${d}-${t}"></td>`).join('')}
-                  </tr>`).join(''));
-              </script>
+            <tbody id="timetable-body">
+              <!-- Filled by JavaScript -->
             </tbody>
           </table>
           <button class="btn btn-primary mr-2" id="toggleView">Switch to List View</button>
@@ -159,64 +61,6 @@
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script>
-    const timetableData = [
-      { day: 'mon', time: 8, course: 'COMP101', type: 'lecture', location: 'Room 101' },
-      { day: 'tue', time: 9, course: 'MATH201', type: 'tutorial', location: 'Room 202' },
-      { day: 'wed', time: 10, course: 'PHYS301', type: 'lab', location: 'Lab A' },
-      { day: 'thu', time: 11, course: 'COMP101', type: 'tutorial', location: 'Room 103' },
-      { day: 'fri', time: 14, course: 'MATH201', type: 'lecture', location: 'Room 204' }
-    ];
-
-    function renderTimetable() {
-      timetableData.forEach(slot => {
-        $(`#${slot.day}-${slot.time}`).html(
-          `<div class="slot slot-${slot.type}">${slot.course} - ${slot.type}<br>Location: ${slot.location}</div>`
-        );
-      });
-    }
-
-    function renderListView() {
-      const listViewContent = $('#listViewContent');
-      listViewContent.empty();
-      timetableData.forEach(slot => {
-        listViewContent.append(
-          `<li class="list-group-item">${slot.course} - ${slot.type} (${slot.day.charAt(0).toUpperCase() + slot.day.slice(1)} ${slot.time}:00, ${slot.location})</li>`
-        );
-      });
-    }
-
-    $('#toggleView').click(function() {
-      const isListView = $('#listView').hasClass('d-none');
-      $('#listView').toggleClass('d-none', !isListView);
-      $('#timetable').toggleClass('d-none', isListView);
-      $(this).text(isListView ? 'Switch to Calendar View' : 'Switch to List View');
-      if (isListView) renderListView();
-    });
-
-    $('#searchInput').on('input', function() {
-      const query = $(this).val().toLowerCase();
-      $('.slot').each(function() {
-        const text = $(this).text().toLowerCase();
-        $(this).parent().toggle(text.includes(query));
-      });
-    });
-
-    $('#exportPDF').click(function() {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
-      doc.text('My Schedule', 10, 10);
-      let y = 20;
-      timetableData.forEach(slot => {
-        doc.text(`${slot.course} - ${slot.type} (${slot.day.charAt(0).toUpperCase() + slot.day.slice(1)} ${slot.time}:00, ${slot.location})`, 10, y);
-        y += 10;
-      });
-      doc.save('timetable.pdf');
-    });
-
-    $(document).ready(function() {
-      renderTimetable();
-    });
-  </script>
+  <script src="{{ url_for('static', filename='js/myschedule.js') }}"></script>
 </body>
 </html>

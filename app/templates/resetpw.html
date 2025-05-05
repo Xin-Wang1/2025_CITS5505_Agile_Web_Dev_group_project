@@ -6,90 +6,9 @@
   <title>Reset Password</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="{{ url_for('static', filename='css/resetpw.css') }}" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
-
-  <style>
-    html, body {
-      height: 100%;
-      margin: 0;
-      background: linear-gradient(135deg, #d0e6ff, #a1c4fd, #f3e5f5, #c5cae9);
-      background-size: 400% 400%;
-      animation: gradientMove 15s ease infinite;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    @keyframes gradientMove {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    .glass-container {
-      background: rgba(255, 255, 255, 0.5);
-      backdrop-filter: blur(12px);
-      border-radius: 15px;
-      min-height: 100vh;
-      padding: 2rem;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-bottom: 1rem;
-    }
-
-    .header .logo {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-weight: bold;
-      font-size: 1.5rem;
-      color: #003087;
-      text-decoration: none;
-    }
-
-    .header .nav-link {
-      color: #003087;
-      font-weight: bold;
-      text-decoration: none;
-    }
-
-    .header .nav-link:hover {
-      color: #0056b3;
-      text-decoration: underline;
-    }
-
-    .content {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .login-card {
-      width: 100%;
-      max-width: 400px;
-      background: rgba(255, 255, 255, 0.3);
-      border-radius: 10px;
-      padding: 2rem;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    }
-
-    .btn-primary-custom {
-      background-color: #003087;
-      border: none;
-      color: #fff;
-    }
-
-    .btn-primary-custom:hover {
-      background-color: #0056b3;
-      color: #fff;
-    }
-  </style>
-
+  <script src="{{ url_for('static', filename='js/resetpw.js') }}"></script>
 </head>
 <body>
   <div class="container-fluid h-100">
@@ -104,28 +23,22 @@
       </div>
       <div class="col-12 col-md-8 glass-container">
         <div class="header">
-          <a href="{{ url_for('home') }}" class="logo">
+          <a href="home.html" class="logo">
             <i class="bi bi-grid" style="font-size: 2rem;"></i>
             Smart Course Selection Tool
           </a>
-          <a href="{{ url_for('home') }}" class="nav-link">Home</a>
+          <a href="home.html" class="nav-link">Home</a>
         </div>
 
         <div class="content">
           <div class="login-card">
             <h2 class="text-center mb-4">Reset Password</h2>
 
-            {% with messages = get_flashed_messages() %}
-              {% if messages %}
-                {% for message in messages %}
-                  <div class="alert alert-info">{{ message }}</div>
-                {% endfor %}
-              {% endif %}
-            {% endwith %}
+            <div class="alert alert-info" style="display: none;"></div>
 
-            <form method="POST" action="{{ url_for('resetpw') }}">
+            <form method="POST" action="resetpw.html" id="resetPasswordForm">
               <div class="mb-3">
-                <input type="email" name="email" class="form-control" placeholder="Enter your registered email" required>
+                <input type="email" name="email" class="form-control" placeholder="Enter your registered email" required id="emailInput">
               </div>
               <div class="d-grid">
                 <button type="submit" class="btn btn-primary-custom w-100">Reset Password</button>
@@ -133,16 +46,12 @@
             </form>
 
             <div class="text-center mt-3">
-              <a href="{{ url_for('login') }}" class="text-primary">Back to Login</a>
+              <a href="login.html" class="text-primary">Back to Login</a>
             </div>
-
           </div>
         </div>
-
       </div>
-
     </div>
   </div>
 </body>
-
 </html>
