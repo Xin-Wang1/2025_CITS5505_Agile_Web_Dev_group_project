@@ -36,7 +36,7 @@
 
             <div class="alert alert-info" style="display: none;"></div>
 
-            <form method="POST" action="resetpw.html" id="resetPasswordForm">
+            <form method="POST" action="{{ url_for('resetpw') }}" id="resetPasswordForm">
               <div class="mb-3">
                 <input type="email" name="email" class="form-control" placeholder="Enter your registered email" required id="emailInput">
               </div>
