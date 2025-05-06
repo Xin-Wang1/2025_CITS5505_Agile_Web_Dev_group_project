@@ -91,17 +91,17 @@ def logout():
     return redirect(url_for('home'))
 
 @app.route('/schedule')
-@login_required
+#@login_required
 def schedule():
     return render_template('Schedule.html')
 
 @app.route('/My_Schedule')
-@login_required
+#@login_required
 def My_Schedule():
     return render_template('My_Schedule.html')
 
 @app.route('/ShareSchedule')
-@login_required
+#@login_required
 def ShareSchedule():
     return render_template('ShareSchedule.html')
  
