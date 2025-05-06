@@ -2,7 +2,6 @@ from flask_login import UserMixin
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 
-
 db = SQLAlchemy()
 
 # Association table linking schedules to selected class time slots
@@ -26,6 +25,7 @@ class User(UserMixin, db.Model):
     shared_posts = db.relationship('Sharedschedule', backref='author', lazy=True)
     reset_tokens = db.relationship('PasswordResetToken', backref='user', lazy=True)
 
+
 class PasswordResetToken(db.Model):
     # Default table name 'passwordresettoken'
     id = db.Column(db.Integer, primary_key=True)
@@ -33,6 +33,7 @@ class PasswordResetToken(db.Model):
     token = db.Column(db.String(64), unique=True, nullable=False)
     expires_at = db.Column(db.DateTime, nullable=False)
     used = db.Column(db.Boolean, default=False)
+
 
 class Unit(db.Model):
     # Default table name 'unit'
@@ -47,6 +48,7 @@ class Unit(db.Model):
     # Each unit can have multiple class time slots
     class_times = db.relationship('Classtime', backref='unit', lazy=True)
 
+
 class Classtime(db.Model):
     # Default table name 'classtime'
     id = db.Column(db.Integer, primary_key=True)
@@ -56,8 +58,9 @@ class Classtime(db.Model):
     start_time = db.Column(db.Time, nullable=False)
     end_time = db.Column(db.Time, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    
+
     schedules = db.relationship('Schedule', secondary=schedule_classtime, back_populates='classtimes')
+
 
 class Schedule(db.Model):
     # Default table name 'schedule'
@@ -69,6 +72,7 @@ class Schedule(db.Model):
     # Selected class slots via association table
     classtimes = db.relationship('Classtime', secondary=schedule_classtime, back_populates='schedules')
 
+
 class Sharedschedule(db.Model):
     # Default table name 'sharedschedule'
     id = db.Column(db.Integer, primary_key=True)
@@ -76,9 +80,11 @@ class Sharedschedule(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     title = db.Column(db.String(150), nullable=False)
     description = db.Column(db.Text)
+    file_url = db.Column(db.String(200))  # 新增字段
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     schedule = db.relationship('Schedule', backref='shares')
+
 
 class Comment(db.Model):
     # Default table name 'comment'
@@ -86,6 +92,7 @@ class Comment(db.Model):
     shared_schedule_id = db.Column(db.Integer, db.ForeignKey('sharedschedule.id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     content = db.Column(db.Text, nullable=False)
+    file_url = db.Column(db.String(200))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     author = db.relationship('User')
