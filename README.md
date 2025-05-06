@@ -15,14 +15,27 @@
 | 24201533 | Xin Wang     | *Xin-Wang1* |
 
 ## 3. How to Launch the Application
-
+Creates a virtual environment named venv in the current directory. 
+``` 
 python -m venv venv
-
+```
+Temporarily allows script execution (like activating a virtual environment) in the current PowerShell session. Without this, Windows may block the activation script.
+```
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
+```
+Activates the virtual environment on Windows. After activation, any Python or pip commands will use the virtual environment instead of the system-wide Python.
+```
 venv\Scripts\activate  
-
+```
+Installs all required dependencies listed in the requirements.txt file. This ensures your project has the correct packages to run properly.
+```
 pip install -r requirements.txt
-
+```
 flask run
 (You may need to enable script running if using Windows)
+```
+cd app
+python app.py
+```
 
 ## 4. How to run test
