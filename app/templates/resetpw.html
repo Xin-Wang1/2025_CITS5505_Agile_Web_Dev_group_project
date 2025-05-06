@@ -23,11 +23,11 @@
       </div>
       <div class="col-12 col-md-8 glass-container">
         <div class="header">
-          <a href="home.html" class="logo">
+          <a href="{{ url_for('home') }}" class="logo">
             <i class="bi bi-grid" style="font-size: 2rem;"></i>
             Smart Course Selection Tool
           </a>
-          <a href="home.html" class="nav-link">Home</a>
+          <a href="{{ url_for('home') }}" class="nav-link">Home</a>
         </div>
 
         <div class="content">
@@ -46,7 +46,7 @@
             </form>
 
             <div class="text-center mt-3">
-              <a href="login.html" class="text-primary">Back to Login</a>
+              <a href="{{ url_for('login') }}" class="text-primary">Back to Login</a>
             </div>
           </div>
         </div>
