@@ -8,7 +8,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
   <link href="{{ url_for('static', filename='css/resetpw.css') }}" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="{{ url_for('static', filename='js/resetpw.js') }}"></script>
+  <!-- <script src="{{ url_for('static', filename='js/resetpw.js') }}"></script> -->
 </head>
 <body>
   <div class="container-fluid h-100">
@@ -32,21 +32,23 @@
 
         <div class="content">
           <div class="login-card">
-            <h2 class="text-center mb-4">Reset Password</h2>
+            <h2 class="text-center mb-4">Reset password for {{ username }}</h2>
 
             <div class="alert alert-info" style="display: none;"></div>
 
-            <form method="POST" action="{{ url_for('resetpw') }}" id="resetPasswordForm">
-              <!-- <div class="mb-3">
-                <input type="email" name="email" class="form-control" placeholder="Enter your registered email" required id="emailInput">
-              </div> -->
-              <div class="mb-3">
-                <input type="text" name="username" class="form-control" placeholder="Username" required />
-              </div>
-              <div class="d-grid">
-                <button type="submit" class="btn btn-primary-custom w-100">Continue</button>
-              </div>
-            </form>
+            <form method="POST" action="{{ url_for('resetpw_username', username=username) }}">
+                <div class="mb-3">
+                  <!-- <input type="password" name="password" class="form-control" placeholder="Password" required /> -->
+                  <input type="password" name="new_password" class="form-control" placeholder="Password" required />
+                </div>
+                <div class="mb-3">
+                  <!-- <input type="password" name="confirm_password" class="form-control" placeholder="Confirm Password" required /> -->
+                  <input type="password" name="confirm_password" class="form-control" placeholder="Confirm Password" required />
+                </div>
+                <div class="d-grid">
+                  <button type="submit" class="btn btn-primary-custom w-100">Submit</button>
+                </div>
+              </form>
 
             <div class="text-center mt-3">
               <a href="{{ url_for('login') }}" class="text-primary">Back to Login</a>
