@@ -1,5 +1,5 @@
 from flask import Flask, render_template, redirect, url_for, request, flash
-from models import User, Unit, Classtime, Schedule
+from models import User, Unit, Classtime, Schedule, Sharedschedule
 from config import Config
 from flask_login import (
     LoginManager,
@@ -114,10 +114,19 @@ def My_Schedule():
     return render_template("My_Schedule.html")
 
 
-@app.route("/ShareSchedule")
+@app.route("/ShareSchedule/<int:id>")
 # @login_required
-def ShareSchedule():
-    return render_template("ShareSchedule.html")
+def ShareSchedule(id):
+    # fetch the shared schedule or 404 if not found
+    post = Sharedschedule.query.get_or_404(id)
+    return render_template("ShareSchedule.html", post=post)
+
+
+@app.route("/blog")
+def blog():
+    schedules = Sharedschedule.query.order_by(Sharedschedule.created_at.desc()).all()
+    user_name = current_user.username if current_user.is_authenticated else "Guest"
+    return render_template("blog.html", schedules=schedules, name=user_name)
 
 
 app.register_blueprint(unit_bp, url_prefix="/unit")
