@@ -68,7 +68,7 @@ def register():
             return render_template("register.html")
 
         hashed_pw = generate_password_hash(password)
-        new_user = User(username=username, password=hashed_pw)
+        new_user = User(username=username, password_hash=hashed_pw)
         db.session.add(new_user)
         db.session.commit()
         flash("Registration successful. You can now log in.", "success")
