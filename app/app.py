@@ -41,7 +41,7 @@ def login():
         if user and check_password_hash(user.password_hash, request.form['password']):
             login_user(user)
             return redirect(url_for('ShareSchedule'))
-        flash('用户名或密码无效')
+        flash('Username or Password is invalid')
     return render_template('login.html')
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -52,19 +52,19 @@ def register():
         confirm_password = request.form['confirm_password']
 
         if password != confirm_password:
-            flash('密码不匹配', 'danger')
+            flash('Password mismatch', 'danger')
             return render_template('register.html')
 
         existing_user = User.query.filter_by(username=username).first()
         if existing_user:
-            flash('用户名已被占用', 'danger')
+            flash('The username has been occupied', 'danger')
             return render_template('register.html')
 
         hashed_pw = generate_password_hash(password)
         new_user = User(username=username, password_hash=hashed_pw)
         db.session.add(new_user)
         db.session.commit()
-        flash('注册成功，请登录。', 'success')
+        flash('Registration successful. Please log in', 'success')
         return redirect(url_for('login'))
 
     return render_template('register.html')
@@ -74,10 +74,10 @@ def resetpw():
     if request.method == 'POST':
         email = request.form.get('email')
         if email:
-            flash('如果邮箱已注册，重置链接已发送。', 'info')
+            flash('The reset link has been sent', 'info')
             return redirect(url_for('login'))
         else:
-            flash('请输入您的邮箱地址。', 'danger')
+            flash('Please enter your email address', 'danger')
     return render_template('resetpw.html')
 
 @app.route('/dashboard')
@@ -128,9 +128,9 @@ def create_post():
     description = data.get('description')
     schedule_id = data.get('schedule_id', 1)  # 示例，需动态获取
     if not (title and description):
-        return jsonify({'error': '标题和内容为必填项'}), 400
+        return jsonify({'error': 'Title and content are required fields'}), 400
     if len(title) > 150:
-        return jsonify({'error': '标题长度不能超过150个字符'}), 400
+        return jsonify({'error': 'The length of the title cannot exceed 150 characters'}), 400
 
     file_url = None
     if 'file' in request.files:
@@ -150,17 +150,17 @@ def create_post():
     )
     db.session.add(post)
     db.session.commit()
-    return jsonify({'message': '帖子创建成功', 'id': post.id}), 201
+    return jsonify({'message': 'The post was successfully created.', 'id': post.id}), 201
 
 @app.route('/api/posts/<int:post_id>', methods=['DELETE'])
 @login_required
 def delete_post(post_id):
     post = Sharedschedule.query.get_or_404(post_id)
     if post.user_id != current_user.id:
-        return jsonify({'error': '无权限删除'}), 403
+        return jsonify({'error': 'Unauthorized deletion'}), 403
     db.session.delete(post)
     db.session.commit()
-    return jsonify({'message': '帖子已删除'}), 200
+    return jsonify({'message': 'The post has been deleted'}), 200
 
 @app.route('/api/comments', methods=['POST'])
 @login_required
@@ -169,7 +169,7 @@ def create_comment():
     shared_schedule_id = data.get('shared_schedule_id')
     content = data.get('content')
     if not (shared_schedule_id and content):
-        return jsonify({'error': '评论内容为必填项'}), 400
+        return jsonify({'error': 'The comment content is a required field'}), 400
 
     file_url = None
     if 'file' in request.files:
@@ -188,7 +188,7 @@ def create_comment():
     )
     db.session.add(comment)
     db.session.commit()
-    return jsonify({'message': '评论添加成功', 'id': comment.id}), 201
+    return jsonify({'message': 'The comment was added successfully', 'id': comment.id}), 201
 
 app.register_blueprint(unit_bp, url_prefix='/unit')
 
