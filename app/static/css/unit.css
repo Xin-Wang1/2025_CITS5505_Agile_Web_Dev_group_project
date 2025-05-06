@@ -1,3 +1,135 @@
-.details {
-  display: none;
+/* Container */
+.unit-container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+/* Headings */
+h2,
+h3 {
+  font-family: 'Helvetica Neue', sans-serif;
+  color: #2e3d49;
+  margin-bottom: 1rem;
+}
+
+/* Form Styling */
+form.upload-form {
+  background: #ffffff;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  margin-bottom: 2rem;
+}
+
+form.upload-form label {
+  font-weight: 600;
+  color: #4a4a4a;
+}
+
+input[type="file"] {
+  display: block;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+button.upload-btn {
+  background-color: #0069d9;
+  color: #ffffff;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 4px;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+button.upload-btn:hover {
+  background-color: #0053ba;
+}
+
+/* Search Input */
+.search-group {
+  margin-bottom: 1.5rem;
+}
+
+.search-group input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+/* Unit List */
+.list-group {
+  margin-bottom: 2rem;
+}
+
+.list-group-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: #f9f9f9;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  transition: background 0.2s ease;
+}
+
+.list-group-item:hover {
+  background: #f1f1f1;
+}
+
+.list-group-item .unit-name {
+  font-weight: 500;
+  color: #333333;
+}
+
+.list-group-item button.select-btn {
+  background-color: #28a745;
+  color: #ffffff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  transition: background-color 0.3s ease;
+}
+
+.list-group-item button.select-btn:hover {
+  background-color: #218838;
+}
+
+/* Selected Units */
+#selected-units {
+  background: #ffffff;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #e0e0e0;
+  min-height: 120px;
+  margin-bottom: 2rem;
+}
+
+#selected-units .unit-item {
+  display: inline-block;
+  background: #e9ecef;
+  color: #495057;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  margin: 0.25rem;
+  font-size: 0.9rem;
+}
+
+/* Generate Button */
+.generate-btn {
+  background-color: #17a2b8;
+  color: #ffffff;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.generate-btn:hover {
+  background-color: #138496;
 }

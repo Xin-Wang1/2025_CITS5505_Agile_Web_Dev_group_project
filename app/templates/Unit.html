@@ -7,40 +7,33 @@
 {% endblock %}
 
 {% block content %}
-<h2 class="mb-4">Upload Unit Details</h2>
-<form method="POST" action="{{ url_for('unit.upload_unit') }}" enctype="multipart/form-data">
-  <div class="mb-3">
-    <label for="file" class="form-label">Upload CSV/Excel File</label>
-    <input type="file" class="form-control" id="file" name="file" accept=".csv, .xlsx" required>
+<div class="unit-container">
+  <h2>Upload Unit Details</h2>
+  <form class="upload-form" method="POST" action="{{ url_for('unit.upload_unit') }}" enctype="multipart/form-data">
+    <label for="file">Upload CSV/Excel File</label>
+    <input type="file" id="file" name="file" accept=".csv,.xlsx" required>
+    <button type="submit" class="upload-btn">Upload</button>
+  </form>
+
+  <div class="search-group">
+    <input type="text" id="search" placeholder="Search for a unit..." onkeyup="filterUnits()">
   </div>
-  <button type="submit" class="btn btn-primary">Upload</button>
-</form>
 
-<hr class="my-4">
+  <ul id="unit-list">
+    {% for unit in units %}
+    <li class="list-group-item">
+      <span class="unit-name">{{ unit.name }}</span>
+      <button class="select-btn" onclick="selectUnit('{{ unit.name }}','{{ unit.credit_points }}',[])">Select</button>
+    </li>
+    {% endfor %}
+  </ul>
 
-<h3>Search and Select Units</h3>
-<div class="mb-3">
-  <input type="text" class="form-control" id="search" placeholder="Search for a unit..." onkeyup="filterUnits()">
-</div>
-<ul class="list-group" id="unit-list">
-  {% for unit in units %}
-  <li class="list-group-item d-flex justify-content-between align-items-center">
-    <span>{{ unit.name }}</span>
-    <button class="btn btn-sm btn-secondary" onclick="selectUnit('{{ unit.name }}', '{{ unit.credit_points }}', [])">Select</button>
-  </li>
-  {% endfor %}
-</ul>
+  <h3>Selected Units</h3>
+  <ul id="selected-units"></ul>
 
-<hr class="my-4">
-
-<h3>Selected Units</h3>
-<ul class="list-group" id="selected-units">
-  <!-- Selected units will appear here -->
-</ul>
-
-<!-- Schedule Generate Button -->
-<div class="mt-4">
-  <a href="/schedule" class="btn btn-success">Schedule Generate</a>
+  <div class="mt-4 text-center">
+    <a href="/schedule" class="generate-btn">Schedule Generate</a>
+  </div>
 </div>
 
 <script src="{{ url_for('static', filename='js/unit.js') }}"></script>
