@@ -4,13 +4,15 @@
 
 {% block head %}
   <link href="{{ url_for('static', filename='css/schedule.css') }}" rel="stylesheet">
-  <script src="{{ url_for('static', filename='js/schedule.js') }}"></script>
+ 
 {% endblock %}
 
 {% block content %}
-<h2 class="mb-4">Generated Schedule</h2>
+<main class="container flex-grow-1 my-4">
+
 <!-- Weekly Calendar -->
 <div class="table-responsive">
+  <h2 class="mb-4">Generated Schedule</h2>
   <table class="table table-bordered text-center">
     <thead class="table-light">
       <tr>
@@ -83,4 +85,9 @@
   </div>
   <button type="submit" class="btn btn-primary">Update Preferences</button>
 </form>
+</main>
+{% endblock %} 
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/schedule.js') }}"></script>
 {% endblock %}
+
