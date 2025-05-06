@@ -47,6 +47,7 @@ def upload_unit():
                         created_by=1,
                         created_at=datetime.utcnow()
                     )
+                    print(f"Adding unit: {unit}")
                     db.session.add(unit)
                     db.session.flush()
 
@@ -63,6 +64,7 @@ def upload_unit():
                     end_time=end_time,
                     created_at=datetime.utcnow()
                 )
+                print(f"Adding class time: {class_time.start_time}")
                 db.session.add(class_time)
 
             db.session.commit()
