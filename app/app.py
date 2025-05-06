@@ -34,10 +34,10 @@ def home():
 def login():
     if request.method == 'POST':
         user = User.query.filter_by(username=request.form['username']).first()
-        if user and check_password_hash(user.password, request.form['password']):
+        if user and check_password_hash(user.password_hash, request.form['password']):  # 将 'password' 改为 'password_hash'
             login_user(user)
             return redirect(url_for('dashboard'))
-        flash('Invalid credentials')
+        flash('Username or Password incorrect!!')
     return render_template('login.html')
 
 
@@ -49,19 +49,19 @@ def register():
         confirm_password = request.form['confirm_password']
 
         if password != confirm_password:
-            flash('Passwords do not match', 'danger')
+            flash('Password mismatch', 'danger')
             return render_template('register.html')
 
         existing_user = User.query.filter_by(username=username).first()
         if existing_user:
-            flash('Username already taken', 'danger')
+            flash('The username has been occupied', 'danger')
             return render_template('register.html')
 
         hashed_pw = generate_password_hash(password)
-        new_user = User(username=username, password=hashed_pw)
+        new_user = User(username=username, password_hash=hashed_pw)
         db.session.add(new_user)
         db.session.commit()
-        flash('Registration successful. You can now log in.', 'success')
+        flash('Registration successful. Please log in', 'success')
         return redirect(url_for('login'))
 
     return render_template('register.html')
