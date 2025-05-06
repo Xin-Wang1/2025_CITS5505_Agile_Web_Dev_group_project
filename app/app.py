@@ -11,6 +11,7 @@ from flask_login import (
 from werkzeug.security import generate_password_hash, check_password_hash
 from insert_sample_data import insert_sample_data
 from routes.unit import unit_bp
+from routes.schedule import schedule_bp
 from models import db
 from flask_migrate import Migrate
 

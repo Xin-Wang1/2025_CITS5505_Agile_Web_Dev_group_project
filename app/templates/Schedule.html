@@ -42,21 +42,15 @@
 <!-- Selected Units -->
 <h3>Selected Units</h3>
 <ul class="list-group mb-4">
+  {% for unit in selected_units %}
   <li class="list-group-item">
-    <strong>Introduction to Programming</strong>
-    <p>Credits: 3</p>
-    <p>Time Slots: Tuesday 9:00 AM - 10:30 AM, Monday 11:00 AM - 12:30 PM</p>
+    <strong>{{ unit.name }}</strong>
+    <p>{{ unit.credits }}</p>
+    {% for  times in unit.class_times %}
+    <p>Time slot:{{ times.start_time}}-{{ times.end_time}}</p>
+    {% endfor %}
   </li>
-  <li class="list-group-item">
-    <strong>Data Structures</strong>
-    <p>Credits: 3</p>
-    <p>Time Slots: Monday 11:00 AM - 12:30 PM, Wednesday 2:00 PM - 3:30 PM</p>
-  </li>
-  <li class="list-group-item">
-    <strong>Software Engineering</strong>
-    <p>Credits: 4</p>
-    <p>Time Slots: Friday 2:00 PM - 3:30 PM, Thursday 3:30 PM - 5:00 PM</p>
-  </li>
+  {% endfor %}
 </ul>
 
 <!-- Total Credits -->
@@ -88,6 +82,6 @@
 </main>
 {% endblock %} 
 {% block scripts %}
-<script src="{{ url_for('static', filename='js/schedule.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/unit.js') }}"></script>
 {% endblock %}
 
