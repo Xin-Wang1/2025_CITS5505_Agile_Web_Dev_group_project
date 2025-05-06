@@ -46,7 +46,7 @@ def login():
         user = User.query.filter_by(username=request.form["username"]).first()
         if user and check_password_hash(user.password, request.form["password"]):
             login_user(user)
-            return redirect(url_for("dashboard"))
+            return redirect(url_for("home"))
         flash("Invalid credentials")
     return render_template("login.html")
 
