@@ -34,7 +34,7 @@ def home():
 def login():
     if request.method == 'POST':
         user = User.query.filter_by(username=request.form['username']).first()
-        if user and check_password_hash(user.password, request.form['password']):
+        if user and check_password_hash(user.password_hash, request.form['password']):
             login_user(user)
             return redirect(url_for('dashboard'))
         flash('Invalid credentials')
@@ -58,7 +58,7 @@ def register():
             return render_template('register.html')
 
         hashed_pw = generate_password_hash(password)
-        new_user = User(username=username, password=hashed_pw)
+        new_user = User(username=username, password_hash=hashed_pw)
         db.session.add(new_user)
         db.session.commit()
         flash('Registration successful. You can now log in.', 'success')
