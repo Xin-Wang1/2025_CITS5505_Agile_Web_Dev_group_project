@@ -133,3 +133,7 @@ button.upload-btn:hover {
 .generate-btn:hover {
   background-color: #138496;
 }
+
+.container {
+  padding-top: 70px;
+}
