@@ -1,20 +1,31 @@
-const scheduleData = [
-  { course: "Introduction to Programming", day: "Monday", time: "9:00 - 10:30", credits: 3 },
-  { course: "Data Structures", day: "Tuesday", time: "11:00 - 12:30", credits: 3 },
-  { course: "Software Engineering", day: "Wednesday", time: "14:00 - 15:30", credits: 4 },
-];
-
+const scheduleData = {{ schedule_data | tojson | safe }};
+console.log(scheduleData+"dddddddddddddddd");  // inspect if valid
+ 
 scheduleData.forEach(item => {
-  const [startHour] = item.time.split(" - ").map(t => parseInt(t.split(":")[0]));
-  const cell = document.getElementById(`${item.day.toLowerCase()}-${startHour}`);
-  if (cell) {
-    cell.innerHTML = `
+  const day = item.day_of_week.toLowerCase();
+  const start = parseInt(item.start_time.split(":")[0]);
+  const end = parseInt(item.end_time.split(":")[0]);
+  const span = end - start;
+
+  // Target the first cell and insert the content
+  const firstCell = document.getElementById(`${day}-${start}`);
+  if (firstCell) {
+    firstCell.innerHTML = `
       <div class="course-cell">
-        <strong>${item.course}</strong><br>
-        Credits: ${item.credits}<br>
-        ${item.time}<br>
-        ${item.day}
+        <strong>${item.unit_name}</strong><br>
+        ${item.type}<br>
+        ${item.start_time} - ${item.end_time}
       </div>
     `;
+    firstCell.rowSpan = span;
+
+    // Remove the following cells that are spanned over
+    for (let h = start + 1; h < start + span; h++) {
+      const nextCell = document.getElementById(`${day}-${h}`);
+      if (nextCell) {
+        nextCell.remove();  // remove merged cells to avoid duplicate display
+      }
+    }
   }
 });
+ 

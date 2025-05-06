@@ -5,6 +5,7 @@ from flask_login import LoginManager, login_user, login_required, logout_user, c
 from werkzeug.security import generate_password_hash, check_password_hash
 from insert_sample_data import insert_sample_data
 from routes.unit import unit_bp
+from routes.schedule import schedule_bp
 from models import db
 from flask_migrate import Migrate
 app = Flask(__name__)
@@ -125,11 +126,6 @@ def logout():
     logout_user()
     return redirect(url_for('home'))
 
-@app.route('/schedule')
-#@login_required
-def schedule():
-    return render_template('Schedule.html')
-
 @app.route('/My_Schedule')
 #@login_required
 def My_Schedule():
@@ -141,6 +137,8 @@ def ShareSchedule():
     return render_template('ShareSchedule.html')
  
 app.register_blueprint(unit_bp, url_prefix='/unit')
+
+app.register_blueprint(schedule_bp, url_prefix='/schedule')
 
 if __name__ == '__main__':
     with app.app_context():
