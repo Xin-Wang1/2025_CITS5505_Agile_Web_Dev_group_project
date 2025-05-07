@@ -25,4 +25,7 @@ pip install -r requirements.txt
 flask run
 (You may need to enable script running if using Windows)
 
+deactivate
+(Exit the virtual environment)
+
 ## 4. How to run test
