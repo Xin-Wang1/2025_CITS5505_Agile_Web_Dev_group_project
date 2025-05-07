@@ -34,12 +34,14 @@
           <div class="login-card">
             <h2 class="text-center mb-4">Login</h2>
 
-            {% with messages = get_flashed_messages() %}
-              {% if messages %}
-                {% for message in messages %}
-                  <div class="alert alert-danger">{{ message }}</div>
-                {% endfor %}
-              {% endif %}
+            {% with messages = get_flashed_messages(with_categories=True) %}
+            {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert alert-{{ 'success' if category == 'success' else 'danger' }}">
+              {{ message }}
+            </div>
+            {% endfor %}
+            {% endif %}
             {% endwith %}
 
             <form method="POST" action="{{ url_for('login') }}">
@@ -47,7 +49,8 @@
                 <input type="text" name="username" class="form-control" placeholder="Username" required>
               </div>
               <div class="mb-3 password-toggle">
-                <input type="password" name="password" id="password" class="form-control" placeholder="Password" required>
+                <input type="password" name="password" id="password" class="form-control" placeholder="Password"
+                  required>
                 <!-- <i class="bi bi-eye-slash" id="togglePassword" style="cursor: pointer; position: absolute; right: 15px; top: 38px;"></i> -->
               </div>
               <div class="d-grid">
