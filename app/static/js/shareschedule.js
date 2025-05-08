@@ -1,5 +1,5 @@
 let posts = [];
-const currentUser = "{{ username }}"; // 从模板获取
+const currentUser = "{{ username }}"; 
 
 function renderPosts() {
     const postsList = $('#postsList');
@@ -19,19 +19,19 @@ function renderPosts() {
             <div class="card mb-4">
                 <div class="card-body">
                     <h5 class="card-title">${post.title}</h5>
-                    <p class="post-meta">发布者：<strong>${post.user}</strong> 于 ${new Date(post.created_at).toLocaleString()}</p>
+                    <p class="post-meta">Post by：<strong>${post.user}</strong> at ${new Date(post.created_at).toLocaleString()}</p>
                     <p class="card-text">${post.description}</p>
                     ${post.file_url ? generateFilePreview(post.file_url) : ''}
-                    ${post.user === currentUser ? `<button class="btn btn-sm btn-danger mb-3" onclick="deletePost(${post.id})">删除帖子</button>` : ''}
+                    ${post.user === currentUser ? `<button class="btn btn-sm btn-danger mb-3" onclick="deletePost(${post.id})">Delete</button>` : ''}
                     <hr>
-                    <h6>评论</h6>
+                    <h6>Comment</h6>
                     <div id="comments-${postIndex}" class="mb-3">
                         ${commentsHtml}
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-control mb-2" id="commentInput-${postIndex}" placeholder="写下您的评论...">
+                        <input type="text" class="form-control mb-2" id="commentInput-${postIndex}" placeholder="leave your comment...">
                         <input type="file" class="form-control-file mb-2" id="commentFile-${postIndex}">
-                        <button class="btn btn-outline-primary btn-sm" onclick="addComment(${postIndex}, ${post.id})">评论</button>
+                        <button class="btn btn-outline-primary btn-sm" onclick="addComment(${postIndex}, ${post.id})">Add comment</button>
                     </div>
                 </div>
             </div>
@@ -46,7 +46,7 @@ function generateFilePreview(fileUrl) {
     if (isImage) {
         return `<img src="${fileUrl}" class="img-preview">`;
     } else {
-        return `<p>附件：<a href="${fileUrl}" download>下载文件</a></p>`;
+        return `<p>attachment:<a href="${fileUrl}" download>download</a></p>`;
     }
 }
 
@@ -55,7 +55,7 @@ function fetchPosts() {
         posts = data;
         renderPosts();
     }).fail(function(xhr) {
-        $('#alertContainer').html(`<div class="alert alert-danger">加载帖子失败：${xhr.responseJSON?.error || '未知错误'}</div>`);
+        $('#alertContainer').html(`<div class="alert alert-danger">Failed to load：${xhr.responseJSON?.error || 'Unknown error'}</div>`);
     });
 }
 
@@ -64,14 +64,14 @@ $('#postForm').submit(function(e) {
     const title = $('#postTitle').val().trim();
     const content = $('#postContent').val().trim();
     if (title.length > 150) {
-        $('#alertContainer').html('<div class="alert alert-danger">标题长度不能超过150个字符</div>');
+        $('#alertContainer').html('<div class="alert alert-danger">The length of the title cannot exceed 150 characters</div>');
         return;
     }
 
     const formData = new FormData();
     formData.append('title', title);
     formData.append('description', content);
-    formData.append('schedule_id', 1); // 示例，需动态获取
+    formData.append('schedule_id', 1); 
     if ($('#postFile')[0].files.length > 0) {
         formData.append('file', $('#postFile')[0].files[0]);
     }
@@ -85,11 +85,11 @@ $('#postForm').submit(function(e) {
         success: function() {
             $('#postForm')[0].reset();
             fetchPosts();
-            $('#alertContainer').html('<div class="alert alert-success">帖子发布成功！</div>');
+            $('#alertContainer').html('<div class="alert alert-success">Published successfully！</div>');
             setTimeout(() => $('#alertContainer').empty(), 3000);
         },
         error: function(xhr) {
-            $('#alertContainer').html(`<div class="alert alert-danger">错误：${xhr.responseJSON?.error || '未知错误'}</div>`);
+            $('#alertContainer').html(`<div class="alert alert-danger">Error：${xhr.responseJSON?.error || 'Unknown error'}</div>`);
         }
     });
 });
@@ -99,7 +99,7 @@ function addComment(postIndex, postId) {
     const fileInput = $(`#commentFile-${postIndex}`)[0];
     const commentText = textInput.val().trim();
     if (!commentText) {
-        $('#alertContainer').html('<div class="alert alert-danger">评论内容不能为空</div>');
+        $('#alertContainer').html('<div class="alert alert-danger">Empty Comment!!!</div>');
         return;
     }
 
@@ -120,27 +120,27 @@ function addComment(postIndex, postId) {
             textInput.val('');
             fileInput.value = '';
             fetchPosts();
-            $('#alertContainer').html('<div class="alert alert-success">评论添加成功！</div>');
+            $('#alertContainer').html('<div class="alert alert-success">Comment added！</div>');
             setTimeout(() => $('#alertContainer').empty(), 3000);
         },
         error: function(xhr) {
-            $('#alertContainer').html(`<div class="alert alert-danger">错误：${xhr.responseJSON?.error || '未知错误'}</div>`);
+            $('#alertContainer').html(`<div class="alert alert-danger">Error：${xhr.responseJSON?.error || 'Unkown error'}</div>`);
         }
     });
 }
 
 function deletePost(postId) {
-    if (confirm('确定要删除此帖子吗？')) {
+    if (confirm('Are you sure with this delete？')) {
         $.ajax({
             url: `/api/posts/${postId}`,
             type: 'DELETE',
             success: function() {
                 fetchPosts();
-                $('#alertContainer').html('<div class="alert alert-success">帖子已删除</div>');
+                $('#alertContainer').html('<div class="alert alert-success">Post has benn delete</div>');
                 setTimeout(() => $('#alertContainer').empty(), 3000);
             },
             error: function(xhr) {
-                $('#alertContainer').html(`<div class="alert alert-danger">错误：${xhr.responseJSON?.error || '未知错误'}</div>`);
+                $('#alertContainer').html(`<div class="alert alert-danger">Error：${xhr.responseJSON?.error || 'Unkown error'}</div>`);
             }
         });
     }
