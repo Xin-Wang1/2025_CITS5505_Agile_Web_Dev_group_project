@@ -126,7 +126,7 @@ def create_post():
     data = request.form
     title = data.get('title')
     description = data.get('description')
-    schedule_id = data.get('schedule_id', 1)  # 示例，需动态获取
+    schedule_id = data.get('schedule_id', 1)  
     if not (title and description):
         return jsonify({'error': 'Title and content are required fields'}), 400
     if len(title) > 150:
