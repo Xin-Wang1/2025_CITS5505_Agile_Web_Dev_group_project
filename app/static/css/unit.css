@@ -1,7 +1,159 @@
-.details {
-  display: none;
+/* Reset and Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
+
+body {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  background-color: #f4f4f4;
+  color: #333;
+  padding: 60px 20px 20px;
+}
+
+/* Container */
 .container {
-  padding-top: 70px; 
+  max-width: 1000px;
+  margin: 50px auto;
+  background: #fff;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
 }
- 
+
+/* Enhanced spacing and text hierarchy */
+h2,
+h3 {
+  font-weight: 600;
+  margin-top: 20px;
+  margin-bottom: 15px;
+  color: #2f3757;
+}
+
+.form-label,
+.form-control {
+  font-size: 1rem;
+}
+
+input[type="file"],
+input[type="text"],
+button {
+  margin-top: 8px;
+  margin-bottom: 20px;
+}
+
+.btn-primary,
+.btn-success {
+  padding: 10px 20px;
+  font-weight: 600;
+  font-size: 1rem;
+  border-radius: 2rem;
+  border: 0.1rem solid rgb(187, 109, 109);
+  background: none;
+  color: #000;
+  transition: all 300ms ease;
+  cursor: pointer;
+}
+
+.btn-primary:hover,
+.btn-success:hover {
+  background: rgb(66, 25, 25);
+  color: white;
+  border-color: white;
+}
+
+.btn-primary:hover {
+  background: rgb(36, 36, 36);
+}
+
+
+/* Fix horizontal centering for main.container */
+main.container {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Header */
+header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+header h1 {
+  font-size: 2.5em;
+  margin-bottom: 10px;
+}
+
+header p {
+  font-size: 1.2em;
+  color: #666;
+}
+
+/* Section Titles */
+h2 {
+  border-bottom: 2px solid #007BFF;
+  padding-bottom: 5px;
+  margin-bottom: 15px;
+  color: #007BFF;
+}
+
+/* Experience and Education Lists */
+ul {
+  list-style: none;
+  margin-bottom: 30px;
+}
+
+ul li {
+  margin-bottom: 15px;
+}
+
+ul li h3 {
+  font-size: 1.2em;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+ul li span {
+  display: block;
+  font-size: 0.9em;
+  color: #666;
+}
+
+/* Skills */
+.skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.skills span {
+  background: #007BFF;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 0.9em;
+}
+
+/* Contact Info */
+.contact-info {
+  margin-top: 20px;
+}
+
+.contact-info p {
+  margin-bottom: 5px;
+  font-size: 1em;
+  color: #555;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .container {
+    padding: 15px;
+  }
+
+  header h1 {
+    font-size: 2em;
+  }
+}
