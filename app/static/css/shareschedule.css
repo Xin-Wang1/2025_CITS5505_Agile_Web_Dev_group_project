@@ -1,53 +1,53 @@
 body {
-  font-family: 'Arial', sans-serif;
-  background-color: #f8f9fa;
-  padding-top: 70px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+    padding-top: 70px;
 }
 
-.navbar {
-  background-color: #003087;
-  padding: 15px;
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 1000;
-}
-
-.navbar-brand, .navbar-nav .nav-link {
-  color: #fff !important;
-  font-weight: 500;
-}
-
-.navbar-brand:hover, .navbar-nav .nav-link:hover {
-  color: #f8d030 !important;
-}
-
-.main-content {
-  padding-top: 20px;
+main.container {
+    padding-top: 70px;
+    margin-top: 20px;
 }
 
 .card {
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(12px);
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.comment {
-  background-color: #e9ecef;
-  padding: 8px 12px;
-  border-radius: 8px;
-  margin-bottom: 8px;
+.list-group-item-action {
+    cursor: pointer;
 }
 
-.post-meta {
-  font-size: 0.9rem;
-  color: #666;
+.list-group-item-action:hover {
+    background-color: #e9ecef;
 }
 
-.img-preview {
-  max-width: 100%;
-  height: auto;
-  margin-top: 8px;
+.btn-primary {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+    border-radius: 10px;
 }
-.container {
-  padding-top: 70px; 
+
+.btn-primary:hover {
+    background-color: #0b5ed7;
 }
- 
+
+.btn-secondary {
+    border-radius: 10px;
+}
+
+.text-success {
+    color: #28a745 !important;
+}
+
+.text-danger {
+    color: #dc3545 !important;
+}
+
+@media (max-width: 768px) {
+    .card {
+        padding: 10px;
+    }
+}
