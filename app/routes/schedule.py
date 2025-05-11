@@ -9,7 +9,7 @@ schedule_bp = Blueprint('schedule', __name__)
 
 
 @schedule_bp.route('/',methods=['POST'])
-#@login_required
+@login_required
 def generation():
     if request.method == 'POST':
         # Get selected unit IDs from the form
