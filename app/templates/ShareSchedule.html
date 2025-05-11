@@ -12,8 +12,9 @@
   <!-- Navbar -->
   <nav class="navbar navbar-expand-lg">
     <a class="navbar-brand" href="#">My University</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <!-- <span class="navbar-toggler-icon"></span> -->
+      <i class="bi bi-list"></i>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ml-auto">
@@ -44,22 +45,20 @@
           <div class="card-body">
             <h5 class="card-title">Post a New Timetable</h5>
             <form id="postForm">
-              <div class="form-group">
-                <label for="postUser">Your Name</label>
+
+                <label class="form-group" for="postUser">Your Name</label>
                 <input type="text" class="form-control" id="postUser" placeholder="Enter your name" required>
-              </div>
-              <div class="form-group">
-                <label for="postTitle">Title</label>
+
+                <label class="form-group" for="postTitle">Title</label>
                 <input type="text" class="form-control" id="postTitle" placeholder="Enter post title" required>
-              </div>
-              <div class="form-group">
-                <label for="postContent">Timetable Details</label>
+
+
+                <label class="form-group" for="postContent">Timetable Details</label>
                 <textarea class="form-control" id="postContent" rows="4" placeholder="Paste or describe your timetable..." required></textarea>
-              </div>
-              <div class="form-group">
-                <label for="postFile">Attach a File (optional)</label>
-                <input type="file" class="form-control-file" id="postFile">
-              </div>
+
+                <label class="form-group" for="postFile">Attach a File (optional)</label>
+                <input type="file" class="form-control" id="postFile">
+
               <button type="submit" class="btn btn-primary">Post</button>
             </form>
           </div>
