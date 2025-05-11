@@ -12,25 +12,46 @@
 </head>
 
 <body class="d-flex flex-column min-vh-100">
-  <header id="main-header" class="navbar navbar-expand-md navbar-light fixed-top" style="background: transparent; backdrop-filter: blur(10px);">
-    <div class="container-fluid d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3">
+  <header id="main-header" class="navbar navbar-expand-md navbar-light fixed-top"
+    style="background: transparent; backdrop-filter: blur(10px);">
+    <div
+      class="container-fluid d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3">
       <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-        <li><a href="{{ url_for('home') }}" class="nav-link px-2 link-secondary">Home</a></li>
-        <li><a href="{{ url_for('unit.unit') }}" class="nav-link px-2">Upload Units</a></li>
-        <li><a href="{{ url_for('myschedule.my_schedules') }}" class="nav-link px-2">My Schedule</a></li>
-        <li><a href="{{ url_for('ShareSchedule') }}" class="nav-link px-2">Shared Schedule</a></li>
      
+        <li><a href="{{ url_for('home') }}"
+            class="nav-link px-2 {% if request.path == '/' %}link-secondary{% else %}link-primary{% endif %}">Home</a>
+        </li>
+        <li><a href="{{ url_for('unit.unit') }}"
+            class="nav-link px-2 {% if request.path.startswith('/unit') %}link-secondary{% else %}link-primary{% endif %}">Upload
+            Units</a></li>
+        <li><a href="{{ url_for('myschedule.my_schedules') }}"
+            class="nav-link px-2 {% if request.path == '/My_Schedule' %}link-secondary{% else %}link-primary{% endif %}">My
+            Schedule</a></li>
+        <li><a href="{{ url_for('ShareSchedule') }}"
+            class="nav-link px-2 {% if request.path == '/ShareSchedule' %}link-secondary{% else %}link-primary{% endif %}">Shared
+            Schedule</a></li>
+
+
       </ul>
-      <div class="col-md-3 text-end">
+      <div class="col-md-3 text-end d-flex align-items-center justify-content-end gap-3">
+        {% if current_user.is_authenticated %}
+        <a href="{{ url_for('My_Schedule') }}" class="d-flex align-items-center text-black text-decoration-none">
+          <span class="me-2">{{ current_user.username }}</span>
+          <img src="{{ url_for('static', filename='image/avatar.png') }}" alt="Avatar" class="rounded-circle" width="32"
+            height="32">
+        </a>
+        <a href="{{ url_for('logout') }}" class="btn btn-outline-primary ms-3">Logout</a>
+        {% else %}
         <a href="{{ url_for('login') }}" class="btn btn-outline-primary me-2">Login</a>
         <a href="{{ url_for('register') }}" class="btn btn-primary">Sign Up</a>
+        {% endif %}
       </div>
     </div>
   </header>
 
- 
-    {% block content %}{% endblock %}
-   
+
+  {% block content %}{% endblock %}
+
 
   <footer class="bg-dark text-white text-center py-3 mt-auto">
     <p class="mb-1">&copy; 2025 Smart Course Selector. All rights reserved.</p>
