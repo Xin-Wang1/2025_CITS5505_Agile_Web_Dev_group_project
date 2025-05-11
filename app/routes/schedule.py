@@ -23,7 +23,9 @@ def generation():
         # Pass the selected units to the schedule page
          # Prepare the data to pass to the schedule page
         schedule_data = []
+        total_credits = 0 
         for unit in selected_units:
+            total_credits += unit.credit_points
             for timeslot in unit.class_times:
                 schedule_data.append({
                     "unit_name": unit.name,
@@ -33,7 +35,7 @@ def generation():
                     "type": timeslot.type
                 })
         print(f"Schedule data: {schedule_data}")
-        return render_template('schedule.html', selected_units=selected_units,schedule_data=schedule_data)
+        return render_template('schedule.html', selected_units=selected_units,schedule_data=schedule_data,total_credits=total_credits)
 
 @schedule_bp.route('/generate_schedule', methods=['POST'])
 #@login_required
