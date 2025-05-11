@@ -55,17 +55,28 @@ def upload_unit():
                 day_of_week = row['Day of Week']
                 start_time = datetime.strptime(row['Start Time'], '%H:%M').time()
                 end_time = datetime.strptime(row['End Time'], '%H:%M').time()
-
-                class_time = Classtime(
+                 # Check if the class time already exists for this unit
+                existing_class_time = Classtime.query.filter_by(
                     unit_id=unit.id,
                     type=class_type,
                     day_of_week=day_of_week,
                     start_time=start_time,
-                    end_time=end_time,
-                    created_at=datetime.utcnow()
-                )
-                print(f"Adding class time: {class_time.start_time}")
-                db.session.add(class_time)
+                    end_time=end_time
+                ).first()
+                
+                if not existing_class_time:
+                    class_time = Classtime(
+                        unit_id=unit.id,
+                        type=class_type,
+                        day_of_week=day_of_week,
+                        start_time=start_time,
+                        end_time=end_time,
+                        created_at=datetime.utcnow()
+                    )
+                    print(f"Adding class time: {class_time.start_time}")
+                    db.session.add(class_time)
+                else:
+                    print(f"Class time already exists: {existing_class_time.start_time}")
 
             db.session.commit()
             flash('Units and class times uploaded successfully!', 'success')

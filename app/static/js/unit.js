@@ -1,15 +1,48 @@
 let selectedUnitIds = [];
 
-function filterUnits() {
-  const searchInput = document.getElementById('search').value.toLowerCase();
-  const unitList = document.getElementById('unit-list').getElementsByTagName('li');
-  for (let i = 0; i < unitList.length; i++) {
-    const unitName = unitList[i].getElementsByTagName('span')[0].innerText.toLowerCase();
-    unitList[i].style.display = unitName.includes(searchInput) ? '' : 'none';
-  }
-}
+document.addEventListener('DOMContentLoaded', () => {
+  const searchInput = document.getElementById('unit-search');
+  const clearBtn = document.getElementById('clear-search');
+  const items = Array.from(document.querySelectorAll('#unit-list li'));
+
+  // debounce helper
+  const debounce = (fn, delay = 200) => {
+    let timeout;
+    return (...args) => {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => fn(...args), delay);
+    };
+  };
+
+  // actual filter logic
+  const filterItems = () => {
+  const q = searchInput.value.trim().toLowerCase();
+  items.forEach(li => {
+    const nameElement = li.querySelector('.unit-name');
+    if (nameElement) { // Check if the .unit-name element exists
+      const name = nameElement.textContent.toLowerCase();
+      li.style.display = name.includes(q) ? '' : 'none';
+    } else {
+      li.style.display = 'none'; // Hide items without a .unit-name element
+    }
+  });
+};
+
+  // wire up events
+  searchInput.addEventListener('input', debounce(filterItems, 200));
+  clearBtn.addEventListener('click', () => {
+    searchInput.value = '';
+    filterItems();
+    searchInput.focus();
+  });
+});
+
 
 function selectUnit(name,id) {
+  if (selectedUnitIds.includes(id)) {
+    alert(`${name} is already selected.`);
+    return;
+  }
   const selectedUnits = document.getElementById('selected-units');
   const unitItem = document.createElement('li');
   unitItem.className = 'list-group-item';
@@ -26,7 +59,7 @@ function selectUnit(name,id) {
     // Update the hidden input field with the selected unit IDs
   document.getElementById('selected-units-input').value = JSON.stringify(selectedUnitIds);
 }
-function removeUnit(button) {
+function removeUnit(id,button) {
   const unitItem = button.parentElement.parentElement;
   unitItem.remove();
 

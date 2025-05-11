@@ -1,36 +1,47 @@
-const timetableData = [
-  { day: 'mon', time: 8, course: 'COMP101', type: 'lecture', location: 'Room 101' },
-  { day: 'tue', time: 9, course: 'MATH201', type: 'tutorial', location: 'Room 202' },
-  { day: 'wed', time: 10, course: 'PHYS301', type: 'lab', location: 'Lab A' },
-  { day: 'thu', time: 11, course: 'COMP101', type: 'tutorial', location: 'Room 103' },
-  { day: 'fri', time: 14, course: 'MATH201', type: 'lecture', location: 'Room 204' }
-];
+ 
 
-function generateTimetableStructure() {
-  const times = [...Array(10)].map((_, i) => 8 + i);
-  const days = ['mon', 'tue', 'wed', 'thu', 'fri'];
-  const tbody = document.getElementById('timetable-body');
-  times.forEach(t => {
-    const row = document.createElement('tr');
-    const timeCell = document.createElement('td');
-    timeCell.textContent = `${t}:00`;
+function generateTimetableStructure(scheduleId) {
+  const times = [...Array(13)].map((_, i) => 8 + i); // Hours from 8:00 to 20:00
+  const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+  const tbody = document.getElementById(`timetable-body-${scheduleId}`);
+  times.forEach((hour) => {
+    const row = document.createElement("tr");
+    const timeCell = document.createElement("td");
+    timeCell.textContent = `${hour}:00 – ${hour + 1}:00`;
     row.appendChild(timeCell);
-    days.forEach(d => {
-      const cell = document.createElement('td');
-      cell.id = `${d}-${t}`;
+    days.forEach((day) => {
+      const cell = document.createElement("td");
+      cell.id = `schedule-${scheduleId}-${day}-${hour}`;
       row.appendChild(cell);
     });
     tbody.appendChild(row);
   });
 }
 
-function renderTimetable() {
-  timetableData.forEach(slot => {
-    $(`#${slot.day}-${slot.time}`).html(
-      `<div class="slot slot-${slot.type}">${slot.course} - ${slot.type}<br>Location: ${slot.location}</div>`
-    );
+function renderTimetable(schedule) {
+  schedule.classtimes.forEach((classtime) => {
+    const startHour = parseInt(classtime.start_time.split(":")[0]);
+    const cellId = `schedule-${schedule.id}-${classtime.day_of_week}-${startHour}`;
+    const cell = document.getElementById(cellId);
+    if (cell) {
+      cell.innerHTML = `
+        <div class="slot slot-${classtime.type.toLowerCase()}">
+          <strong>${classtime.unit_name}</strong><br>
+          ${classtime.type}<br>
+          ${classtime.start_time} – ${classtime.end_time}
+        </div>
+      `;
+    }
   });
 }
+
+$(document).ready(function () {
+  // Iterate over all schedules and generate their timetables
+  scheduleData.forEach((schedule) => {
+    generateTimetableStructure(schedule.id);
+    renderTimetable(schedule);
+  });
+});
 
 function renderListView() {
   const listViewContent = $('#listViewContent');
