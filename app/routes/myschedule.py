@@ -12,7 +12,7 @@ myschedule_bp = Blueprint('myschedule', __name__)
 def my_schedules():
     # Fetch all schedules created by the current user
     schedules = Schedule.query \
-        .filter_by(user_id=1) \
+        .filter_by(user_id=current_user.id) \
         .order_by(Schedule.created_at.desc()) \
         .all()
     print(f"Schedules: {schedules}")

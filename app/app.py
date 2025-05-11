@@ -148,7 +148,7 @@ def My_Schedule():
 
 @app.route("/ShareSchedule")
 @app.route("/ShareSchedule/<int:id>")
- @login_required
+@login_required
 def ShareSchedule():
     return render_template("ShareSchedule.html")
 
