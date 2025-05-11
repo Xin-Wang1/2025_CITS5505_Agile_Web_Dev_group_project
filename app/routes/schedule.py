@@ -44,7 +44,7 @@ def generate_schedule():
     print(f"Selected classtime IDs: {selected_classtime_ids}")
     print(f"Unavailable slots: {unavailable_slots}")
      # 2) Create and persist the Schedule
-    sched = Schedule(user_id=1, name="Auto-Generated")
+    sched = Schedule(user_id=current_user.id, name="Auto-Generated")
     db.session.add(sched)
 
     # 3) For each selected class-timeslot, look up its Classtime record
