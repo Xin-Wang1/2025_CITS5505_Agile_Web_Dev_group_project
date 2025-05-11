@@ -8,14 +8,14 @@ from io import TextIOWrapper
 unit_bp = Blueprint('unit', __name__)
 
 @unit_bp.route('/')
-#@login_required
+@login_required
 def unit():
     # Fetch all units from the database
     units = Unit.query.all()
     return render_template('Unit.html', units=units)
  
 @unit_bp.route('/', methods=['POST'])
-#@login_required
+@login_required
 def upload_unit():
     if 'file' not in request.files:
         flash('No file part', 'danger')
