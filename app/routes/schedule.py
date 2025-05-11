@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user
-from models import Unit, Classtime, db
+from models import Unit, Classtime,Schedule, db
 from datetime import datetime
 import csv
 from io import TextIOWrapper
@@ -34,3 +34,25 @@ def generation():
                 })
         print(f"Schedule data: {schedule_data}")
         return render_template('schedule.html', selected_units=selected_units,schedule_data=schedule_data)
+
+@schedule_bp.route('/generate_schedule', methods=['POST'])
+#@login_required
+def generate_schedule():
+    # 1) Pull the JSON arrays you sent from the front end
+    selected_classtime_ids = json.loads(request.form.get('selected_classtime_ids', '[]'))
+    unavailable_slots = json.loads(request.form.get('unavailable_slots', '[]'))
+    print(f"Selected classtime IDs: {selected_classtime_ids}")
+    print(f"Unavailable slots: {unavailable_slots}")
+     # 2) Create and persist the Schedule
+    sched = Schedule(user_id=1, name="Auto-Generated")
+    db.session.add(sched)
+
+    # 3) For each selected class-timeslot, look up its Classtime record
+    classtimes = Classtime.query.filter(Classtime.id.in_(selected_classtime_ids)).all()
+    print(f"Selected classtimes: {classtimes}")
+    sched.classtimes.extend(classtimes)
+    db.session.add(sched)
+    db.session.commit()
+    flash("Schedule generated successfully!", "success")
+
+    return redirect(url_for('myschedule.my_schedules'))

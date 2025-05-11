@@ -1,0 +1,113 @@
+body {
+    background-color: #f4f6f8;
+    padding-top: 100px;
+
+}
+
+.blog-container {
+    max-width: 1000px;
+    margin: 0 auto 40px;
+    padding: 40px 20px;
+    font-family: 'Helvetica Neue', sans-serif;
+    background-color: #f9fafb;
+    border-radius: 8px;
+}
+
+
+.blog-container h1 {
+    font-size: 2rem;
+    color: #2e3d49;
+    margin-bottom: 0.5rem;
+}
+
+.blog-container h2 {
+    font-size: 1.5rem;
+    color: #2e3d49;
+    border-left: 4px solid #1976d2;
+    padding-left: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Grid Layout */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+/* Schedule Card */
+.schedule-card {
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.schedule-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.schedule-card h3 {
+    font-size: 1.25rem;
+    color: #1976d2;
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+}
+
+.schedule-card p {
+    color: #4a4a4a;
+    line-height: 1.4;
+    margin: 0.5rem 0;
+    font-size: 0.95rem;
+}
+
+.schedule-card .byline {
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin-top: 1rem;
+}
+
+/* View Button */
+.view-btn {
+    display: inline-block;
+    margin-top: 1rem;
+    align-self: flex-end;
+    background-color: #1976d2;
+    color: #ffffff;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+}
+
+.view-btn:hover {
+    background-color: #0d47a1;
+}
+
+/* Empty State */
+.blog-container p {
+    font-size: 1rem;
+    color: #555555;
+    margin-top: 1rem;
+}
+
+/* Center the header */
+.blog-container h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+/* Empty state styling */
+.empty-state {
+    text-align: center;
+    color: #888888;
+    font-style: italic;
+    margin-top: 2rem;
+}
