@@ -1,5 +1,41 @@
 Unit Code,Unit Name,Credit Points,Description,Class Type,Day of Week,Start Time,End Time
-CITS5505,Agile Web Development,6,Learn Agile and Web Development,Lecture,Monday,09:00,11:00
-CITS5505,Agile Web Development,6,Learn Agile and Web Development,Tutorial,Wednesday,14:00,16:00
-CITS5551,Data Science,6,Learn Data Science concepts,Lecture,Tuesday,10:00,12:00
-CITS5551,Data Science,6,Learn Data Science concepts,Lab,Thursday,13:00,15:00
+CITS5901,Software Engineering,6,Learn Software Engineering principles,Lecture,Monday,14:00,16:00
+CITS5901,Software Engineering,6,Learn Software Engineering principles,Tutorial,Wednesday,11:00,13:00
+CITS5901,Software Engineering,6,Learn Software Engineering principles,Tutorial,Thursday,09:00,11:00
+CITS5901,Software Engineering,6,Learn Software Engineering principles,Tutorial,Friday,10:00,12:00
+CITS5901,Software Engineering,6,Learn Software Engineering principles,Tutorial,Monday,16:00,18:00
+CITS6001,Big Data Analytics,6,Learn Big Data concepts,Lecture,Tuesday,09:00,11:00
+CITS6001,Big Data Analytics,6,Learn Big Data concepts,Lab,Wednesday,10:00,12:00
+CITS6001,Big Data Analytics,6,Learn Big Data concepts,Lab,Thursday,14:00,16:00
+CITS6001,Big Data Analytics,6,Learn Big Data concepts,Lab,Friday,09:00,11:00
+CITS6001,Big Data Analytics,6,Learn Big Data concepts,Lab,Monday,13:00,15:00
+CITS6101,Cybersecurity,6,Learn Cybersecurity fundamentals,Lecture,Wednesday,13:00,15:00
+CITS6101,Cybersecurity,6,Learn Cybersecurity fundamentals,Tutorial,Thursday,10:00,12:00
+CITS6101,Cybersecurity,6,Learn Cybersecurity fundamentals,Tutorial,Friday,10:00,12:00
+CITS6101,Cybersecurity,6,Learn Cybersecurity fundamentals,Tutorial,Monday,14:00,16:00
+CITS6101,Cybersecurity,6,Learn Cybersecurity fundamentals,Tutorial,Tuesday,09:00,11:00
+CITS6201,Blockchain Technology,6,Learn Blockchain concepts,Lecture,Monday,10:00,12:00
+CITS6201,Blockchain Technology,6,Learn Blockchain concepts,Tutorial,Tuesday,11:00,13:00
+CITS6201,Blockchain Technology,6,Learn Blockchain concepts,Tutorial,Wednesday,14:00,16:00
+CITS6201,Blockchain Technology,6,Learn Blockchain concepts,Tutorial,Thursday,09:00,11:00
+CITS6201,Blockchain Technology,6,Learn Blockchain concepts,Tutorial,Friday,13:00,15:00
+CITS6301,Human-Computer Interaction,6,Learn HCI principles,Lecture,Tuesday,14:00,16:00
+CITS6301,Human-Computer Interaction,6,Learn HCI principles,Lab,Wednesday,09:00,11:00
+CITS6301,Human-Computer Interaction,6,Learn HCI principles,Lab,Thursday,13:00,15:00
+CITS6301,Human-Computer Interaction,6,Learn HCI principles,Lab,Friday,10:00,12:00
+CITS6301,Human-Computer Interaction,6,Learn HCI principles,Lab,Monday,15:00,17:00
+CITS5801,Artificial Intelligence,6,Learn AI fundamentals,Lecture,Tuesday,12:00,14:00
+CITS5801,Artificial Intelligence,6,Learn AI fundamentals,Tutorial,Monday,09:00,10:00
+CITS5801,Artificial Intelligence,6,Learn AI fundamentals,Tutorial,Monday,11:00,12:00
+CITS5801,Artificial Intelligence,6,Learn AI fundamentals,Tutorial,Wednesday,10:00,11:00
+CITS5801,Artificial Intelligence,6,Learn AI fundamentals,Tutorial,Friday,13:00,14:00
+CITS5701,Cloud Computing,6,Learn Cloud Computing concepts,Lecture,Wednesday,09:00,11:00
+CITS5701,Cloud Computing,6,Learn Cloud Computing concepts,Lab,Friday,08:00,09:00
+CITS5701,Cloud Computing,6,Learn Cloud Computing concepts,Lab,Friday,12:00,13:00
+CITS5701,Cloud Computing,6,Learn Cloud Computing concepts,Lab,Tuesday,10:00,12:00
+CITS5701,Cloud Computing,6,Learn Cloud Computing concepts,Lab,Wednesday,14:00,16:00
+CITS5601,Machine Learning,6,Introduction to Machine Learning,Lecture,Monday,11:00,13:00
+CITS5601,Machine Learning,6,Introduction to Machine Learning,Tutorial,Thursday,15:00,17:00
+CITS5601,Machine Learning,6,Introduction to Machine Learning,Tutorial,Monday,17:00,19:00
+CITS5601,Machine Learning,6,Introduction to Machine Learning,Tutorial,Friday,15:00,17:00
+CITS5601,Machine Learning,6,Introduction to Machine Learning,Tutorial,Tuesday,09:00,11:00
