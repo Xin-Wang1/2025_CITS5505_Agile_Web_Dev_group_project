@@ -12,6 +12,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from insert_sample_data import insert_sample_data
 from routes.unit import unit_bp
 from routes.schedule import schedule_bp
+from routes.myschedule import myschedule_bp
 from models import db
 from flask_migrate import Migrate
 
@@ -168,7 +169,8 @@ app.register_blueprint(unit_bp, url_prefix="/unit")
 
 app.register_blueprint(schedule_bp, url_prefix="/schedule")
 
-if __name__ == "__main__":
+app.register_blueprint(myschedule_bp, url_prefix='/myschedule')
+if __name__ == '__main__':
     with app.app_context():
         db.create_all()
         # insert_sample_data(db)
