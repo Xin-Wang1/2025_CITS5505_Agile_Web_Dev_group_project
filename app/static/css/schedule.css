@@ -1,4 +1,4 @@
-
+/* Calendar table layout */
 .table {
   width: 100%;
   border-collapse: collapse;
@@ -14,6 +14,7 @@
   background-color: #f8f9fa;
 }
 
+/* Course cell box inside the calendar */
 .course-cell {
   background-color: #0d6efd;
   color: #fff;
@@ -24,16 +25,19 @@
   line-height: 1.4;
 }
 
+/* Selected Units List */
 .list-group-item strong {
   font-size: 1.1rem;
 }
 
+/* Alert Info Box */
 .alert-info {
   background-color: #e9f7fd;
   color: #055160;
   border-color: #b6effb;
 }
 
+/* Form Styling */
 form .form-label {
   font-weight: 500;
 }
@@ -47,59 +51,7 @@ form button[type="submit"] {
   margin-top: 1rem;
 }
 
-.container {
-  padding-top: 70px; 
-}
-
-.navbar .container-fluid .col-md-3.text-end {
-  text-align: left !important;
-  justify-content: flex-start !important;
-  padding-left: 20px !important;
-}
-
-.navbar .container-fluid .col-md-3 .dropdown {
-  display: flex !important;
-  align-items: center !important;
-  margin-left: 30px !important;
-  position: relative !important;
-}
-
-.navbar .container-fluid .col-md-3 .dropdown-menu {
-  display: none !important;
-  top: 100% !important;
-  left: 0 !important;
-  right: auto !important;
-  margin-top: 0 !important;
-  transform: none !important;
-  position: absolute !important;
-  min-width: 200px !important;
-  background-color: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  border: none;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  opacity: 0;
-  transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
-.navbar .container-fluid .col-md-3 .dropdown:hover .dropdown-menu {
-  display: block !important;
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.dropdown-item {
-  color: #333;
-  padding: 10px 20px;
-  font-size: 0.95rem;
-  display: flex;
-  align-items: center;
-}
-
-.dropdown-item:hover {
-  background-color: #0d6efd;
-  color: #fff;
-}
-
+/* Responsive adjustments */
 @media (max-width: 768px) {
   h2, h3 {
     font-size: 1.25rem;
@@ -112,19 +64,8 @@ form button[type="submit"] {
   .form-control, .form-select {
     width: 100%;
   }
-
-  .navbar .container-fluid .col-md-3.text-end {
-    padding-left: 10px !important;
-  }
-
-  .navbar .container-fluid .col-md-3 .dropdown {
-    margin-left: 15px !important;
-  }
-
-  .navbar .container-fluid .col-md-3 .dropdown-menu {
-    top: 100% !important;
-    left: 0 !important;
-    margin-top: 0 !important;
-    transform: none !important;
-  }
 }
+.container {
+  padding-top: 70px; 
+}
+ 

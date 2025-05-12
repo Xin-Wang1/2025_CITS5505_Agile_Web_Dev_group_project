@@ -4,7 +4,6 @@ body {
     margin: 0;
     padding-top: 70px; /* Ensure content starts below the fixed header */
 }
-
 /* Main content padding */
 main.container {
     padding-top: 70px; /* Push content below the fixed header */
@@ -16,9 +15,10 @@ main.container {
     background: rgba(255, 255, 255, 0.75);
     backdrop-filter: blur(12px);
     padding: 20px;
+ 
+  
 }
 
-/* Table styling */
 .table th {
     background-color: #0d6efd;
     color: #fff;
@@ -40,6 +40,7 @@ main.container {
     background-color: #0d6efd;
 }
 
+ 
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .navbar {
@@ -52,110 +53,5 @@ main.container {
 
     .slot {
         font-size: 0.8em;
-    }
-}
-
-/* Custom styles for empty schedule alert */
-.alert-info {
-    background-color: rgba(13, 110, 253, 0.1);
-    border-color: #0d6efd;
-    color: #0d6efd;
-    padding: 20px;
-    border-radius: 10px;
-    max-width: 600px;
-    margin: 0 auto;
-    font-size: 1.1rem;
-}
-
-.alert-info .bi-info-circle {
-    font-size: 1.2rem;
-    vertical-align: middle;
-}
-
-.alert-info .btn-primary {
-    background-color: #0d6efd;
-    border-color: #0d6efd;
-    border-radius: 8px;
-    padding: 8px 16px;
-    font-size: 0.9rem;
-}
-
-.alert-info .btn-primary:hover {
-    background-color: #005cbf;
-    border-color: #005cbf;
-}
-
-/* Custom styles for delete button */
-.btn-danger {
-    background-color: #dc3545;
-    border-color: #dc3545;
-    border-radius: 8px;
-    padding: 6px 12px;
-    font-size: 0.9rem;
-}
-
-.btn-danger:hover {
-    background-color: #b02a37;
-    border-color: #b02a37;
-}
-
-.btn-danger .bi-trash {
-    font-size: 0.9rem;
-    vertical-align: middle;
-}
-
-/* Custom styles for success alert */
-.alert-success {
-    background-color: rgba(40, 167, 69, 0.1);
-    border-color: #28a745;
-    color: #28a745;
-    padding: 15px;
-    border-radius: 10px;
-    max-width: 600px;
-    margin: 0 auto 20px;
-    font-size: 1rem;
-}
-
-.alert-success .bi-check-circle {
-    font-size: 1.1rem;
-    vertical-align: middle;
-}
-
-/* Custom dropdown styles for My_Schedule page */
-
-.navbar .col-md-3.text-end {
-    text-align: left !important;
-    justify-content: flex-start !important;
-    padding-left: 20px; 
-}
-
-
-.navbar .col-md-3 .dropdown {
-    display: flex;
-    align-items: center;
-    margin-left: 30px !important; 
-}
-
-
-.navbar .col-md-3 .dropdown-menu {
-    left: 0 !important;
-    right: auto !important;
-    margin-left: 15px !important; 
-    transform: translateY(0) translateX(-15px) !important; 
-}
-
-@media (max-width: 768px) {
-    .navbar .col-md-3.text-end {
-        padding-left: 10px;
-    }
-
-    .navbar .col-md-3 .dropdown {
-        margin-left: 15px !important; 
-    }
-
-    .navbar .col-md-3 .dropdown-menu {
-        left0 !important;
-        margin-left: 10px !important;
-        transform: translateY(0) translateX(-10px) !important; 
     }
 }
