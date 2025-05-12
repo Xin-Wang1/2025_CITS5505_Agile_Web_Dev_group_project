@@ -11,7 +11,6 @@ from flask_login import (
 from werkzeug.security import generate_password_hash, check_password_hash
 from insert_sample_data import insert_sample_data
 from routes.unit import unit_bp
-from routes.schedule import schedule_bp
 from routes.myschedule import myschedule_bp
 from models import db
 from flask_migrate import Migrate
@@ -21,7 +20,7 @@ import json
 app = Flask(__name__)
 app.config.from_object(Config)
 
-# initialize database
+# Initialize db and migrate
 db.init_app(app)
 migrate = Migrate(app, db)
 
@@ -47,7 +46,7 @@ def login():
         if user and check_password_hash(user.password_hash, request.form["password"]):
             login_user(user)
             return redirect(url_for("home"))
-        flash("Invalid credentials")
+        flash("Invalid credentials", "danger")
     return render_template("login.html")
 
 @app.route("/register", methods=["GET", "POST"])
@@ -102,7 +101,10 @@ def resetpw_username(username):
             flash("Passwords do not match.", "danger")
             return render_template("resetpw_form.html", username=username)
 
-        return render_template("resetpw_form.html", username=username)
+        user.password_hash = generate_password_hash(new_password)
+        db.session.commit()
+        flash("Password reset successful. You can now log in.", "success")
+        return redirect(url_for("login"))
 
     return render_template("resetpw_form.html", username=username)
 
@@ -121,10 +123,10 @@ def logout():
 @login_required
 def My_Schedule():
     print(f"Request path: {request.path}")  
-    # find all schedules for the current user
+    # Find all schedules for the current user
     schedules = Schedule.query.filter_by(user_id=current_user.id).all()
     
-    # transform schedules data for rendering
+    # Transform schedules data for rendering
     schedules_data = []
     for schedule in schedules:
         classtimes = []
@@ -153,7 +155,7 @@ def My_Schedule():
 def delete_schedule(schedule_id):
     schedule = Schedule.query.get_or_404(schedule_id)
     if schedule.user_id != current_user.id:
-        return jsonify({"success": False, "message": "Have no right to delete this course schedule!"}), 403
+        return jsonify({"success": False, "message": "No permission to delete this schedule!"}), 403
     
     try:
         db.session.delete(schedule)
@@ -163,31 +165,31 @@ def delete_schedule(schedule_id):
         db.session.rollback()
         return jsonify({"success": False, "message": str(e)}), 500
 
-# upload unit
+# Upload unit
 @app.route("/schedule/generation", methods=["POST"])
 @login_required
 def schedule_generation():
-    # get selected unit ids from the request
+    # Get selected unit IDs from the request
     selected_unit_ids = request.form.get('selected_units')
     
-    # check if selected_unit_ids is None or empty
+    # Check if selected_unit_ids is None or empty
     if not selected_unit_ids:
-        flash('choose at least one unit！', 'danger')
+        flash('Please select at least one unit!', 'danger')
         return redirect(url_for('unit.upload_unit'))
     
     try:
-        # try to parse the JSON string into a Python list
+        # Try to parse the JSON string into a Python list
         selected_unit_ids = json.loads(selected_unit_ids)
-        # check if the list is empty
+        # Check if the list is empty
         if not selected_unit_ids:
-            flash('choose at least one unit！', 'danger')
+            flash('Please select at least one unit!', 'danger')
             return redirect(url_for('unit.upload_unit'))
     except json.JSONDecodeError:
-        # catcjh JSON parsing errors
-        flash('Try again, unvaliable choose！', 'danger')
+        # Catch JSON parsing errors
+        flash('Please try again, invalid selection!', 'danger')
         return redirect(url_for('unit.upload_unit'))
     
-    # create a new schedule
+    # Create a new schedule
     new_schedule = Schedule(
         user_id=current_user.id,
         name=f"Schedule {current_user.username} {len(current_user.schedules) + 1}",
@@ -195,7 +197,7 @@ def schedule_generation():
     )
     db.session.add(new_schedule)
     
-    # link selected units to the new schedule
+    # Link selected units to the new schedule
     for unit_id in selected_unit_ids:
         classtimes = Classtime.query.filter_by(unit_id=unit_id).all()
         for classtime in classtimes:
@@ -203,8 +205,66 @@ def schedule_generation():
     
     db.session.commit()
     
-    flash('Schedule Generate！', 'success')
-    return redirect(url_for('My_Schedule'))
+    flash('Schedule generated successfully!', 'success')
+    # Redirect with selected_unit_ids as query parameter
+    return redirect(url_for('generate_schedule', unit_ids=','.join(map(str, selected_unit_ids))))
+
+@app.route("/schedule/generate_schedule", methods=["GET", "POST"])
+@login_required
+def generate_schedule():
+    if request.method == "POST":
+        selected_classtime_ids = json.loads(request.form.get('selected_classtime_ids', '[]'))
+        unit_ids = request.form.getlist('unit_ids')
+        
+        # Create or update schedule
+        new_schedule = Schedule(
+            user_id=current_user.id,
+            name=f"Schedule {current_user.username} {len(current_user.schedules) + 1}",
+            created_at=datetime.utcnow()
+        )
+        db.session.add(new_schedule)
+        
+        # Link selected classtimes
+        for classtime_id in selected_classtime_ids:
+            classtime = Classtime.query.get(classtime_id)
+            if classtime:
+                new_schedule.classtimes.append(classtime)
+        
+        db.session.commit()
+        flash('Schedule saved successfully!', 'success')
+        return redirect(url_for('My_Schedule'))
+    
+    # GET request: Render Schedule.html with selected units
+    selected_unit_ids = request.args.get('unit_ids', '').split(',') if request.args.get('unit_ids') else []
+    selected_units = Unit.query.filter(Unit.id.in_(selected_unit_ids)).all() if selected_unit_ids else []
+    total_credits = sum(unit.credit_points for unit in selected_units)
+
+    # Transform selected_units to a serializable format
+    serialized_units = []
+    for unit in selected_units:
+        # Convert class_times to a list of dictionaries
+        class_times = [
+            {
+                'id': classtime.id,
+                'unit_id': classtime.unit_id,
+                'type': classtime.type,
+                'day_of_week': classtime.day_of_week,
+                'start_time': classtime.start_time.strftime('%H:%M') if classtime.start_time else None,
+                'end_time': classtime.end_time.strftime('%H:%M') if classtime.end_time else None,
+                'created_at': classtime.created_at.isoformat() if classtime.created_at else None
+            }
+            for classtime in unit.class_times
+        ]
+        serialized_units.append({
+            'id': unit.id,
+            'name': unit.name,
+            'credit_points': unit.credit_points,
+            'class_times': class_times
+        })
+    
+    return render_template('Schedule.html',
+                         selected_units=serialized_units,
+                         total_credits=total_credits)
 
 @app.route("/ShareSchedule")
 @login_required
@@ -218,7 +278,7 @@ def view_shared_schedule(id):
     return render_template("ShareSchedule.html", post=post)
 
 def ShareSchedule(id):
-    # get the shared schedule by id
+    # Get the shared schedule by ID
     post = Sharedschedule.query.get_or_404(id)
     return render_template("ShareSchedule.html", post=post)
 
@@ -228,7 +288,6 @@ def blog():
     return render_template("blog.html", schedules=schedules, name=current_user.username)
 
 app.register_blueprint(unit_bp, url_prefix="/unit")
-app.register_blueprint(schedule_bp, url_prefix="/schedule")
 app.register_blueprint(myschedule_bp, url_prefix='/myschedule')
 
 if __name__ == '__main__':
