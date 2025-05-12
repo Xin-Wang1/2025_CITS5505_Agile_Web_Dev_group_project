@@ -1,112 +1,98 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %} {% block title %}Home{% endblock %} {% block head %}
+<link
+  href="{{ url_for('static', filename='css/home.css') }}"
+  rel="stylesheet"
+/>
+<link
+  href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+  rel="stylesheet"
+/>
+{% endblock %} {% block content %}
+<!-- Intro Section -->
+<div
+  class="container-fluid d-flex flex-column justify-content-center align-items-center text-center text-white"
+  style="
+    padding-top: 100px;
+    min-height: 100vh;
+    height: 840px;
+    background: linear-gradient(-45deg, #d0e6ff, #a1c4fd, #f3e5f5, #c5cae9);
+    background-size: 600% 600%;
+    animation: flow 10s ease infinite;
+  "
+>
+  <h1 class="display-4 fw-bold">Welcome to the Smart Course Selection Tool</h1>
+  <p class="lead mt-3">
+    Easily upload your course information, intelligently generate optimized
+    schedules, and share them with your classmates to enjoy a more efficient
+    academic life!
+  </p>
+  <a href="#features" class="btn btn-light btn-lg mt-4">Learn More</a>
+</div>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Home</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-  <link href="{{ url_for('static', filename='css/home.css') }}" rel="stylesheet">
-</head>
-
-<body>
-  <header id="main-header" class="navbar navbar-expand-md navbar-light fixed-top"
-    style="background: transparent; backdrop-filter: blur(10px);">
-    <div class="container-fluid d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3">
-
-      <div class="col-md-3 mb-2 mb-md-0">
-        <a href="{{ url_for('home') }}" class="d-inline-flex link-body-emphasis text-decoration-none">
-          <i class="bi bi-grid" style="font-size: 1.5rem;"> Smart Course Selection Tool</i>
-        </a>
+<!-- Main Features Section -->
+<div id="features" class="container py-5">
+  <div class="row g-4">
+    <!-- Feature 1 -->
+    <div class="col-md-4">
+      <div class="card h-100 text-center border-0 shadow-sm">
+        <div
+          class="card-body d-flex flex-column justify-content-center align-items-center"
+          style="min-height: 300px"
+        >
+          <div class="mb-3">
+            <i class="bi bi-upload" style="font-size: 4rem; color: #6a11cb"></i>
+          </div>
+          <h5 class="card-title fw-bold">Upload Units</h5>
+          <p class="card-text">
+            Quickly upload your course times, credits, and preferences to our
+            intelligent system.
+          </p>
+        </div>
       </div>
-
-      <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-        <li><a href="{{ url_for('home') }}" class="nav-link px-2 link-secondary">Home</a></li>
-        <li><a href="{{ url_for('unit.unit') }}" class="nav-link px-2">Upload Units</a></li>
-        <li><a href="{{ url_for('My_Schedule') }}" class="nav-link px-2">My Schedule</a></li>
-        <li><a href="{{ url_for('ShareSchedule') }}" class="nav-link px-2">Share</a></li>
-      </ul>
-
-      <div class="col-md-3 text-end d-flex align-items-center justify-content-end gap-3">
-        {% if current_user.is_authenticated %}
-          <a href="{{ url_for('My_Schedule') }}" class="d-flex align-items-center text-white text-decoration-none">
-            <span class="me-2">{{ current_user.username }}</span>
-            <img src="{{ url_for('static', filename='image/avatar.png') }}" alt="Avatar" class="rounded-circle" width="32" height="32">
-          </a>
-          <a href="{{ url_for('logout') }}" class="btn btn-outline-primary ms-3">Logout</a>
-        {% else %}
-          <a href="{{ url_for('login') }}" class="btn btn-outline-primary me-2">Login</a>
-          <a href="{{ url_for('register') }}" class="btn btn-primary">Sign Up</a>
-        {% endif %}
-      </div>
-      
-
     </div>
-  </header>
 
-  <!-- Intro Section -->
-  <div class="container-fluid d-flex flex-column justify-content-center align-items-center text-center text-white"
-    style="padding-top: 100px; min-height: 100vh; height: 840px; background: linear-gradient(-45deg, #d0e6ff, #a1c4fd, #f3e5f5, #c5cae9); background-size: 600% 600%; animation: flow 10s ease infinite;">
-
-    <h1 class="display-4 fw-bold">Welcome to the Smart Course Selection Tool</h1>
-    <p class="lead mt-3">Easily upload your course information, intelligently generate optimized schedules, and
-      share them with your classmates to enjoy a more efficient academic life!</p>
-    <a href="#features" class="btn btn-light btn-lg mt-4">Learn More</a>
-  </div>
-
-  <!-- Main Features Section -->
-  <div id="features" class="container py-5">
-    <div class="row g-4">
-      <!-- Feature 1 -->
-      <div class="col-md-4">
-        <div class="card h-100 text-center border-0 shadow-sm">
-          <div class="card-body d-flex flex-column justify-content-center align-items-center" style="min-height: 300px;">
-            <div class="mb-3">
-              <i class="bi bi-upload" style="font-size: 4rem; color: #6a11cb;"></i>
-            </div>
-            <h5 class="card-title fw-bold">Upload Units</h5>
-            <p class="card-text">Quickly upload your course times, credits, and preferences to our intelligent system.</p>
+    <!-- Feature 2 -->
+    <div class="col-md-4">
+      <div class="card h-100 text-center border-0 shadow-sm">
+        <div
+          class="card-body d-flex flex-column justify-content-center align-items-center"
+          style="min-height: 300px"
+        >
+          <div class="mb-3">
+            <i
+              class="bi bi-calendar-check"
+              style="font-size: 4rem; color: #2575fc"
+            ></i>
           </div>
+          <h5 class="card-title fw-bold">Smart Scheduling</h5>
+          <p class="card-text">
+            Automatically generate the best course schedule with one click,
+            making time management easy.
+          </p>
         </div>
       </div>
+    </div>
 
-      <!-- Feature 2 -->
-      <div class="col-md-4">
-        <div class="card h-100 text-center border-0 shadow-sm">
-          <div class="card-body d-flex flex-column justify-content-center align-items-center" style="min-height: 300px;">
-            <div class="mb-3">
-              <i class="bi bi-calendar-check" style="font-size: 4rem; color: #2575fc;"></i>
-            </div>
-            <h5 class="card-title fw-bold">Smart Scheduling</h5>
-            <p class="card-text">Automatically generate the best course schedule with one click, making time management easy.</p>
+    <!-- Feature 3 -->
+    <div class="col-md-4">
+      <div class="card h-100 text-center border-0 shadow-sm">
+        <div
+          class="card-body d-flex flex-column justify-content-center align-items-center"
+          style="min-height: 300px"
+        >
+          <div class="mb-3">
+            <i class="bi bi-share" style="font-size: 4rem; color: #6a11cb"></i>
           </div>
-        </div>
-      </div>
-
-      <!-- Feature 3 -->
-      <div class="col-md-4">
-        <div class="card h-100 text-center border-0 shadow-sm">
-          <div class="card-body d-flex flex-column justify-content-center align-items-center" style="min-height: 300px;">
-            <div class="mb-3">
-              <i class="bi bi-share" style="font-size: 4rem; color: #6a11cb;"></i>
-            </div>
-            <h5 class="card-title fw-bold">Share Schedules</h5>
-            <p class="card-text">Easily share your course schedules with your classmates and plan your studies together.</p>
-          </div>
+          <h5 class="card-title fw-bold">Share Schedules</h5>
+          <p class="card-text">
+            Easily share your course schedules with your classmates and plan
+            your studies together.
+          </p>
         </div>
       </div>
     </div>
   </div>
-
-  <footer class="bg-dark text-white text-center py-4 mt-5">
-    <div class="container">
-      <p class="mb-1">&copy; 2025 Smart Course Selector. All rights reserved.</p>
-    </div>
-  </footer>
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="{{ url_for('static', filename='js/home.js') }}"></script>
-</body>
-
-</html>
+</div>
+{% endblock %} {% block scripts %}
+<script src="{{ url_for('static', filename='js/home.js') }}"></script>
+{% endblock %}
