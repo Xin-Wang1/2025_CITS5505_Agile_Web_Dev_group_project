@@ -4,9 +4,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const searchInput = document.getElementById('unit-search');
   const clearBtn = document.getElementById('clear-search');
   const items = Array.from(document.querySelectorAll('#unit-list li'));
-  const scheduleForm = document.querySelector('form[action="/schedule/generation"]');
 
-  // Anti-shake function, delay the execution of search filtering
+  // debounce helper
   const debounce = (fn, delay = 200) => {
     let timeout;
     return (...args) => {
@@ -15,43 +14,33 @@ document.addEventListener('DOMContentLoaded', () => {
     };
   };
 
-  // filter function
+  // actual filter logic
   const filterItems = () => {
-    const q = searchInput.value.trim().toLowerCase();
-    items.forEach(li => {
-      const nameElement = li.querySelector('.unit-name');
-      if (nameElement) { // check if nameElement exists
-        const name = nameElement.textContent.toLowerCase();
-        li.style.display = name.includes(q) ? '' : 'none';
-      } else {
-        li.style.display = 'none'; 
-      }
-    });
-  };
+  const q = searchInput.value.trim().toLowerCase();
+  items.forEach(li => {
+    const nameElement = li.querySelector('.unit-name');
+    if (nameElement) { // Check if the .unit-name element exists
+      const name = nameElement.textContent.toLowerCase();
+      li.style.display = name.includes(q) ? '' : 'none';
+    } else {
+      li.style.display = 'none'; // Hide items without a .unit-name element
+    }
+  });
+};
 
-  // 绑定事件
+  // wire up events
   searchInput.addEventListener('input', debounce(filterItems, 200));
   clearBtn.addEventListener('click', () => {
     searchInput.value = '';
     filterItems();
     searchInput.focus();
   });
-
-  // Form submission validation: Check if a course is selected
-  if (scheduleForm) {
-    scheduleForm.addEventListener('submit', (event) => {
-      if (selectedUnitIds.length === 0) {
-        event.preventDefault(); // prevent form submission
-        alert('choose at least one unit！');
-      }
-    });
-  }
 });
 
-// selectUnit 
-function selectUnit(name, id) {
+
+function selectUnit(name,id) {
   if (selectedUnitIds.includes(id)) {
-    alert(`${name} is choosen already!`);
+    alert(`${name} is already selected.`);
     return;
   }
   const selectedUnits = document.getElementById('selected-units');
@@ -62,20 +51,21 @@ function selectUnit(name, id) {
       <strong>${name}</strong>
       <button class="btn btn-sm btn-danger float-end" onclick="removeUnit(${id}, this)">Remove</button>
     </div>
+    
   `;
   selectedUnits.appendChild(unitItem);
-  // add to selectedUnitIds array
+    // Add the unit ID to the selectedUnitIds array
   selectedUnitIds.push(id);
-  // update hidden input field
+    // Update the hidden input field with the selected unit IDs
   document.getElementById('selected-units-input').value = JSON.stringify(selectedUnitIds);
 }
-
-// removeUnit
-function removeUnit(id, button) {
+function removeUnit(id,button) {
   const unitItem = button.parentElement.parentElement;
   unitItem.remove();
-  // remove from selectedUnitIds array
+
+  // Remove the unit ID from the selectedUnitIds array
   selectedUnitIds = selectedUnitIds.filter(unitId => unitId !== id);
-  // update hidden input field
+
+  // Update the hidden input field with the selected unit IDs
   document.getElementById('selected-units-input').value = JSON.stringify(selectedUnitIds);
 }
