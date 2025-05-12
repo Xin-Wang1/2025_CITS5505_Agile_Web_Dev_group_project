@@ -101,10 +101,7 @@ def resetpw_username(username):
             flash("Passwords do not match.", "danger")
             return render_template("resetpw_form.html", username=username)
 
-        user.password_hash = generate_password_hash(new_password)
-        db.session.commit()
-        flash("Password reset successful. You can now log in.", "success")
-        return redirect(url_for("login"))
+        return render_template("resetpw_form.html", username=username)
 
     return render_template("resetpw_form.html", username=username)
 
@@ -122,6 +119,7 @@ def logout():
 @app.route('/My_Schedule')
 @login_required
 def My_Schedule():
+    print(f"Request path: {request.path}")  # 调试：打印 request.path
     # find all schedules for the current user
     schedules = Schedule.query.filter_by(user_id=current_user.id).all()
     
