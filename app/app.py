@@ -17,7 +17,7 @@ from models import db
 from flask_migrate import Migrate
 from datetime import datetime
 import json
-from forms import LoginForm, RegisterForm
+from forms import LoginForm, RegisterForm, ResetPasswordForm
 from flask_wtf.csrf import CSRFProtect
 
 app = Flask(__name__)
@@ -117,6 +117,25 @@ def resetpw():
             return render_template("resetpw.html")
     return render_template("resetpw.html")
 
+# @app.route("/resetpw/<username>", methods=["GET", "POST"])
+# def resetpw_username(username):
+#     user = User.query.filter_by(username=username).first()
+#     if not user:
+#         flash("Invalid username.", "danger")
+#         return redirect(url_for("resetpw"))
+
+#     if request.method == "POST":
+#         new_password = request.form.get("new_password")
+#         confirm_password = request.form.get("confirm_password")
+
+#         if new_password != confirm_password:
+#             flash("Passwords do not match.", "danger")
+#             return render_template("resetpw_form.html", username=username)
+
+#         return render_template("resetpw_form.html", username=username)
+
+#     return render_template("resetpw_form.html", username=username)
+
 @app.route("/resetpw/<username>", methods=["GET", "POST"])
 def resetpw_username(username):
     user = User.query.filter_by(username=username).first()
@@ -124,17 +143,15 @@ def resetpw_username(username):
         flash("Invalid username.", "danger")
         return redirect(url_for("resetpw"))
 
-    if request.method == "POST":
-        new_password = request.form.get("new_password")
-        confirm_password = request.form.get("confirm_password")
+    form = ResetPasswordForm()
 
-        if new_password != confirm_password:
-            flash("Passwords do not match.", "danger")
-            return render_template("resetpw_form.html", username=username)
+    if form.validate_on_submit():
+        user.password_hash = generate_password_hash(form.new_password.data)
+        db.session.commit()
+        flash("Password reset successful. You can now log in.", "success")
+        return redirect(url_for("login"))
 
-        return render_template("resetpw_form.html", username=username)
-
-    return render_template("resetpw_form.html", username=username)
+    return render_template("resetpw_form.html", username=username, form=form)
 
 @app.route("/dashboard")
 @login_required

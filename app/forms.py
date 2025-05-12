@@ -38,3 +38,14 @@ class RegisterForm(FlaskForm):
         existing_user = User.query.filter_by(username=username.data).first()
         if existing_user:
             raise ValidationError("This username is already taken. Please choose a different one.")
+        
+class ResetPasswordForm(FlaskForm):
+    new_password = PasswordField("New Password", validators=[
+        DataRequired(),
+        Length(min=6)
+    ])
+    confirm_password = PasswordField("Confirm Password", validators=[
+        DataRequired(),
+        EqualTo("new_password", message="Passwords must match")
+    ])
+    submit = SubmitField("Reset Password")
