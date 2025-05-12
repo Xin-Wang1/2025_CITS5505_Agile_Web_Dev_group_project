@@ -120,3 +120,40 @@ main.container {
     font-size: 1.1rem;
     vertical-align: middle;
 }
+
+/* Custom dropdown styles for My_Schedule page */
+.myschedule-dropdown-container {
+    justify-content: flex-start !important; /* Move the entire dropdown to the left */
+    margin-left: 20px; /* Add left margin to shift the avatar left */
+}
+
+.myschedule-dropdown-menu {
+    left: 0 !important; /* Align dropdown menu to the left edge of the dropdown */
+    right: auto !important; /* Remove right alignment */
+    transform: translateY(0); /* Adjust initial transform for left-aligned menu */
+    min-width: 200px;
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.myschedule-dropdown:hover .myschedule-dropdown-menu {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@media (max-width: 768px) {
+    .myschedule-dropdown-menu {
+        min-width: 150px;
+        left: -20px !important; /* Adjust for mobile to align slightly left */
+        right: auto !important;
+    }
+
+    .myschedule-dropdown-container {
+        margin-left: 10px; /* Reduce left margin on mobile */
+    }
+}
