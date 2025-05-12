@@ -119,7 +119,7 @@ def logout():
 @app.route('/My_Schedule')
 @login_required
 def My_Schedule():
-    print(f"Request path: {request.path}")  # 调试：打印 request.path
+    print(f"Request path: {request.path}")  
     # find all schedules for the current user
     schedules = Schedule.query.filter_by(user_id=current_user.id).all()
     
@@ -152,7 +152,7 @@ def My_Schedule():
 def delete_schedule(schedule_id):
     schedule = Schedule.query.get_or_404(schedule_id)
     if schedule.user_id != current_user.id:
-        return jsonify({"success": False, "message": "无权删除此课程表"}), 403
+        return jsonify({"success": False, "message": "Have no right to delete this course schedule!"}), 403
     
     try:
         db.session.delete(schedule)

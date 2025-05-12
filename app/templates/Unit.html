@@ -119,12 +119,12 @@
 <script src="{{ url_for('static', filename='js/unit.js') }}"></script>
 <script>
   $(document).ready(function () {
-    // 下拉菜单点击交互
+    // pull down menu
     $(".dropdown > a").on("click", function (e) {
       e.preventDefault();
       $(this).siblings(".dropdown-menu").toggle();
     });
-    // 点击页面其他区域时隐藏下拉菜单
+    // hide dropdown menu when clicking outside
     $(document).on("click", function (e) {
       if (!$(e.target).closest(".dropdown").length) {
         $(".dropdown-menu").hide();

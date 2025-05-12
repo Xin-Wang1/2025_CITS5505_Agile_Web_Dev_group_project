@@ -6,26 +6,26 @@
 }
 
 /* Custom dropdown styles for Unit page */
-/* 调整父容器，移除右对齐 */
+
 .navbar .col-md-3.text-end {
     text-align: left !important;
     justify-content: flex-start !important;
-    padding-left: 20px; /* 增加左内边距 */
+    padding-left: 20px; 
 }
 
-/* 调整头像栏位置 */
+
 .navbar .col-md-3 .dropdown {
     display: flex;
     align-items: center;
-    margin-left: 30px !important; /* 强制左移 */
+    margin-left: 30px !important; 
 }
 
-/* 调整下拉菜单位置 */
+
 .navbar .col-md-3 .dropdown-menu {
     left: 0 !important;
     right: auto !important;
-    margin-left: 15px !important; /* 微调菜单位置 */
-    transform: translateY(0) translateX(-15px) !important; /* 强制左移菜单 */
+    margin-left: 15px !important; 
+    transform: translateY(0) translateX(-15px) !important; 
 }
 
 @media (max-width: 768px) {
@@ -34,12 +34,12 @@
     }
 
     .navbar .col-md-3 .dropdown {
-        margin-left: 15px !important; /* 小屏幕上减小左边距 */
+        margin-left: 15px !important; 
     }
 
     .navbar .col-md-3 .dropdown-menu {
         left: 0 !important;
         margin-left: 10px !important;
-        transform: translateY(0) translateX(-10px) !important; /* 小屏幕上调整菜单位置 */
+        transform: translateY(0) translateX(-10px) !important; 
     }
 }
