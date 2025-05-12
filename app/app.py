@@ -16,11 +16,12 @@ from routes.myschedule import myschedule_bp
 from models import db
 from flask_migrate import Migrate
 from datetime import datetime
+import json
 
 app = Flask(__name__)
 app.config.from_object(Config)
 
-# Initialize db and migrate
+# initialize database
 db.init_app(app)
 migrate = Migrate(app, db)
 
@@ -162,6 +163,49 @@ def delete_schedule(schedule_id):
         db.session.rollback()
         return jsonify({"success": False, "message": str(e)}), 500
 
+# upload unit
+@app.route("/schedule/generation", methods=["POST"])
+@login_required
+def schedule_generation():
+    # get selected unit ids from the request
+    selected_unit_ids = request.form.get('selected_units')
+    
+    # check if selected_unit_ids is None or empty
+    if not selected_unit_ids:
+        flash('choose at least one unit！', 'danger')
+        return redirect(url_for('unit.upload_unit'))
+    
+    try:
+        # try to parse the JSON string into a Python list
+        selected_unit_ids = json.loads(selected_unit_ids)
+        # check if the list is empty
+        if not selected_unit_ids:
+            flash('choose at least one unit！', 'danger')
+            return redirect(url_for('unit.upload_unit'))
+    except json.JSONDecodeError:
+        # catcjh JSON parsing errors
+        flash('Try again, unvaliable choose！', 'danger')
+        return redirect(url_for('unit.upload_unit'))
+    
+    # create a new schedule
+    new_schedule = Schedule(
+        user_id=current_user.id,
+        name=f"Schedule {current_user.username} {len(current_user.schedules) + 1}",
+        created_at=datetime.utcnow()
+    )
+    db.session.add(new_schedule)
+    
+    # link selected units to the new schedule
+    for unit_id in selected_unit_ids:
+        classtimes = Classtime.query.filter_by(unit_id=unit_id).all()
+        for classtime in classtimes:
+            new_schedule.classtimes.append(classtime)
+    
+    db.session.commit()
+    
+    flash('Schedule Generate！', 'success')
+    return redirect(url_for('My_Schedule'))
+
 @app.route("/ShareSchedule")
 @login_required
 def ShareSchedule():
@@ -174,7 +218,7 @@ def view_shared_schedule(id):
     return render_template("ShareSchedule.html", post=post)
 
 def ShareSchedule(id):
-    # fetch the shared schedule or 404 if not found
+    # get the shared schedule by id
     post = Sharedschedule.query.get_or_404(id)
     return render_template("ShareSchedule.html", post=post)
 
