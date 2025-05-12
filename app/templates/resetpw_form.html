@@ -34,7 +34,9 @@
           <div class="login-card">
             <h2 class="text-center mb-4">Reset password for {{ username }}</h2>
 
-            <div class="alert alert-info" style="display: none;"></div>
+            <!-- <div class="alert alert-info" style="display: none;"></div> -->
+            <div class="alert alert-info d-none" role="alert" id="statusMessage"></div>
+
 
             <form method="POST" action="{{ url_for('resetpw_username', username=username) }}">
                 <div class="mb-3">

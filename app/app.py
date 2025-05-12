@@ -140,17 +140,28 @@ def logout():
     return redirect(url_for("home"))
 
 
-@app.route("/My_Schedule")
-# @login_required
+@app.route('/My_Schedule')
+@login_required
 def My_Schedule():
     return render_template("My_Schedule.html")
 
 
-@app.route("/ShareSchedule")
-@app.route("/ShareSchedule/<int:id>")
+# @app.route("/ShareSchedule")
+# @app.route("/ShareSchedule/<int:id>")
 # @login_required
+# def ShareSchedule():
+#     return render_template("ShareSchedule.html")
+
+@app.route("/ShareSchedule")
+@login_required
 def ShareSchedule():
     return render_template("ShareSchedule.html")
+
+@app.route("/ShareSchedule/<int:id>")
+@login_required
+def view_shared_schedule(id):
+    post = Sharedschedule.query.get_or_404(id)
+    return render_template("ShareSchedule.html", post=post)
 
 
 def ShareSchedule(id):
