@@ -84,7 +84,7 @@
           Select
         </button>
       </div>
-      <!-- Timeslots for the unit -->
+      <!-- schedule -->
       <ul class="mt-2">
         {% for timeslot in unit.class_times %}
         <li>
@@ -103,12 +103,12 @@
 
   <h3>Selected Units</h3>
   <ul class="list-group" id="selected-units">
-    <!-- Selected units will appear here -->
+    <!-- show the choosed units -->
   </ul>
 
-  <!-- Schedule Generate Button -->
+  <!-- generate button -->
   <div class="mt-4">
-    <form method="POST" action="{{ url_for('schedule.generation') }}">
+    <form method="POST" action="{{ url_for('schedule_generation') }}">
       <input type="hidden" name="selected_units" id="selected-units-input" />
       <button type="submit" class="btn btn-success">Schedule Generate</button>
     </form>
@@ -119,12 +119,12 @@
 <script src="{{ url_for('static', filename='js/unit.js') }}"></script>
 <script>
   $(document).ready(function () {
-    // pull down menu
+    // dropdown menu
     $(".dropdown > a").on("click", function (e) {
       e.preventDefault();
       $(this).siblings(".dropdown-menu").toggle();
     });
-    // hide dropdown menu when clicking outside
+    // click outside to close the dropdown
     $(document).on("click", function (e) {
       if (!$(e.target).closest(".dropdown").length) {
         $(".dropdown-menu").hide();
