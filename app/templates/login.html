@@ -44,18 +44,31 @@
             {% endif %}
             {% endwith %}
 
-            <form method="POST" action="{{ url_for('login') }}">
+            <!-- <form method="POST" action="{{ url_for('login') }}">
               <div class="mb-3">
                 <input type="text" name="username" class="form-control" placeholder="Username" required>
               </div>
               <div class="mb-3 password-toggle">
                 <input type="password" name="password" id="password" class="form-control" placeholder="Password"
                   required>
-                <!-- <i class="bi bi-eye-slash" id="togglePassword" style="cursor: pointer; position: absolute; right: 15px; top: 38px;"></i> -->
               </div>
               <div class="d-grid">
                 <button type="submit" class="btn btn-primary-custom w-100">Sign In</button>
               </div>
+            </form> -->
+
+            <form method="POST">
+              {{ form.hidden_tag() }}
+              <div class="mb-3">
+                {{ form.username.label }} {{ form.username(class="form-control") }}
+              </div>
+              <div class="mb-3">
+                {{ form.password.label }} {{ form.password(class="form-control") }}
+              </div>
+              <div class="d-grid">
+                {{ form.submit(class="btn btn-primary-custom") }}
+              </div>
+              
             </form>
 
             <div class="text-center mt-3">
