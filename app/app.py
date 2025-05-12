@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, request, flash
+from flask import Flask, render_template, redirect, url_for, request, flash, jsonify
 from models import User, Unit, Classtime, Schedule, Sharedschedule
 from config import Config
 from flask_login import (
@@ -15,6 +15,7 @@ from routes.schedule import schedule_bp
 from routes.myschedule import myschedule_bp
 from models import db
 from flask_migrate import Migrate
+from datetime import datetime
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -27,11 +28,9 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "login"
 
-
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
-
 
 @app.route("/")
 def home():
@@ -39,7 +38,6 @@ def home():
         return render_template("home.html", name=current_user.username)
     else:
         return render_template("home.html", name="Guest")
-
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -50,7 +48,6 @@ def login():
             return redirect(url_for("home"))
         flash("Invalid credentials")
     return render_template("login.html")
-
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -77,20 +74,6 @@ def register():
 
     return render_template("register.html")
 
-
-# @app.route('/resetpw', methods=['GET', 'POST'])
-# def resetpw():
-#     if request.method == 'POST':
-#         email = request.form.get('email')
-#         if email:
-#             # 这里可以加发送重置密码邮件的逻辑
-#             flash('If the email is registered, a reset link has been sent.', 'info')
-#             return redirect(url_for('login'))
-#         else:
-#             flash('Please enter your email address.', 'danger')
-#     return render_template('resetpw.html')
-
-
 @app.route("/resetpw", methods=["GET", "POST"])
 def resetpw():
     if request.method == "POST":
@@ -102,7 +85,6 @@ def resetpw():
             flash("Username not found.", "danger")
             return render_template("resetpw.html")
     return render_template("resetpw.html")
-
 
 @app.route("/resetpw/<username>", methods=["GET", "POST"])
 def resetpw_username(username):
@@ -126,12 +108,10 @@ def resetpw_username(username):
 
     return render_template("resetpw_form.html", username=username)
 
-
 @app.route("/dashboard")
 @login_required
 def dashboard():
     return render_template("dashboard.html", name=current_user.username)
-
 
 @app.route("/logout")
 @login_required
@@ -139,18 +119,50 @@ def logout():
     logout_user()
     return redirect(url_for("home"))
 
-
 @app.route('/My_Schedule')
 @login_required
 def My_Schedule():
-    return render_template("My_Schedule.html")
+    # find all schedules for the current user
+    schedules = Schedule.query.filter_by(user_id=current_user.id).all()
+    
+    # transform schedules data for rendering
+    schedules_data = []
+    for schedule in schedules:
+        classtimes = []
+        for classtime in schedule.classtimes:
+            classtimes.append({
+                'id': classtime.id,
+                'unit_id': classtime.unit_id,
+                'unit_name': classtime.unit.name if classtime.unit else 'Unknown Unit',
+                'type': classtime.type,
+                'day_of_week': classtime.day_of_week,
+                'start_time': classtime.start_time.strftime('%H:%M') if classtime.start_time else None,
+                'end_time': classtime.end_time.strftime('%H:%M') if classtime.end_time else None,
+                'created_at': classtime.created_at.isoformat() if classtime.created_at else None
+            })
+        schedules_data.append({
+            'id': schedule.id,
+            'name': schedule.name,
+            'created_at': schedule.created_at.isoformat() if schedule.created_at else None,
+            'classtimes': classtimes
+        })
+    
+    return render_template("My_Schedule.html", schedules=schedules_data)
 
-
-# @app.route("/ShareSchedule")
-# @app.route("/ShareSchedule/<int:id>")
-# @login_required
-# def ShareSchedule():
-#     return render_template("ShareSchedule.html")
+@app.route("/schedule/delete/<int:schedule_id>", methods=["POST"])
+@login_required
+def delete_schedule(schedule_id):
+    schedule = Schedule.query.get_or_404(schedule_id)
+    if schedule.user_id != current_user.id:
+        return jsonify({"success": False, "message": "无权删除此课程表"}), 403
+    
+    try:
+        db.session.delete(schedule)
+        db.session.commit()
+        return jsonify({"success": True})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"success": False, "message": str(e)}), 500
 
 @app.route("/ShareSchedule")
 @login_required
@@ -163,24 +175,20 @@ def view_shared_schedule(id):
     post = Sharedschedule.query.get_or_404(id)
     return render_template("ShareSchedule.html", post=post)
 
-
 def ShareSchedule(id):
     # fetch the shared schedule or 404 if not found
     post = Sharedschedule.query.get_or_404(id)
     return render_template("ShareSchedule.html", post=post)
-
 
 @app.route("/blog")
 def blog():
     schedules = Sharedschedule.query.order_by(Sharedschedule.created_at.desc()).all()
     return render_template("blog.html", schedules=schedules, name=current_user.username)
 
-
 app.register_blueprint(unit_bp, url_prefix="/unit")
-
 app.register_blueprint(schedule_bp, url_prefix="/schedule")
-
 app.register_blueprint(myschedule_bp, url_prefix='/myschedule')
+
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
