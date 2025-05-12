@@ -5,49 +5,46 @@
 <link href="{{ url_for('static', filename='css/shareschedule.css') }}" rel="stylesheet">
 {% endblock %}
 
-<body>
-  {% block content %}
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-12 main-content">
-        <h1>Share Your Timetable</h1>
-        <p class="text-muted">Post your schedule and comment below.</p>
+{% block content %}
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12 main-content">
+      <h1>Share Your Timetable</h1>
+      <p class="text-muted">Post your schedule and comment below.</p>
 
-        <!-- Posts List -->
-        <div id="postsList" class="mb-4"></div>
+      <!-- Posts List -->
+      <div id="postsList" class="mb-4"></div>
 
-        <!-- New Post Form -->
-        <div class="card mb-4">
-          <div class="card-body">
-            <h5 class="card-title">Post a New Timetable</h5>
-            <form id="postForm">
-              <div class="form-group">
-                <label for="postUser">Your Name</label>
-                <input type="text" class="form-control" id="postUser" placeholder="Enter your name" required>
-              </div>
-              <div class="form-group">
-                <label for="postTitle">Title</label>
-                <input type="text" class="form-control" id="postTitle" placeholder="Enter post title" required>
-              </div>
-              <div class="form-group">
-                <label for="postContent">Timetable Details</label>
-                <textarea class="form-control" id="postContent" rows="4"
-                  placeholder="Paste or describe your timetable..." required></textarea>
-              </div>
-              <div class="form-group">
-                <label for="postFile">Attach a File (optional)</label>
-                <input type="file" class="form-control-file" id="postFile">
-              </div>
-              <button type="submit" class="btn btn-primary">Post</button>
-            </form>
-          </div>
+      <!-- New Post Form -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">Post a New Timetable</h5>
+          <form id="postForm">
+            <div class="form-group">
+              <label for="postUser">Your Name</label>
+              <input type="text" class="form-control" id="postUser" placeholder="Enter your name" required>
+            </div>
+            <div class="form-group">
+              <label for="postTitle">Title</label>
+              <input type="text" class="form-control" id="postTitle" placeholder="Enter post title" required>
+            </div>
+            <div class="form-group">
+              <label for="postContent">Timetable Details</label>
+              <textarea class="form-control" id="postContent" rows="4" placeholder="Paste or describe your timetable..." required></textarea>
+            </div>
+            <div class="form-group">
+              <label for="postFile">Attach a File (optional)</label>
+              <input type="file" class="form-control-file" id="postFile">
+            </div>
+            <button type="submit" class="btn btn-primary">Post</button>
+          </form>
         </div>
       </div>
     </div>
   </div>
-  {% endblock %}
+</div>
+{% endblock %}
 
-  {% block extra_js %}
-  <script src="{{ url_for('static', filename='js/shareschedule.js') }}"></script>
-  {% endblock %}
-</body>
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/shareschedule.js') }}"></script>
+{% endblock %}

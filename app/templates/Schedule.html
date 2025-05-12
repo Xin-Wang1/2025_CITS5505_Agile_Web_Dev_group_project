@@ -10,78 +10,107 @@
 {% block content %}
 <main class="container flex-grow-1 my-4">
 
-<!-- Weekly Calendar -->
-<div class="table-responsive">
-  <h2 class="mb-4">Generated Schedule</h2>
-  <table class="table table-bordered text-center">
-    <thead class="table-light">
-      <tr>
-        <th>Time</th>
-        <th>Monday</th>
-        <th>Tuesday</th>
-        <th>Wednesday</th>
-        <th>Thursday</th>
-        <th>Friday</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for hour in range(8, 21) %}
-      <tr>
-        <td>{{ hour }}:00 - {{ hour + 1 }}:00</td>
-        <td id="monday-{{ hour }}"></td>
-        <td id="tuesday-{{ hour }}"></td>
-        <td id="wednesday-{{ hour }}"></td>
-        <td id="thursday-{{ hour }}"></td>
-        <td id="friday-{{ hour }}"></td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-</div>
+   <!-- Weekly Calendar -->
+  <div class="table-responsive">
+    <h2 class="mb-4">Generated Schedule</h2>
+    <table class="table table-bordered text-center">
+      <thead class="table-light">
+        <tr>
+          <th>Time</th>
+          <th>Monday</th>
+          <th>Tuesday</th>
+          <th>Wednesday</th>
+          <th>Thursday</th>
+          <th>Friday</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for hour in range(8, 21) %}
+        <tr>
+          <td>{{ hour }}:00 – {{ hour + 1 }}:00</td>
+          <td class="slot-cell" data-day="Monday"    data-hour="{{ hour }}"></td>
+          <td class="slot-cell" data-day="Tuesday"   data-hour="{{ hour }}"></td>
+          <td class="slot-cell" data-day="Wednesday" data-hour="{{ hour }}"></td>
+          <td class="slot-cell" data-day="Thursday"  data-hour="{{ hour }}"></td>
+          <td class="slot-cell" data-day="Friday"    data-hour="{{ hour }}"></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 
-<!-- Selected Units -->
-<h3>Selected Units</h3>
-<ul class="list-group mb-4">
-  {% for unit in selected_units %}
-  <li class="list-group-item">
-    <strong>{{ unit.name }}</strong>
-    <p>{{ unit.credits }}</p>
-    {% for  times in unit.class_times %}
-    <p>Time slot:{{ times.start_time}}-{{ times.end_time}}</p>
+   <!-- Selected Units -->
+  <h3>Selected Units</h3>
+  <ul class="list-group mb-4">
+    {% for unit in selected_units %}
+    <li class="list-group-item">
+      <strong>{{ unit.name }} ({{ unit.credit_points }} credits)</strong>
+      {% for times in unit.class_times %}
+      {% set hour = times.start_time.hour %}
+      <div class="form-check">
+        <input
+          class="form-check-input timeslot-checkbox"
+          type="checkbox"
+          id="timeslot-{{ unit.id }}-{{ hour }}"
+          data-day="{{ times.day_of_week }}"
+          data-hour="{{ hour }}"
+          data-start-hour="{{ times.start_time }}"
+          data-end-hour="{{ times.end_time }}"
+          data-unit-name="{{ unit.name }}"
+          data-class-type="{{ times.type }}"
+          data-classtime-id="{{ times.id }}"
+          >
+        <label
+          class="form-check-label"
+          for="timeslot-{{ unit.id }}-{{ hour }}"
+        >
+         {{times.day_of_week}} {{times.type}}: {{ times.start_time }} – {{ times.end_time }}
+        </label>
+      </div>
+      {% endfor %}
+    </li>
     {% endfor %}
-  </li>
-  {% endfor %}
-</ul>
+  </ul>
 
 <!-- Total Credits -->
 <div class="alert alert-info">
-  <strong>Total Credits:</strong> 10
+  <strong>Total Credits:</strong> {{ total_credits }}
 </div>
 
 <hr class="my-4">
 
 <!-- Adjust Preferences -->
 <h3>Adjust Preferences</h3>
-<form method="POST" action="/adjust-schedule">
+<div id="adjust-preferences-form" class="mb-4">
   <div class="mb-3">
     <label for="unavailable-day" class="form-label">Mark a Day as Unavailable</label>
-    <select class="form-select" id="unavailable-day" name="unavailable-day">
-      <option value="Monday">Monday</option>
-      <option value="Tuesday">Tuesday</option>
-      <option value="Wednesday">Wednesday</option>
-      <option value="Thursday">Thursday</option>
-      <option value="Friday">Friday</option>
+    <select class="form-select" id="unavailable-day">
+      <option>Monday</option><option>Tuesday</option>
+      <option>Wednesday</option><option>Thursday</option>
+      <option>Friday</option>
     </select>
   </div>
   <div class="mb-3">
     <label for="unavailable-time" class="form-label">Mark a Time Slot as Unavailable</label>
-    <input type="text" class="form-control" id="unavailable-time" name="unavailable-time" placeholder="e.g., 10:00 - 12:00">
+    <input type="text" class="form-control" id="unavailable-time" placeholder="e.g., 10:00 - 12:00">
   </div>
-  <button type="submit" class="btn btn-primary">Update Preferences</button>
+  <button id="add-unavailable-btn" class="btn btn-primary" type="button">
+    Add Unavailable
+  </button>
+</div>
+
+<form id="generate-form" method="POST" action="{{ url_for('schedule.generate_schedule') }}">
+  {% for unit in selected_units %}
+    <input type="hidden" name="unit_ids" value="{{ unit.id }}">
+  {% endfor %}
+  <div id="hidden-inputs"></div>
+  <button class="btn btn-success">Generate Schedule</button>
 </form>
 </main>
 {% endblock %} 
 {% block scripts %}
-  <script src="{{ url_for('static', filename='js/unit.js') }}"></script>
+<script src="{{ url_for('static', filename='js/schedule.js') }}"></script>
+
+
 {% endblock %}
 
