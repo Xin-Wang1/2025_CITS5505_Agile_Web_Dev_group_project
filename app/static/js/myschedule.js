@@ -21,9 +21,14 @@ function generateTimetableStructure(scheduleId) {
 function renderTimetable(schedule) {
   schedule.classtimes.forEach((classtime) => {
     const startHour = parseInt(classtime.start_time.split(":")[0]);
+    const endHour = parseInt(classtime.end_time.split(":")[0]);
+    const span = endHour - startHour; // Calculate the number of hours the class spans
     const cellId = `schedule-${schedule.id}-${classtime.day_of_week}-${startHour}`;
     const cell = document.getElementById(cellId);
+
     if (cell) {
+      // Set the rowspan for the first cell
+      cell.setAttribute("rowspan", span);
       cell.innerHTML = `
         <div class="slot slot-${classtime.type.toLowerCase()}">
           <strong>${classtime.unit_name}</strong><br>
@@ -31,6 +36,16 @@ function renderTimetable(schedule) {
           ${classtime.start_time} – ${classtime.end_time}
         </div>
       `;
+      cell.classList.add("selected");
+
+      // Hide the subsequent cells in the same column
+      for (let hour = startHour + 1; hour < endHour; hour++) {
+        const nextCellId = `schedule-${schedule.id}-${classtime.day_of_week}-${hour}`;
+        const nextCell = document.getElementById(nextCellId);
+        if (nextCell) {
+          nextCell.style.display = "none";
+        }
+      }
     }
   });
 }

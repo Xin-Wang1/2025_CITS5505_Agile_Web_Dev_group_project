@@ -59,6 +59,7 @@
           data-unit-name="{{ unit.name }}"
           data-class-type="{{ times.type }}"
           data-classtime-id="{{ times.id }}"
+          data-unit-id="{{ unit.id }}"
           >
         <label
           class="form-check-label"
@@ -98,7 +99,36 @@
     Add Unavailable
   </button>
 </div>
-
+<div id="adjust-preferences-form" class="mb-4">
+  <div class="mb-3">
+    <label for="preferred-days" class="form-label">Preferred Days of the Week</label>
+    <div id="preferred-days" class="form-check">
+      <div>
+        <input type="checkbox" class="form-check-input" id="preferred-monday" value="Monday">
+        <label class="form-check-label" for="preferred-monday">Monday</label>
+      </div>
+      <div>
+        <input type="checkbox" class="form-check-input" id="preferred-tuesday" value="Tuesday">
+        <label class="form-check-label" for="preferred-tuesday">Tuesday</label>
+      </div>
+      <div>
+        <input type="checkbox" class="form-check-input" id="preferred-wednesday" value="Wednesday">
+        <label class="form-check-label" for="preferred-wednesday">Wednesday</label>
+      </div>
+      <div>
+        <input type="checkbox" class="form-check-input" id="preferred-thursday" value="Thursday">
+        <label class="form-check-label" for="preferred-thursday">Thursday</label>
+      </div>
+      <div>
+        <input type="checkbox" class="form-check-input" id="preferred-friday" value="Friday">
+        <label class="form-check-label" for="preferred-friday">Friday</label>
+      </div>
+    </div>
+  </div>
+  <button id="apply-preferences-btn" class="btn btn-primary" type="button">
+    Apply Preferences
+  </button>
+</div>
 <form id="generate-form" method="POST" action="{{ url_for('schedule.generate_schedule') }}">
   {% for unit in selected_units %}
     <input type="hidden" name="unit_ids" value="{{ unit.id }}">
