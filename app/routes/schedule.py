@@ -9,7 +9,7 @@ schedule_bp = Blueprint('schedule', __name__)
 
 
 @schedule_bp.route('/',methods=['POST'])
-#@login_required
+@login_required
 def generation():
     if request.method == 'POST':
         # Get selected unit IDs from the form
@@ -23,7 +23,9 @@ def generation():
         # Pass the selected units to the schedule page
          # Prepare the data to pass to the schedule page
         schedule_data = []
+        total_credits = 0 
         for unit in selected_units:
+            total_credits += unit.credit_points
             for timeslot in unit.class_times:
                 schedule_data.append({
                     "unit_name": unit.name,
@@ -33,7 +35,7 @@ def generation():
                     "type": timeslot.type
                 })
         print(f"Schedule data: {schedule_data}")
-        return render_template('schedule.html', selected_units=selected_units,schedule_data=schedule_data)
+        return render_template('schedule.html', selected_units=selected_units,schedule_data=schedule_data,total_credits=total_credits)
 
 @schedule_bp.route('/generate_schedule', methods=['POST'])
 #@login_required
@@ -44,7 +46,7 @@ def generate_schedule():
     print(f"Selected classtime IDs: {selected_classtime_ids}")
     print(f"Unavailable slots: {unavailable_slots}")
      # 2) Create and persist the Schedule
-    sched = Schedule(user_id=1, name="Auto-Generated")
+    sched = Schedule(user_id=current_user.id, name="Auto-Generated")
     db.session.add(sched)
 
     # 3) For each selected class-timeslot, look up its Classtime record
