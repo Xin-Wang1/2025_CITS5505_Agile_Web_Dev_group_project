@@ -1,5 +1,5 @@
 from flask import Flask, render_template, redirect, url_for, request, flash, jsonify
-from models import User, Unit, Classtime, Schedule, Sharedschedule
+from models import User, Unit, Classtime, Schedule, Message
 from config import Config
 from flask_login import (
     LoginManager,
@@ -16,6 +16,8 @@ from models import db
 from flask_migrate import Migrate
 from datetime import datetime
 import json
+import os
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -27,6 +29,15 @@ migrate = Migrate(app, db)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "login"
+
+# File upload configuration
+UPLOAD_FOLDER = 'static/uploads'
+ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png', 'pdf'}
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['MAX_CONTENT_LENGTH'] = 10 * 1024 * 1024  # 10MB limit
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -69,7 +80,7 @@ def register():
         new_user = User(username=username, password_hash=hashed_pw)
         db.session.add(new_user)
         db.session.commit()
-        flash("Registration successful. You can now log in.", "success")
+        flash("Registration successful. You can now log Calculating... in.", "success")
         return redirect(url_for("login"))
 
     return render_template("register.html")
@@ -266,26 +277,65 @@ def generate_schedule():
                          selected_units=serialized_units,
                          total_credits=total_credits)
 
-@app.route("/ShareSchedule")
+@app.route("/messages")
 @login_required
-def ShareSchedule():
-    return render_template("ShareSchedule.html")
+def messages():
+    # Get sent and received messages
+    sent_messages = Message.query.filter_by(sender_id=current_user.id).order_by(Message.created_at.desc()).all()
+    received_messages = Message.query.filter_by(receiver_id=current_user.id).order_by(Message.created_at.desc()).all()
+    return render_template("ShareSchedule.html", sent_messages=sent_messages, received_messages=received_messages)
 
-@app.route("/ShareSchedule/<int:id>")
+@app.route("/messages/send", methods=["POST"])
 @login_required
-def view_shared_schedule(id):
-    post = Sharedschedule.query.get_or_404(id)
-    return render_template("ShareSchedule.html", post=post)
+def send_message():
+    receiver_username = request.form.get("receiver_username").strip()
+    content = request.form.get("content").strip()
+    file = request.files.get("file")
 
-def ShareSchedule(id):
-    # Get the shared schedule by ID
-    post = Sharedschedule.query.get_or_404(id)
-    return render_template("ShareSchedule.html", post=post)
+    # Validate input
+    if not receiver_username or not content:
+        flash("接收者用户名和消息内容不能为空！", "danger")
+        return redirect(url_for("messages"))
 
-@app.route("/blog")
-def blog():
-    schedules = Sharedschedule.query.order_by(Sharedschedule.created_at.desc()).all()
-    return render_template("blog.html", schedules=schedules, name=current_user.username)
+    # Find receiver
+    receiver = User.query.filter_by(username=receiver_username).first()
+    if not receiver:
+        flash("接收者用户名不存在！", "danger")
+        return redirect(url_for("messages"))
+    if receiver.id == current_user.id:
+        flash("不能给自己发送消息！", "danger")
+        return redirect(url_for("messages"))
+
+    # Handle file upload
+    file_url = None
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        file.save(file_path)
+        file_url = f"/{file_path}"
+
+    # Create new message
+    new_message = Message(
+        sender_id=current_user.id,
+        receiver_id=receiver.id,
+        content=content,
+        file_url=file_url,
+        created_at=datetime.utcnow()
+    )
+    db.session.add(new_message)
+    db.session.commit()
+
+    flash("消息发送成功！", "success")
+    return redirect(url_for("messages"))
+
+@app.route("/messages/search", methods=["GET"])
+@login_required
+def search_users():
+    query = request.args.get("query", "").strip()
+    if not query:
+        return jsonify([])
+    users = User.query.filter(User.username.ilike(f"%{query}%")).all()
+    return jsonify([{"id": user.id, "username": user.username} for user in users])
 
 app.register_blueprint(unit_bp, url_prefix="/unit")
 app.register_blueprint(myschedule_bp, url_prefix='/myschedule')
