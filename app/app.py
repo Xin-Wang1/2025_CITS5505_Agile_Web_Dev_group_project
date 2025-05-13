@@ -294,16 +294,16 @@ def send_message():
 
     # Validate input
     if not receiver_username or not content:
-        flash("接收者用户名和消息内容不能为空！", "danger")
+        flash("Recipient and message content cannot be empty！", "danger")
         return redirect(url_for("messages"))
 
     # Find receiver
     receiver = User.query.filter_by(username=receiver_username).first()
     if not receiver:
-        flash("接收者用户名不存在！", "danger")
+        flash("Recipient does not exist！", "danger")
         return redirect(url_for("messages"))
     if receiver.id == current_user.id:
-        flash("不能给自己发送消息！", "danger")
+        flash("Can't send messages to myself！", "danger")
         return redirect(url_for("messages"))
 
     # Handle file upload
@@ -325,7 +325,7 @@ def send_message():
     db.session.add(new_message)
     db.session.commit()
 
-    flash("消息发送成功！", "success")
+    flash("Sent successfully！", "success")
     return redirect(url_for("messages"))
 
 @app.route("/messages/search", methods=["GET"])

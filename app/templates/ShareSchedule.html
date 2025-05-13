@@ -16,7 +16,7 @@
   <body>
     {% extends "base.html" %} {% block content %}
     <div class="container main-content">
-      <h2>私信</h2>
+      <h2>Messages</h2>
       <hr />
 
       <!-- Flash messages -->
@@ -33,7 +33,7 @@
           data-dismiss="alert"
           aria-label="Close"
         >
-          <span aria-hidden="true">&times;</span>
+          <span aria-hidden="true">×</span>
         </button>
       </div>
       {% endfor %} {% endif %} {% endwith %}
@@ -41,7 +41,7 @@
       <!-- Send Message Form -->
       <div class="card mb-4">
         <div class="card-body">
-          <h5 class="card-title">发送新消息</h5>
+          <h5 class="card-title">Send New Message</h5>
           <form
             id="messageForm"
             method="POST"
@@ -49,31 +49,31 @@
             enctype="multipart/form-data"
           >
             <div class="form-group">
-              <label for="receiver_username">接收者用户名</label>
+              <label for="receiver_username">Recipient Username</label>
               <input
                 type="text"
                 class="form-control"
                 id="receiver_username"
                 name="receiver_username"
-                placeholder="输入用户名"
+                placeholder="Enter username"
                 required
                 autocomplete="off"
               />
               <div id="search-results" class="list-group mt-2"></div>
             </div>
             <div class="form-group">
-              <label for="content">消息内容</label>
+              <label for="content">Message Content</label>
               <textarea
                 class="form-control"
                 id="content"
                 name="content"
                 rows="4"
-                placeholder="输入消息内容"
+                placeholder="Enter message content"
                 required
               ></textarea>
             </div>
             <div class="form-group">
-              <label for="file">附件（可选）</label>
+              <label for="file">Attachment (Optional)</label>
               <input
                 type="file"
                 class="form-control-file"
@@ -82,24 +82,24 @@
                 accept=".jpg,.jpeg,.png,.pdf"
               />
             </div>
-            <button type="submit" class="btn btn-primary">发送</button>
+            <button type="submit" class="btn btn-primary">Send</button>
           </form>
         </div>
       </div>
 
       <!-- Received Messages -->
-      <h3>收件箱</h3>
+      <h3>Inbox</h3>
       <div id="receivedMessages">
         {% for message in received_messages %}
         <div class="card mb-3">
           <div class="card-body">
             <p class="card-text">
-              <strong>来自：</strong> {{ message.sender.username }}
+              <strong>From:</strong> {{ message.sender.username }}
             </p>
             <p class="card-text">{{ message.content }}</p>
             {% if message.file_url %}
             <p class="card-text">
-              <strong>附件：</strong>
+              <strong>Attachment:</strong>
               {% if message.file_url.endswith(('.jpg', '.jpeg', '.png')) %}
               <img
                 src="{{ message.file_url }}"
@@ -107,33 +107,33 @@
                 alt="Attachment"
               />
               {% else %}
-              <a href="{{ message.file_url }}" download>下载附件</a>
+              <a href="{{ message.file_url }}" download>Download Attachment</a>
               {% endif %}
             </p>
             {% endif %}
             <p class="post-meta">
-              发送时间：{{ message.created_at.strftime('%Y-%m-%d %H:%M:%S') }}
+              Sent at: {{ message.created_at.strftime('%Y-%m-%d %H:%M:%S') }}
             </p>
           </div>
         </div>
         {% else %}
-        <p>暂无接收的消息。</p>
+        <p>No messages received yet.</p>
         {% endfor %}
       </div>
 
       <!-- Sent Messages -->
-      <h3>发件箱</h3>
+      <h3>Sent</h3>
       <div id="sentMessages">
         {% for message in sent_messages %}
         <div class="card mb-3">
           <div class="card-body">
             <p class="card-text">
-              <strong>发送给：</strong> {{ message.receiver.username }}
+              <strong>To:</strong> {{ message.receiver.username }}
             </p>
             <p class="card-text">{{ message.content }}</p>
             {% if message.file_url %}
             <p class="card-text">
-              <strong>附件：</strong>
+              <strong>Attachment:</strong>
               {% if message.file_url.endswith(('.jpg', '.jpeg', '.png')) %}
               <img
                 src="{{ message.file_url }}"
@@ -141,17 +141,17 @@
                 alt="Attachment"
               />
               {% else %}
-              <a href="{{ message.file_url }}" download>下载附件</a>
+              <a href="{{ message.file_url }}" download>Download Attachment</a>
               {% endif %}
             </p>
             {% endif %}
             <p class="post-meta">
-              发送时间：{{ message.created_at.strftime('%Y-%m-%d %H:%M:%S') }}
+              Sent at: {{ message.created_at.strftime('%Y-%m-%d %H:%M:%S') }}
             </p>
           </div>
         </div>
         {% else %}
-        <p>暂无发送的消息。</p>
+        <p>No messages sent yet.</p>
         {% endfor %}
       </div>
     </div>
