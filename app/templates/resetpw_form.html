@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,6 +11,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
   <!-- <script src="{{ url_for('static', filename='js/resetpw.js') }}"></script> -->
 </head>
+
 <body>
   <div class="container-fluid h-100">
     <div class="row h-100">
@@ -38,19 +40,42 @@
             <div class="alert alert-info d-none" role="alert" id="statusMessage"></div>
 
 
-            <form method="POST" action="{{ url_for('resetpw_username', username=username) }}">
+            <!-- <form method="POST" action="{{ url_for('resetpw_username', username=username) }}">
                 <div class="mb-3">
-                  <!-- <input type="password" name="password" class="form-control" placeholder="Password" required /> -->
                   <input type="password" name="new_password" class="form-control" placeholder="Password" required />
                 </div>
                 <div class="mb-3">
-                  <!-- <input type="password" name="confirm_password" class="form-control" placeholder="Confirm Password" required /> -->
                   <input type="password" name="confirm_password" class="form-control" placeholder="Confirm Password" required />
                 </div>
                 <div class="d-grid">
                   <button type="submit" class="btn btn-primary-custom w-100">Submit</button>
                 </div>
-              </form>
+              </form> -->
+
+
+            <form method="POST">
+              {{ form.hidden_tag() }}
+
+              <div class="mb-3">
+                {{ form.new_password.label(class="form-label") }}
+                {{ form.new_password(class="form-control") }}
+                {% for error in form.new_password.errors %}
+                <div class="text-danger small">{{ error }}</div>
+                {% endfor %}
+              </div>
+
+              <div class="mb-3">
+                {{ form.confirm_password.label(class="form-label") }}
+                {{ form.confirm_password(class="form-control") }}
+                {% for error in form.confirm_password.errors %}
+                <div class="text-danger small">{{ error }}</div>
+                {% endfor %}
+              </div>
+
+              <div class="d-grid">
+                {{ form.submit(class="btn btn-primary") }}
+              </div>
+            </form>
 
             <div class="text-center mt-3">
               <a href="{{ url_for('login') }}" class="text-primary">Back to Login</a>
@@ -61,4 +86,5 @@
     </div>
   </div>
 </body>
+
 </html>
