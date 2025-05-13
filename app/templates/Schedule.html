@@ -45,8 +45,10 @@
     {% for unit in selected_units %}
     <li class="list-group-item">
       <strong>{{ unit.name }} ({{ unit.credit_points }} credits)</strong>
-      {% for times in unit.class_times %}
-      {% set hour = times.start_time.hour %}
+
+      {% for times in unit.class_times %} {% set hour =
+      times.start_time.split(':')[0] | int %}
+
       <div class="form-check">
         <input
           class="form-check-input timeslot-checkbox"
@@ -66,6 +68,7 @@
           for="timeslot-{{ unit.id }}-{{ hour }}"
         >
          {{times.day_of_week}} {{times.type}}: {{ times.start_time }} – {{ times.end_time }}
+
         </label>
       </div>
       {% endfor %}
