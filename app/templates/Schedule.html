@@ -111,7 +111,7 @@
   <form
     id="generate-form"
     method="POST"
-    action="{{ url_for('generate_schedule') }}"
+    action="{{ url_for('schedule.generate_schedule') }}"
   >
     {% for unit in selected_units %}
     <input type="hidden" name="unit_ids" value="{{ unit.id }}" />
