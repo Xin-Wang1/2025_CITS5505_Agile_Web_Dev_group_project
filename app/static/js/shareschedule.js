@@ -15,7 +15,7 @@ $(document).ready(function() {
                 const results = $('#search-results');
                 results.empty();
                 if (data.length === 0) {
-                    results.append('<div class="list-group-item">无匹配用户</div>');
+                    results.append('<div class="list-group-item">No matching users</div>');
                     return;
                 }
                 data.forEach(user => {
@@ -29,7 +29,7 @@ $(document).ready(function() {
                 });
             },
             error: function() {
-                $('#search-results').html('<div class="list-group-item">搜索失败，请重试</div>');
+                $('#search-results').html('<div class="list-group-item">Search failed, please try again</div>');
             }
         });
     });
@@ -49,7 +49,7 @@ $(document).ready(function() {
                 window.location.reload(); // Refresh page to show new message
             },
             error: function(xhr) {
-                const errorMsg = xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : '发送失败，请重试';
+                const errorMsg = xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : 'Send failed, please try again';
                 alert(errorMsg);
             }
         });
