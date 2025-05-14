@@ -38,8 +38,6 @@ ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png', 'pdf'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 10 * 1024 * 1024  # 10MB limit
 
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -204,7 +202,7 @@ def schedule_generation():
         name=f"Schedule {current_user.username} {len(current_user.schedules) + 1}",
         created_at=datetime.utcnow()
     )
-    db.session.add(new_schedule)
+ 
     
     # Link selected units to the new schedule
     for unit_id in selected_unit_ids:
@@ -212,7 +210,6 @@ def schedule_generation():
         for classtime in classtimes:
             new_schedule.classtimes.append(classtime)
     
-    db.session.commit()
     
     flash('Schedule generated successfully!', 'success')
     # Redirect with selected_unit_ids as query parameter
@@ -279,45 +276,74 @@ def generate_schedule():
 @login_required
 def messages():
     # Get sent and received messages
+    users = User.query.all()
     sent_messages = Message.query.filter_by(sender_id=current_user.id).order_by(Message.created_at.desc()).all()
     received_messages = Message.query.filter_by(receiver_id=current_user.id).order_by(Message.created_at.desc()).all()
-    return render_template("ShareSchedule.html", sent_messages=sent_messages, received_messages=received_messages)
+    
+    received_schedule_ids = {
+        msg.schedule_id
+        for msg in received_messages
+        if msg.schedule_id  # skip None
+    }
+    schedules = Schedule.query \
+        .filter(Schedule.id.in_(received_schedule_ids)) \
+        .all()
+    schedules_data = []
+    for schedule in schedules:
+        class_list = []
+        for ct in schedule.classtimes:
+            class_list.append({
+                'id': ct.id,
+                'unit_id': ct.unit_id,
+                'unit_name': ct.unit.name or 'Unknown',
+                'type': ct.type,
+                'day_of_week': ct.day_of_week,
+                'start_time': ct.start_time.strftime('%H:%M'),
+                'end_time': ct.end_time.strftime('%H:%M'),
+            })
+        schedules_data.append({
+            'id': schedule.id,
+            'name': schedule.name,
+            'classtimes': class_list
+        })
+    return render_template("ShareSchedule.html", sent_messages=sent_messages, received_messages=received_messages,users=users, schedules=schedules_data)
 
 @app.route("/messages/send", methods=["POST"])
 @login_required
 def send_message():
-    receiver_username = request.form.get("receiver_username").strip()
-    content = request.form.get("content").strip()
-    file = request.files.get("file")
-
-    # Validate input
-    if not receiver_username or not content:
-        flash("Recipient and message content cannot be empty！", "danger")
+    receiver_id = request.form.get("receiver_id")
+    if not receiver_id:
+        flash("Please select a recipient.", "danger")
+        return redirect(url_for("messages"))
+    receiver = User.query.get(int(receiver_id))
+    if not receiver or receiver.id == current_user.id:
+        flash("Invalid recipient.", "danger")
         return redirect(url_for("messages"))
 
-    # Find receiver
-    receiver = User.query.filter_by(username=receiver_username).first()
-    if not receiver:
-        flash("Recipient does not exist！", "danger")
-        return redirect(url_for("messages"))
-    if receiver.id == current_user.id:
-        flash("Can't send messages to myself！", "danger")
+    schedule_id = request.form.get("schedule_id")
+    schedule = None
+    if schedule_id:
+        schedule = Schedule.query.filter_by(
+            id=int(schedule_id),
+            user_id=current_user.id
+        ).first()
+        if not schedule:
+            flash("Invalid schedule selected.", "danger")
+            return redirect(url_for("messages"))
+
+    # 3) Message content
+    content = request.form.get("content", "").strip()
+    if not content:
+        flash("Message content cannot be empty.", "danger")
         return redirect(url_for("messages"))
 
-    # Handle file upload
-    file_url = None
-    if file and allowed_file(file.filename):
-        filename = secure_filename(file.filename)
-        file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        file.save(file_path)
-        file_url = f"/{file_path}"
-
+    
     # Create new message
     new_message = Message(
         sender_id=current_user.id,
         receiver_id=receiver.id,
         content=content,
-        file_url=file_url,
+        schedule_id=schedule.id if schedule else None,
         created_at=datetime.utcnow()
     )
     db.session.add(new_message)
@@ -326,20 +352,10 @@ def send_message():
     flash("Sent successfully！", "success")
     return redirect(url_for("messages"))
 
-@app.route("/messages/search", methods=["GET"])
-@login_required
-def search_users():
-    query = request.args.get("query", "").strip()
-    if not query:
-        return jsonify([])
-    users = User.query.filter(User.username.ilike(f"%{query}%")).all()
-    return jsonify([{"id": user.id, "username": user.username} for user in users])
-
 app.register_blueprint(unit_bp, url_prefix="/unit")
 app.register_blueprint(myschedule_bp, url_prefix='/myschedule')
 
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
-        # insert_sample_data(db)
     app.run(debug=True)
