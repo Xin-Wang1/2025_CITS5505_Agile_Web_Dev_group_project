@@ -1,6 +1,6 @@
 from flask import Flask, render_template, redirect, url_for, request, flash, jsonify
-from models import User, Unit, Classtime, Schedule, Message
-from config import Config
+from app.models import User, Unit, Classtime, Schedule, Message
+from app.config import Config
 from flask_login import (
     LoginManager,
     login_user,
@@ -9,16 +9,16 @@ from flask_login import (
     current_user,
 )
 from werkzeug.security import generate_password_hash, check_password_hash
-from insert_sample_data import insert_sample_data
-from routes.unit import unit_bp
-from routes.myschedule import myschedule_bp
-from models import db
+from app.insert_sample_data import insert_sample_data
+from app.routes.unit import unit_bp
+from app.routes.myschedule import myschedule_bp
+from app.models import db
 from flask_migrate import Migrate
 from datetime import datetime
 import json
 import os
 from werkzeug.utils import secure_filename
-from forms import LoginForm, RegisterForm, ResetPasswordForm
+from app.forms import LoginForm, RegisterForm, ResetPasswordForm
 from flask_wtf.csrf import CSRFProtect
 
 app = Flask(__name__)
