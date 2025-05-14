@@ -18,6 +18,8 @@ from datetime import datetime
 import json
 import os
 from werkzeug.utils import secure_filename
+from forms import LoginForm, RegisterForm, ResetPasswordForm
+from flask_wtf.csrf import CSRFProtect
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -52,38 +54,34 @@ def home():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    if request.method == "POST":
-        user = User.query.filter_by(username=request.form["username"]).first()
-        if user and check_password_hash(user.password_hash, request.form["password"]):
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=form.username.data).first()
+        if user and check_password_hash(user.password_hash, form.password.data):
             login_user(user)
             return redirect(url_for("home"))
         flash("Invalid credentials", "danger")
-    return render_template("login.html")
+
+    return render_template("login.html", form=form)
+
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
-    if request.method == "POST":
-        username = request.form["username"]
-        password = request.form["password"]
-        confirm_password = request.form["confirm_password"]
-
-        if password != confirm_password:
-            flash("Passwords do not match", "danger")
-            return render_template("register.html")
-
-        existing_user = User.query.filter_by(username=username).first()
+    form = RegisterForm()
+    if form.validate_on_submit():
+        existing_user = User.query.filter_by(username=form.username.data).first()
         if existing_user:
             flash("Username already taken", "danger")
-            return render_template("register.html")
+            return render_template("register.html", form=form)
 
-        hashed_pw = generate_password_hash(password)
-        new_user = User(username=username, password_hash=hashed_pw)
+        hashed_pw = generate_password_hash(form.password.data)
+        new_user = User(username=form.username.data, password_hash=hashed_pw)
         db.session.add(new_user)
         db.session.commit()
-        flash("Registration successful. You can now log Calculating... in.", "success")
+        flash("Registration successful. You can now log in.", "success")
         return redirect(url_for("login"))
 
-    return render_template("register.html")
+    return render_template("register.html", form=form)
 
 @app.route("/resetpw", methods=["GET", "POST"])
 def resetpw():
