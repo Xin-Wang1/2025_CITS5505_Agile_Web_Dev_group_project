@@ -1,82 +1,21 @@
 html {
-  scroll-behavior: smooth;
-}
+      scroll-behavior: smooth;
+    }
 
-@keyframes flow {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
+    @keyframes flow {
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
+    }
 
-#main-header.scrolled {
-  background-color: rgba(0, 0, 0, 0.8);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(10px);
-}
-
-
-.dropdown {
-  position: relative;
-}
-
-.dropdown-menu {
-  display: none;
-  position: absolute;
-  top: 100%;
-  right: 0;
-  background-color: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  border: none;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  min-width: 200px;
-  opacity: 0;
-  transform: translateY(-10px);
-  transition: opacity 0.3s ease, transform 0.3s ease;
-  z-index: 1000;
-}
-
-.dropdown:hover .dropdown-menu {
-  display: block;
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.dropdown-item {
-  color: #333;
-  padding: 10px 20px;
-  font-size: 0.95rem;
-  display: flex;
-  align-items: center;
-}
-
-.dropdown-item:hover {
-  background-color: #0d6efd;
-  color: #fff;
-}
-
-.dropdown-divider {
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-
-.dropdown > a {
-  transition: color 0.2s ease;
-}
-
-.dropdown > a:hover {
-  color: #0d6efd;
-}
-
-
-@media (max-width: 768px) {
-  .dropdown-menu {
-    min-width: 150px;
-    right: -20px;
-  }
-}
+    #main-header.scrolled {
+      background-color: rgba(0, 0, 0, 0.8);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+    }
