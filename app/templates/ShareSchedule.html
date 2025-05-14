@@ -1,75 +1,164 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Share Schedule Forum</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <link href="{{ url_for('static', filename='css/shareschedule.css') }}" rel="stylesheet">
-</head>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Messages | My University</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/bootstrap.min.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/shareschedule.css') }}"
+    />
+  </head>
+  <body>
+    {% extends "base.html" %} {% block content %}
+    <div class="container main-content">
+      <h2>Messages</h2>
+      <hr />
 
-<body>
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg">
-    <a class="navbar-brand" href="#">My University</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <!-- <span class="navbar-toggler-icon"></span> -->
-      <i class="bi bi-list"></i>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ml-auto">
-        <li class="nav-item">
-          <a class="nav-link" href="My_Schedule.html">MySchedule</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Help</a>
-        </li>
-        <li class="nav-item">
-          <span class="nav-link">[Student Name]'s Schedule</span>
-        </li>
-      </ul>
-    </div>
-  </nav>
+      <!-- Flash messages -->
+      {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %} {% for category, message in messages %}
+      <div
+        class="alert alert-{{ category }} alert-dismissible fade show"
+        role="alert"
+      >
+        {{ message }}
+        <button
+          type="button"
+          class="close"
+          data-dismiss="alert"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      {% endfor %} {% endif %} {% endwith %}
 
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-12 main-content">
-        <h1>Share Your Timetable</h1>
-        <p class="text-muted">Post your schedule and comment below.</p>
-
-        <!-- Posts List -->
-        <div id="postsList" class="mb-4"></div>
-
-        <!-- New Post Form -->
-        <div class="card mb-4">
-          <div class="card-body">
-            <h5 class="card-title">Post a New Timetable</h5>
-            <form id="postForm">
-
-                <label class="form-group" for="postUser">Your Name</label>
-                <input type="text" class="form-control" id="postUser" placeholder="Enter your name" required>
-
-                <label class="form-group" for="postTitle">Title</label>
-                <input type="text" class="form-control" id="postTitle" placeholder="Enter post title" required>
-
-
-                <label class="form-group" for="postContent">Timetable Details</label>
-                <textarea class="form-control" id="postContent" rows="4" placeholder="Paste or describe your timetable..." required></textarea>
-
-                <label class="form-group" for="postFile">Attach a File (optional)</label>
-                <input type="file" class="form-control" id="postFile">
-
-              <button type="submit" class="btn btn-primary">Post</button>
-            </form>
-          </div>
+      <!-- Send Message Form -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">Send New Message</h5>
+          <form
+            id="messageForm"
+            method="POST"
+            action="{{ url_for('send_message') }}"
+            enctype="multipart/form-data"
+          >
+            <div class="form-group">
+              <label for="receiver_username">Recipient Username</label>
+              <input
+                type="text"
+                class="form-control"
+                id="receiver_username"
+                name="receiver_username"
+                placeholder="Enter username"
+                required
+                autocomplete="off"
+              />
+              <div id="search-results" class="list-group mt-2"></div>
+            </div>
+            <div class="form-group">
+              <label for="content">Message Content</label>
+              <textarea
+                class="form-control"
+                id="content"
+                name="content"
+                rows="4"
+                placeholder="Enter message content"
+                required
+              ></textarea>
+            </div>
+            <div class="form-group">
+              <label for="file">Attachment (Optional)</label>
+              <input
+                type="file"
+                class="form-control-file"
+                id="file"
+                name="file"
+                accept=".jpg,.jpeg,.png,.pdf"
+              />
+            </div>
+            <button type="submit" class="btn btn-primary">Send</button>
+          </form>
         </div>
       </div>
-    </div>
-  </div>
 
-  <!-- JS -->
-  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  <script src="{{ url_for('static', filename='js/shareschedule.js') }}"></script>
-</body>
+      <!-- Received Messages -->
+      <h3>Inbox</h3>
+      <div id="receivedMessages">
+        {% for message in received_messages %}
+        <div class="card mb-3">
+          <div class="card-body">
+            <p class="card-text">
+              <strong>From:</strong> {{ message.sender.username }}
+            </p>
+            <p class="card-text">{{ message.content }}</p>
+            {% if message.file_url %}
+            <p class="card-text">
+              <strong>Attachment:</strong>
+              {% if message.file_url.endswith(('.jpg', '.jpeg', '.png')) %}
+              <img
+                src="{{ message.file_url }}"
+                class="img-preview"
+                alt="Attachment"
+              />
+              {% else %}
+              <a href="{{ message.file_url }}" download>Download Attachment</a>
+              {% endif %}
+            </p>
+            {% endif %}
+            <p class="post-meta">
+              Sent at: {{ message.created_at.strftime('%Y-%m-%d %H:%M:%S') }}
+            </p>
+          </div>
+        </div>
+        {% else %}
+        <p>No messages received yet.</p>
+        {% endfor %}
+      </div>
+
+      <!-- Sent Messages -->
+      <h3>Sent</h3>
+      <div id="sentMessages">
+        {% for message in sent_messages %}
+        <div class="card mb-3">
+          <div class="card-body">
+            <p class="card-text">
+              <strong>To:</strong> {{ message.receiver.username }}
+            </p>
+            <p class="card-text">{{ message.content }}</p>
+            {% if message.file_url %}
+            <p class="card-text">
+              <strong>Attachment:</strong>
+              {% if message.file_url.endswith(('.jpg', '.jpeg', '.png')) %}
+              <img
+                src="{{ message.file_url }}"
+                class="img-preview"
+                alt="Attachment"
+              />
+              {% else %}
+              <a href="{{ message.file_url }}" download>Download Attachment</a>
+              {% endif %}
+            </p>
+            {% endif %}
+            <p class="post-meta">
+              Sent at: {{ message.created_at.strftime('%Y-%m-%d %H:%M:%S') }}
+            </p>
+          </div>
+        </div>
+        {% else %}
+        <p>No messages sent yet.</p>
+        {% endfor %}
+      </div>
+    </div>
+    {% endblock %} {% block scripts %}
+    <script src="{{ url_for('static', filename='js/jquery-3.5.1.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/shareschedule.js') }}"></script>
+    {% endblock %}
+  </body>
 </html>
