@@ -1,57 +1,48 @@
-$(document).ready(function() {
-    // Username search
-    $('#receiver_username').on('input', function() {
-        const query = $(this).val().trim();
-        if (query.length === 0) {
-            $('#search-results').empty();
-            return;
-        }
-
-        $.ajax({
-            url: '/messages/search',
-            method: 'GET',
-            data: { query: query },
-            success: function(data) {
-                const results = $('#search-results');
-                results.empty();
-                if (data.length === 0) {
-                    results.append('<div class="list-group-item">No matching users</div>');
-                    return;
-                }
-                data.forEach(user => {
-                    const item = $(`<a href="#" class="list-group-item list-group-item-action">${user.username}</a>`);
-                    item.click(function(e) {
-                        e.preventDefault();
-                        $('#receiver_username').val(user.username);
-                        results.empty();
-                    });
-                    results.append(item);
-                });
-            },
-            error: function() {
-                $('#search-results').html('<div class="list-group-item">Search failed, please try again</div>');
-            }
-        });
+function generateTimetableStructure(scheduleId) {
+  const times = [...Array(13)].map((_, i) => 8 + i); // Hours from 8:00 to 20:00
+  const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+  const tbody = document.getElementById(`timetable-body-${scheduleId}`);
+  times.forEach((hour) => {
+    const row = document.createElement("tr");
+    const timeCell = document.createElement("td");
+    timeCell.textContent = `${hour}:00 – ${hour + 1}:00`;
+    row.appendChild(timeCell);
+    days.forEach((day) => {
+      const cell = document.createElement("td");
+      cell.id = `schedule-${scheduleId}-${day}-${hour}`;
+      row.appendChild(cell);
     });
+    tbody.appendChild(row);
+  });
+}
 
-    // Form submission
-    $('#messageForm').submit(function(e) {
-        e.preventDefault();
-        const formData = new FormData(this);
+function renderTimetable(schedule) {
+  schedule.classtimes.forEach((classtime) => {
+    const startHour = parseInt(classtime.start_time.split(":")[0]);
+    const cellId = `schedule-${schedule.id}-${classtime.day_of_week}-${startHour}`;
+    const cell = document.getElementById(cellId);
+    if (cell) {
+      cell.innerHTML = `
+        <div class="slot slot-${classtime.type.toLowerCase()}">
+          <strong>${classtime.unit_name}</strong><br>
+          ${classtime.type}<br>
+          ${classtime.start_time} – ${classtime.end_time}
+        </div>
+      `;
+    }
+  });
+}
 
-        $.ajax({
-            url: '/messages/send',
-            method: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function() {
-                window.location.reload(); // Refresh page to show new message
-            },
-            error: function(xhr) {
-                const errorMsg = xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : 'Send failed, please try again';
-                alert(errorMsg);
-            }
-        });
-    });
+$(document).ready(function () {
+  // Iterate over all schedules and generate their timetables
+  scheduleData.forEach((schedule) => {
+    generateTimetableStructure(schedule.id);
+    renderTimetable(schedule);
+    
+  });
+});
+
+$(document).ready(function () {
+  generateTimetableStructure();
+  renderTimetable();
 });
