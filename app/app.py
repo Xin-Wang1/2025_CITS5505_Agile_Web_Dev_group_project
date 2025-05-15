@@ -38,7 +38,6 @@ ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png', 'pdf'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 10 * 1024 * 1024  # 10MB limit
 
-
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -59,9 +58,7 @@ def login():
             login_user(user)
             return redirect(url_for("home"))
         flash("Invalid credentials", "danger")
-
     return render_template("login.html", form=form)
-
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -71,14 +68,12 @@ def register():
         if existing_user:
             flash("Username already taken", "danger")
             return render_template("register.html", form=form)
-
         hashed_pw = generate_password_hash(form.password.data)
         new_user = User(username=form.username.data, password_hash=hashed_pw)
         db.session.add(new_user)
         db.session.commit()
         flash("Registration successful. You can now log in.", "success")
         return redirect(url_for("login"))
-
     return render_template("register.html", form=form)
 
 @app.route("/resetpw", methods=["GET", "POST"])
@@ -99,20 +94,16 @@ def resetpw_username(username):
     if not user:
         flash("Invalid username.", "danger")
         return redirect(url_for("resetpw"))
-
     if request.method == "POST":
         new_password = request.form.get("new_password")
         confirm_password = request.form.get("confirm_password")
-
         if new_password != confirm_password:
             flash("Passwords do not match.", "danger")
             return render_template("resetpw_form.html", username=username)
-
         user.password_hash = generate_password_hash(new_password)
         db.session.commit()
         flash("Password reset successful. You can now log in.", "success")
         return redirect(url_for("login"))
-
     return render_template("resetpw_form.html", username=username)
 
 @app.route("/dashboard")
@@ -129,10 +120,10 @@ def logout():
 @app.route('/My_Schedule')
 @login_required
 def My_Schedule():
-    print(f"Request path: {request.path}")  
     # Find all schedules for the current user
     schedules = Schedule.query.filter_by(user_id=current_user.id).all()
-    
+    if not schedules:
+        flash('You have no schedules yet. Please upload units and generate a schedule first.', 'warning')
     # Transform schedules data for rendering
     schedules_data = []
     for schedule in schedules:
@@ -154,7 +145,6 @@ def My_Schedule():
             'created_at': schedule.created_at.isoformat() if schedule.created_at else None,
             'classtimes': classtimes
         })
-    
     return render_template("My_Schedule.html", schedules=schedules_data)
 
 @app.route("/schedule/delete/<int:schedule_id>", methods=["POST"])
@@ -163,56 +153,41 @@ def delete_schedule(schedule_id):
     schedule = Schedule.query.get_or_404(schedule_id)
     if schedule.user_id != current_user.id:
         return jsonify({"success": False, "message": "No permission to delete this schedule!"}), 403
-    
     try:
         db.session.delete(schedule)
         db.session.commit()
-        return jsonify({"success": True})
+        # Check if user has any schedules left
+        remaining = Schedule.query.filter_by(user_id=current_user.id).count()
+        return jsonify({"success": True, "no_schedule": remaining == 0})
     except Exception as e:
         db.session.rollback()
         return jsonify({"success": False, "message": str(e)}), 500
 
-# Upload unit
 @app.route("/schedule/generation", methods=["POST"])
 @login_required
 def schedule_generation():
-    # Get selected unit IDs from the request
     selected_unit_ids = request.form.get('selected_units')
-    
-    # Check if selected_unit_ids is None or empty
     if not selected_unit_ids:
         flash('Please select at least one unit!', 'danger')
         return redirect(url_for('unit.upload_unit'))
-    
     try:
-        # Try to parse the JSON string into a Python list
         selected_unit_ids = json.loads(selected_unit_ids)
-        # Check if the list is empty
         if not selected_unit_ids:
             flash('Please select at least one unit!', 'danger')
             return redirect(url_for('unit.upload_unit'))
     except json.JSONDecodeError:
-        # Catch JSON parsing errors
         flash('Please try again, invalid selection!', 'danger')
         return redirect(url_for('unit.upload_unit'))
-    
-    # Create a new schedule
     new_schedule = Schedule(
         user_id=current_user.id,
         name=f"Schedule {current_user.username} {len(current_user.schedules) + 1}",
         created_at=datetime.utcnow()
     )
- 
-    
-    # Link selected units to the new schedule
     for unit_id in selected_unit_ids:
         classtimes = Classtime.query.filter_by(unit_id=unit_id).all()
         for classtime in classtimes:
             new_schedule.classtimes.append(classtime)
-    
-    
     flash('Schedule generated successfully!', 'success')
-    # Redirect with selected_unit_ids as query parameter
     return redirect(url_for('generate_schedule', unit_ids=','.join(map(str, selected_unit_ids))))
 
 @app.route("/schedule/generate_schedule", methods=["GET", "POST"])
@@ -221,34 +196,24 @@ def generate_schedule():
     if request.method == "POST":
         selected_classtime_ids = json.loads(request.form.get('selected_classtime_ids', '[]'))
         unit_ids = request.form.getlist('unit_ids')
-        
-        # Create or update schedule
         new_schedule = Schedule(
             user_id=current_user.id,
             name=f"Schedule {current_user.username} {len(current_user.schedules) + 1}",
             created_at=datetime.utcnow()
         )
         db.session.add(new_schedule)
-        
-        # Link selected classtimes
         for classtime_id in selected_classtime_ids:
             classtime = Classtime.query.get(classtime_id)
             if classtime:
                 new_schedule.classtimes.append(classtime)
-        
         db.session.commit()
         flash('Schedule saved successfully!', 'success')
-        return redirect(url_for('My_Schedule'))
-    
-    # GET request: Render Schedule.html with selected units
+        return redirect(url_for("My_Schedule"))
     selected_unit_ids = request.args.get('unit_ids', '').split(',') if request.args.get('unit_ids') else []
     selected_units = Unit.query.filter(Unit.id.in_(selected_unit_ids)).all() if selected_unit_ids else []
     total_credits = sum(unit.credit_points for unit in selected_units)
-
-    # Transform selected_units to a serializable format
     serialized_units = []
     for unit in selected_units:
-        # Convert class_times to a list of dictionaries
         class_times = [
             {
                 'id': classtime.id,
@@ -267,7 +232,6 @@ def generate_schedule():
             'credit_points': unit.credit_points,
             'class_times': class_times
         })
-    
     return render_template('Schedule.html',
                          selected_units=serialized_units,
                          total_credits=total_credits)
@@ -275,15 +239,32 @@ def generate_schedule():
 @app.route("/messages")
 @login_required
 def messages():
-    # Get sent and received messages
     users = User.query.all()
     sent_messages = Message.query.filter_by(sender_id=current_user.id).order_by(Message.created_at.desc()).all()
     received_messages = Message.query.filter_by(receiver_id=current_user.id).order_by(Message.created_at.desc()).all()
-    
+    user_schedules = Schedule.query.filter_by(user_id=current_user.id).all()
+    user_schedules_data = []
+    for schedule in user_schedules:
+        class_list = []
+        for ct in schedule.classtimes:
+            class_list.append({
+                'id': ct.id,
+                'unit_id': ct.unit_id,
+                'unit_name': ct.unit.name or 'Unknown',
+                'type': ct.type,
+                'day_of_week': ct.day_of_week,
+                'start_time': ct.start_time.strftime('%H:%M'),
+                'end_time': ct.end_time.strftime('%H:%M'),
+            })
+        user_schedules_data.append({
+            'id': schedule.id,
+            'name': schedule.name,
+            'classtimes': class_list
+        })
     received_schedule_ids = {
         msg.schedule_id
         for msg in received_messages
-        if msg.schedule_id  # skip None
+        if msg.schedule_id
     }
     schedules = Schedule.query \
         .filter(Schedule.id.in_(received_schedule_ids)) \
@@ -306,7 +287,14 @@ def messages():
             'name': schedule.name,
             'classtimes': class_list
         })
-    return render_template("ShareSchedule.html", sent_messages=sent_messages, received_messages=received_messages,users=users, schedules=schedules_data)
+    return render_template(
+        "ShareSchedule.html",
+        sent_messages=sent_messages,
+        received_messages=received_messages,
+        users=users,
+        schedules=schedules_data,
+        user_schedules=user_schedules_data
+    )
 
 @app.route("/messages/send", methods=["POST"])
 @login_required
@@ -319,7 +307,6 @@ def send_message():
     if not receiver or receiver.id == current_user.id:
         flash("Invalid recipient.", "danger")
         return redirect(url_for("messages"))
-
     schedule_id = request.form.get("schedule_id")
     schedule = None
     if schedule_id:
@@ -330,15 +317,10 @@ def send_message():
         if not schedule:
             flash("Invalid schedule selected.", "danger")
             return redirect(url_for("messages"))
-
-    # 3) Message content
     content = request.form.get("content", "").strip()
     if not content:
         flash("Message content cannot be empty.", "danger")
         return redirect(url_for("messages"))
-
-    
-    # Create new message
     new_message = Message(
         sender_id=current_user.id,
         receiver_id=receiver.id,
@@ -348,7 +330,6 @@ def send_message():
     )
     db.session.add(new_message)
     db.session.commit()
-
     flash("Sent successfully！", "success")
     return redirect(url_for("messages"))
 

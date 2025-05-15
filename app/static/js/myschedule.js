@@ -34,14 +34,53 @@ function renderTimetable(schedule) {
 }
 
 $(document).ready(function () {
-  // Iterate over all schedules and generate their timetables
+  // Generate timetables for all schedules
   if (typeof scheduleData !== "undefined") {
     scheduleData.forEach((schedule) => {
       generateTimetableStructure(schedule.id);
       renderTimetable(schedule);
     });
   }
-  // Optionally, you can add more event listeners or features here
+
+  // Delete schedule logic with "no schedule" alert
+  if (typeof uploadUnitUrl !== "undefined") {
+    document.querySelectorAll('.delete-schedule-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        if (!confirm('Are you sure you want to delete this schedule?')) return;
+        const scheduleId = this.getAttribute('data-id');
+        fetch(`/schedule/delete/${scheduleId}`, {
+          method: 'POST',
+          headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            document.getElementById(`schedule-${scheduleId}`).remove();
+            if (data.no_schedule) {
+              const alert = document.createElement('div');
+              alert.className = 'alert alert-warning alert-dismissible fade show mt-3';
+              alert.role = 'alert';
+              alert.innerHTML = `
+                You have no schedules left. Please <a href="${uploadUnitUrl}" class="btn btn-sm btn-primary ms-2">Upload Units</a> to generate a new schedule.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              `;
+              // Insert alert after the h1 title
+              const title = document.querySelector('main.container h1');
+              if (title && title.parentNode) {
+                title.parentNode.insertBefore(alert, title.nextSibling);
+              } else {
+                document.querySelector('main.container').prepend(alert);
+              }
+            }
+          } else {
+            alert(data.message || 'Delete failed.');
+          }
+        });
+      });
+    });
+  }
 });
 
 /* 
