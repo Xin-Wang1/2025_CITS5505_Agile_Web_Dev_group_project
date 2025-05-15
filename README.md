@@ -37,4 +37,14 @@ flask run
 flask run
 ```
 
-## 4. How to run test
+## 4. How to Run Tests
+
+We use both unit tests and end-to-end tests to verify application correctness.
+
+### 4.1 Unit Tests (Flask Routes)
+
+Run the following command to execute unit tests that verify the core Flask routes:
+
+```bash
+python3 -m unittest app/tests/test_routes.py
+```
