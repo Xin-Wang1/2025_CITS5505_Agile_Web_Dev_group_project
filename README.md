@@ -38,3 +38,55 @@ flask run
 ```
 
 ## 4. How to run test
+
+#### Unit Tests  
+Run backend Flask route and logic tests using Python’s built-in `unittest`:
+
+```bash
+python -m unittest app/tests/test_routes.py
+```
+#### Selenium Tests
+Start the Flask server in one terminal:
+```bash
+flask run
+```
+In another terminal, run the Selenium suite:
+```bash
+python -m unittest app/tests/test_selenium.py
+```
+## 5.  Project Structure Overview
+```
+2025_CITS5505_Agile_Web_Dev_group_project/
+├── app/
+│   ├── __init__.py
+│   ├── app.py
+│   ├── config.py
+│   ├── cleanup.py
+│   ├── forms.py
+│   ├── insert_sample_data.py
+│   ├── models.py
+│   ├── routes/
+│   │   ├── __init__.py
+│   │   ├── auth.py
+│   │   ├── myschedule.py
+│   │   ├── schedule.py
+│   │   └── unit.py
+│   ├── static/
+│   │   ├── css/
+│   │   │   └── (various .css files)
+│   │   ├── js/
+│   │   │   └── (various .js files)
+│   │   └── image/
+│   │       └── avatar.png
+│   ├── templates/
+│   │   └── (various .html files)
+│   └── tests/
+│       ├── __init__.py
+│       ├── test_routes.py
+│       ├── test_selenium.py
+│       └── test_unit.py
+├── requirements.txt
+├── README.md
+├── LICENSE
+└── units.csv
+```
