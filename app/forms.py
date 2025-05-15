@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired, EqualTo, Length, ValidationError
-from app.models import User  # ← 导入你的 User 模型
+from models import User  # ← 导入你的 User 模型
 
 class LoginForm(FlaskForm):
     username = StringField("Username", validators=[

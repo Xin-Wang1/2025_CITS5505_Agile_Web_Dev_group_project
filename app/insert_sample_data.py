@@ -1,4 +1,4 @@
-from app.models import User, Unit, Classtime, Schedule
+from models import User, Unit, Classtime, Schedule
 from werkzeug.security import generate_password_hash
 from datetime import time
 
