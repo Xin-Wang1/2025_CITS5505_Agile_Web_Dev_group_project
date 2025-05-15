@@ -23,6 +23,23 @@
       .dropdown-menu {
         display: none; /* Hidden by default */
       }
+
+      body {
+        background: linear-gradient(-45deg, #d0e6ff, #a1c4fd, #f3e5f5, #c5cae9);
+        background-size: 600% 600%;
+        animation: flow 10s ease infinite;
+      }
+      @keyframes flow {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
     </style>
     {% endblock %}
   </head>
