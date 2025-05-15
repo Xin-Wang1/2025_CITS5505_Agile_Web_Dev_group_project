@@ -39,12 +39,15 @@
             {% with messages = get_flashed_messages(with_categories=True) %}
             {% if messages %}
             {% for category, message in messages %}
-            <div class="alert alert-{{ 'success' if category == 'success' else 'danger' }}">{{ message }}</div>
+            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
             {% endfor %}
             {% endif %}
             {% endwith %}
 
-            <!-- <form method="POST" action="{{ url_for('register') }}">
+            <!-- <form method="POST" action="{{ url_for('auth.register') }}">
               <div class="mb-3">
                 <input type="text" name="username" class="form-control" placeholder="Username" required />
               </div>
@@ -62,7 +65,7 @@
 
             <!-- 
             <div class="text-center mt-3">
-              <a href="{{ url_for('login') }}" class="text-primary">Go back to the login page</a> -->
+              <a href="{{ url_for('auth.login') }}" class="text-primary">Go back to the login page</a> -->
 
             <form method="POST">
               {{ form.hidden_tag() }}
@@ -96,7 +99,7 @@
               </div>
             </form>
 
-            <p class="mt-3">Already have an account? <a href="{{ url_for('login') }}">Login here</a>.</p>
+            <p class="mt-3">Already have an account? <a href="{{ url_for('auth.login') }}">Login here</a>.</p>
           </div>
         </div>
       </div>

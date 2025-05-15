@@ -44,7 +44,7 @@
             {% endif %}
             {% endwith %}
 
-            <!-- <form method="POST" action="{{ url_for('login') }}">
+            <!-- <form method="POST" action="{{ url_for('auth.login') }}">
               <div class="mb-3">
                 <input type="text" name="username" class="form-control" placeholder="Username" required>
               </div>
@@ -72,11 +72,11 @@
             </form>
 
             <div class="text-center mt-3">
-              <a href="{{ url_for('register') }}" class="text-primary">Don't have an account? Sign Up</a>
+              <a href="{{ url_for('auth.register') }}" class="text-primary">Don't have an account? Sign Up</a>
             </div>
 
             <div class="text-center mt-3">
-              <a href="{{ url_for('resetpw') }}" class="text-primary">Forgot password?</a>
+              <a href="{{ url_for('auth.resetpw') }}" class="text-primary">Forgot password?</a>
             </div>
 
           </div>

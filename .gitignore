@@ -9,7 +9,3 @@ __pycache__/
 # ignore virtual environment
 venv/
 .env
-
-# ignore migratioms file
-migrations/
-*/migrations/

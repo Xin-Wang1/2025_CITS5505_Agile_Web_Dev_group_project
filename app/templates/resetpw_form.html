@@ -34,13 +34,20 @@
 
         <div class="content">
           <div class="login-card">
+            {% with messages = get_flashed_messages(with_categories=True) %}
+            {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert alert-{{ 'success' if category == 'success' else 'danger' }}">{{ message }}</div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
             <h2 class="text-center mb-4">Reset password for {{ username }}</h2>
 
             <!-- <div class="alert alert-info" style="display: none;"></div> -->
             <div class="alert alert-info d-none" role="alert" id="statusMessage"></div>
 
 
-            <!-- <form method="POST" action="{{ url_for('resetpw_username', username=username) }}">
+            <!-- <form method="POST" action="{{ url_for('auth.resetpw_username', username=username) }}">
                 <div class="mb-3">
                   <input type="password" name="new_password" class="form-control" placeholder="Password" required />
                 </div>
@@ -78,7 +85,7 @@
             </form>
 
             <div class="text-center mt-3">
-              <a href="{{ url_for('login') }}" class="text-primary">Back to Login</a>
+              <a href="{{ url_for('auth.login') }}" class="text-primary">Back to Login</a>
             </div>
           </div>
         </div>

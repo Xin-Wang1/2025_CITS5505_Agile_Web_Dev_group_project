@@ -1,8 +1,9 @@
 # cleanup.py
 from flask import Flask
-from app import app
-from models import Classtime, db
+from app.app import app
+from app.models import Classtime, db
 from collections import defaultdict
+
 
 def delete_duplicate_classtimes():
     print("Searching for duplicate classtimes...")
@@ -25,6 +26,7 @@ def delete_duplicate_classtimes():
 
     db.session.commit()
     print("Duplicate classtimes deleted.")
+
 
 if __name__ == "__main__":
     with app.app_context():
