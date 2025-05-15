@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user
-from models import Unit, Classtime, db
+from app.models import Unit, Classtime, db
 from datetime import datetime
 import csv
 from io import TextIOWrapper
