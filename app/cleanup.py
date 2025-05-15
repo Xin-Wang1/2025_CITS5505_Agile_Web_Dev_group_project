@@ -1,7 +1,7 @@
 # cleanup.py
 from flask import Flask
 from app import app
-from models import Classtime, db
+from app.models import Classtime, db
 from collections import defaultdict
 
 def delete_duplicate_classtimes():

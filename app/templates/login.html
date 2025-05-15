@@ -44,20 +44,7 @@
             {% endif %}
             {% endwith %}
 
-            <!-- <form method="POST" action="{{ url_for('login') }}">
-              <div class="mb-3">
-                <input type="text" name="username" class="form-control" placeholder="Username" required>
-              </div>
-              <div class="mb-3 password-toggle">
-                <input type="password" name="password" id="password" class="form-control" placeholder="Password"
-                  required>
-              </div>
-              <div class="d-grid">
-                <button type="submit" class="btn btn-primary-custom w-100">Sign In</button>
-              </div>
-            </form> -->
-
-            <form method="POST">
+            <form method="POST" action="{{ url_for('auth.login') }}">
               {{ form.hidden_tag() }}
               <div class="mb-3">
                 {{ form.username.label }} {{ form.username(class="form-control") }}
@@ -72,11 +59,11 @@
             </form>
 
             <div class="text-center mt-3">
-              <a href="{{ url_for('register') }}" class="text-primary">Don't have an account? Sign Up</a>
+              <a href="{{ url_for('auth.register') }}" class="text-primary">Don't have an account? Sign Up</a>
             </div>
 
             <div class="text-center mt-3">
-              <a href="{{ url_for('resetpw') }}" class="text-primary">Forgot password?</a>
+              <a href="{{ url_for('auth.resetpw') }}" class="text-primary">Forgot password?</a>
             </div>
 
           </div>
