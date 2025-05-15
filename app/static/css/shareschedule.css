@@ -13,14 +13,12 @@ body {
     z-index: 1000;
 }
 
-.navbar-brand,
-.navbar-nav .nav-link {
+.navbar-brand, .navbar-nav .nav-link {
     color: #fff !important;
     font-weight: 500;
 }
 
-.navbar-brand:hover,
-.navbar-nav .nav-link:hover {
+.navbar-brand:hover, .navbar-nav .nav-link:hover {
     color: #f8d030 !important;
 }
 
@@ -29,7 +27,7 @@ body {
 }
 
 .card {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     margin-bottom: 20px;
 }
 
@@ -58,84 +56,5 @@ body {
 }
 
 .list-group-item:hover {
-    background-color: #f1f1f1;
-}
-
-/* ShareSchedule form enhancements */
-.card-title {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: #003087;
-}
-
-.form-group label {
-    font-weight: 500;
-    color: #333;
-}
-
-.form-control {
-    border-radius: 6px;
-    border: 1px solid #ced4da;
-    box-shadow: none;
-    transition: border-color 0.3s ease-in-out;
-}
-
-.form-control:focus {
-    border-color: #003087;
-    box-shadow: 0 0 0 0.2rem rgba(0, 48, 135, 0.25);
-}
-
-.btn-primary {
-    background-color: #003087;
-    border-color: #003087;
-}
-
-.btn-primary:hover {
-    background-color: #002265;
-    border-color: #002265;
-}
-
-/* Message card padding */
-.card-body {
-    padding: 1.5rem;
-}
-
-/* Section headers */
-h2,
-h3 {
-    color: #003087;
-    font-weight: 600;
-    margin-bottom: 1rem;
-}
-
-/* Responsive tweaks */
-@media (max-width: 576px) {
-    .card-body {
-        padding: 1rem;
-    }
-}
-
-/* Shared Schedule Display Enhancements */
-.schedule-container {
-    margin-top: 20px;
-}
-
-.schedule-title {
-    font-size: 1.3rem;
-    font-weight: 600;
-    color: #003087;
-    margin-bottom: 10px;
-}
-
-.schedule-entry {
-    padding: 1rem;
-    background-color: #ffffff;
-    border: 1px solid #dee2e6;
-    border-radius: 6px;
-    margin-bottom: 10px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.schedule-entry:hover {
     background-color: #f1f1f1;
 }
