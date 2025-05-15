@@ -71,7 +71,7 @@
 
   <!-- Schedule Generate Button -->
   <div class="mt-4">
-    <form method="POST" action="{{ url_for('schedule_generation') }}">
+    <form method="POST" action="{{ url_for('schedule.schedule_generation') }}">
       <input type="hidden" name="selected_units" id="selected-units-input" />
       <button type="submit" class="btn btn-success">Schedule Generate</button>
     </form>
