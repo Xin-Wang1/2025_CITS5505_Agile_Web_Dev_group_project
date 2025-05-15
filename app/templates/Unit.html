@@ -1,87 +1,103 @@
-{% extends "base.html" %}
+{% extends "base.html" %} {% block title %}Schedule{% endblock %} {% block head
+%} {{ super() }}
+<link
+  href="{{ url_for('static', filename='css/unit.css') }}"
+  rel="stylesheet"
+/>
 
-{% block title %}Schedule{% endblock %}
-  
-  {% block head %}
-    <link href="{{ url_for('static', filename='css/unit.css') }}" rel="stylesheet">
-    
-  {% endblock %}
-  
-  {% block content %}
+{% endblock %} {% block content %}
 
-
-
-  <main class="container flex-grow-1 my-4">
+<main class="container flex-grow-1 my-4">
   <h2 class="mb-4">Upload Unit Details</h2>
-  {% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-    {% for category, message in messages %}
-      <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-        {{ message }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-      </div>
-    {% endfor %}
-  {% endif %}
-{% endwith %}
-  <form method="POST" action="{{ url_for('unit.upload_unit') }}" enctype="multipart/form-data">
+  {% with messages = get_flashed_messages(with_categories=true) %} {% if
+  messages %} {% for category, message in messages %}
+  <div
+    class="alert alert-{{ category }} alert-dismissible fade show"
+    role="alert"
+  >
+    {{ message }}
+    <button
+      type="button"
+      class="btn-close"
+      data-bs-dismiss="alert"
+      aria-label="Close"
+    ></button>
+  </div>
+  {% endfor %} {% endif %} {% endwith %}
+  <form
+    method="POST"
+    action="{{ url_for('unit.upload_unit') }}"
+    enctype="multipart/form-data"
+  >
     <div class="mb-3">
       <label for="file" class="form-label">Upload CSV/Excel File</label>
-      <input type="file" class="form-control" id="file" name="file" accept=".csv, .xlsx" required>
+      <input
+        type="file"
+        class="form-control"
+        id="file"
+        name="file"
+        accept=".csv, .xlsx"
+        required
+      />
     </div>
     <button type="submit" class="btn btn-primary">Upload</button>
   </form>
 
-  <hr class="my-4">
+  <hr class="my-4" />
 
   <h3>Search and Select Units</h3>
-<div class="mb-3">
-  <label for="unit-search" class="form-label">Filter Units</label>
-  <div class="input-group">
-    <span class="input-group-text">  
-      🔍
-    </span>
-    <input
-      type="text"
-      class="form-control"
-      id="unit-search"
-      placeholder="Type to filter by unit name…"
-      aria-label="Search units"
-    >
-    <button
-      class="btn btn-outline-secondary"
-      type="button"
-      id="clear-search"
-      aria-label="Clear search"
-    >✖️</button>
-  </div>
-</div>
-<ul class="list-group" id="unit-list">
-  {% for unit in units %}
-  <li class="list-group-item">
-    <div class="d-flex justify-content-between align-items-center">
-      <span>
-        <strong class="unit-name">{{ unit.name }}</strong> ({{ unit.credit_points }} credits)
-      </span>
-      <button class="btn btn-sm btn-secondary" 
-              onclick="selectUnit('{{ unit.name|escape }}', '{{ unit.id }}')">
-        Select
+  <div class="mb-3">
+    <label for="unit-search" class="form-label">Filter Units</label>
+    <div class="input-group">
+      <span class="input-group-text"> 🔍 </span>
+      <input
+        type="text"
+        class="form-control"
+        id="unit-search"
+        placeholder="Type to filter by unit name…"
+        aria-label="Search units"
+      />
+      <button
+        class="btn btn-outline-secondary"
+        type="button"
+        id="clear-search"
+        aria-label="Clear search"
+      >
+        ✖️
       </button>
     </div>
-    <!-- Timeslots for the unit -->
-    <ul class="mt-2">
-      {% for timeslot in unit.class_times %}
-      <li>
-        <small>
-          {{ timeslot.day_of_week }}: {{ timeslot.start_time }} - {{ timeslot.end_time }} ({{ timeslot.type }})
-        </small>
-      </li>
-      {% endfor %}
-    </ul>
-  </li>
-  {% endfor %}
-</ul>
+  </div>
+  <ul class="list-group" id="unit-list">
+    {% for unit in units %}
+    <li class="list-group-item">
+      <div class="d-flex justify-content-between align-items-center">
+        <span>
+          <strong class="unit-name">{{ unit.name }}</strong> ({{
+          unit.credit_points }} credits)
+        </span>
+        <button
+          class="btn btn-sm btn-secondary"
+          onclick="selectUnit('{{ unit.name|escape }}', '{{ unit.id }}')"
+        >
+          Select
+        </button>
+      </div>
+      <!-- Timeslots for the unit -->
+      <ul class="mt-2">
+        {% for timeslot in unit.class_times %}
+        <li>
+          <small>
+            {{ timeslot.day_of_week }}: {{ timeslot.start_time }} - {{
+            timeslot.end_time }} ({{ timeslot.type }})
+          </small>
+        </li>
+        {% endfor %}
+      </ul>
+    </li>
+    {% endfor %}
+  </ul>
 
-  <hr class="my-4">
+  <hr class="my-4" />
 
   <h3>Selected Units</h3>
   <ul class="list-group" id="selected-units">
@@ -91,13 +107,11 @@
   <!-- Schedule Generate Button -->
   <div class="mt-4">
     <form method="POST" action="{{ url_for('schedule_generation') }}">
-      <input type="hidden" name="selected_units" id="selected-units-input">
+      <input type="hidden" name="selected_units" id="selected-units-input" />
       <button type="submit" class="btn btn-success">Schedule Generate</button>
     </form>
   </div>
 </main>
-{% endblock %}
-
-{% block scripts %}
-  <script src="{{ url_for('static', filename='js/unit.js') }}"></script>
+{% endblock %} {% block scripts %}
+<script src="{{ url_for('static', filename='js/unit.js') }}"></script>
 {% endblock %}
