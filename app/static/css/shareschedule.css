@@ -1,53 +1,60 @@
 body {
-  font-family: 'Arial', sans-serif;
-  background-color: #f8f9fa;
-  padding-top: 70px;
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa;
+    padding-top: 70px;
 }
 
 .navbar {
-  background-color: #003087;
-  padding: 15px;
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 1000;
+    background-color: #003087;
+    padding: 15px;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
 }
 
 .navbar-brand, .navbar-nav .nav-link {
-  color: #fff !important;
-  font-weight: 500;
+    color: #fff !important;
+    font-weight: 500;
 }
 
 .navbar-brand:hover, .navbar-nav .nav-link:hover {
-  color: #f8d030 !important;
+    color: #f8d030 !important;
 }
 
 .main-content {
-  padding-top: 20px;
+    padding-top: 20px;
 }
 
 .card {
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.comment {
-  background-color: #e9ecef;
-  padding: 8px 12px;
-  border-radius: 8px;
-  margin-bottom: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
 }
 
 .post-meta {
-  font-size: 0.9rem;
-  color: #666;
+    font-size: 0.9rem;
+    color: #666;
 }
 
 .img-preview {
-  max-width: 100%;
-  height: auto;
-  margin-top: 8px;
+    max-width: 100%;
+    height: auto;
+    margin-top: 8px;
 }
+
 .container {
-  padding-top: 70px; 
+    padding-top: 70px;
 }
- 
+
+#search-results {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.list-group-item {
+    cursor: pointer;
+}
+
+.list-group-item:hover {
+    background-color: #f1f1f1;
+}

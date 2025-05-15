@@ -1,5 +1,5 @@
 from flask import Flask, render_template, redirect, url_for, request, flash, jsonify
-from models import User, Unit, Classtime, Schedule, Sharedschedule
+from models import User, Unit, Classtime, Schedule, Message
 from config import Config
 from flask_login import (
     LoginManager,
@@ -16,19 +16,28 @@ from models import db
 from flask_migrate import Migrate
 from datetime import datetime
 import json
+import os
+from werkzeug.utils import secure_filename
 from forms import LoginForm, RegisterForm, ResetPasswordForm
 from flask_wtf.csrf import CSRFProtect
 
 app = Flask(__name__)
 app.config.from_object(Config)
 
-# initialize database
+# Initialize db and migrate
 db.init_app(app)
 migrate = Migrate(app, db)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "login"
+
+# File upload configuration
+UPLOAD_FOLDER = 'static/uploads'
+ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png', 'pdf'}
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['MAX_CONTENT_LENGTH'] = 10 * 1024 * 1024  # 10MB limit
+
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -41,15 +50,6 @@ def home():
     else:
         return render_template("home.html", name="Guest")
 
-# @app.route("/login", methods=["GET", "POST"])
-# def login():
-#     if request.method == "POST":
-#         user = User.query.filter_by(username=request.form["username"]).first()
-#         if user and check_password_hash(user.password_hash, request.form["password"]):
-#             login_user(user)
-#             return redirect(url_for("home"))
-#         flash("Invalid credentials")
-#     return render_template("login.html")
 @app.route("/login", methods=["GET", "POST"])
 def login():
     form = LoginForm()
@@ -81,31 +81,6 @@ def register():
 
     return render_template("register.html", form=form)
 
-# @app.route("/register", methods=["GET", "POST"])
-# def register():
-#     if request.method == "POST":
-#         username = request.form["username"]
-#         password = request.form["password"]
-#         confirm_password = request.form["confirm_password"]
-
-#         if password != confirm_password:
-#             flash("Passwords do not match", "danger")
-#             return render_template("register.html")
-
-#         existing_user = User.query.filter_by(username=username).first()
-#         if existing_user:
-#             flash("Username already taken", "danger")
-#             return render_template("register.html")
-
-#         hashed_pw = generate_password_hash(password)
-#         new_user = User(username=username, password_hash=hashed_pw)
-#         db.session.add(new_user)
-#         db.session.commit()
-#         flash("Registration successful. You can now log in.", "success")
-#         return redirect(url_for("login"))
-
-#     return render_template("register.html")
-
 @app.route("/resetpw", methods=["GET", "POST"])
 def resetpw():
     if request.method == "POST":
@@ -118,25 +93,6 @@ def resetpw():
             return render_template("resetpw.html")
     return render_template("resetpw.html")
 
-# @app.route("/resetpw/<username>", methods=["GET", "POST"])
-# def resetpw_username(username):
-#     user = User.query.filter_by(username=username).first()
-#     if not user:
-#         flash("Invalid username.", "danger")
-#         return redirect(url_for("resetpw"))
-
-#     if request.method == "POST":
-#         new_password = request.form.get("new_password")
-#         confirm_password = request.form.get("confirm_password")
-
-#         if new_password != confirm_password:
-#             flash("Passwords do not match.", "danger")
-#             return render_template("resetpw_form.html", username=username)
-
-#         return render_template("resetpw_form.html", username=username)
-
-#     return render_template("resetpw_form.html", username=username)
-
 @app.route("/resetpw/<username>", methods=["GET", "POST"])
 def resetpw_username(username):
     user = User.query.filter_by(username=username).first()
@@ -144,15 +100,20 @@ def resetpw_username(username):
         flash("Invalid username.", "danger")
         return redirect(url_for("resetpw"))
 
-    form = ResetPasswordForm()
+    if request.method == "POST":
+        new_password = request.form.get("new_password")
+        confirm_password = request.form.get("confirm_password")
 
-    if form.validate_on_submit():
-        user.password_hash = generate_password_hash(form.new_password.data)
+        if new_password != confirm_password:
+            flash("Passwords do not match.", "danger")
+            return render_template("resetpw_form.html", username=username)
+
+        user.password_hash = generate_password_hash(new_password)
         db.session.commit()
         flash("Password reset successful. You can now log in.", "success")
         return redirect(url_for("login"))
 
-    return render_template("resetpw_form.html", username=username, form=form)
+    return render_template("resetpw_form.html", username=username)
 
 @app.route("/dashboard")
 @login_required
@@ -201,7 +162,8 @@ def My_Schedule():
 def delete_schedule(schedule_id):
     schedule = Schedule.query.get_or_404(schedule_id)
     if schedule.user_id != current_user.id:
-        return jsonify({"success": False, "message": "No permission to delete this schedule!"}), 403    
+        return jsonify({"success": False, "message": "No permission to delete this schedule!"}), 403
+    
     try:
         db.session.delete(schedule)
         db.session.commit()
@@ -240,7 +202,7 @@ def schedule_generation():
         name=f"Schedule {current_user.username} {len(current_user.schedules) + 1}",
         created_at=datetime.utcnow()
     )
-    db.session.add(new_schedule)
+ 
     
     # Link selected units to the new schedule
     for unit_id in selected_unit_ids:
@@ -248,7 +210,6 @@ def schedule_generation():
         for classtime in classtimes:
             new_schedule.classtimes.append(classtime)
     
-    db.session.commit()
     
     flash('Schedule generated successfully!', 'success')
     # Redirect with selected_unit_ids as query parameter
@@ -311,35 +272,90 @@ def generate_schedule():
                          selected_units=serialized_units,
                          total_credits=total_credits)
 
-@app.route("/ShareSchedule")
+@app.route("/messages")
 @login_required
-def ShareSchedule():
-    return render_template("ShareSchedule.html")
+def messages():
+    # Get sent and received messages
+    users = User.query.all()
+    sent_messages = Message.query.filter_by(sender_id=current_user.id).order_by(Message.created_at.desc()).all()
+    received_messages = Message.query.filter_by(receiver_id=current_user.id).order_by(Message.created_at.desc()).all()
+    
+    received_schedule_ids = {
+        msg.schedule_id
+        for msg in received_messages
+        if msg.schedule_id  # skip None
+    }
+    schedules = Schedule.query \
+        .filter(Schedule.id.in_(received_schedule_ids)) \
+        .all()
+    schedules_data = []
+    for schedule in schedules:
+        class_list = []
+        for ct in schedule.classtimes:
+            class_list.append({
+                'id': ct.id,
+                'unit_id': ct.unit_id,
+                'unit_name': ct.unit.name or 'Unknown',
+                'type': ct.type,
+                'day_of_week': ct.day_of_week,
+                'start_time': ct.start_time.strftime('%H:%M'),
+                'end_time': ct.end_time.strftime('%H:%M'),
+            })
+        schedules_data.append({
+            'id': schedule.id,
+            'name': schedule.name,
+            'classtimes': class_list
+        })
+    return render_template("ShareSchedule.html", sent_messages=sent_messages, received_messages=received_messages,users=users, schedules=schedules_data)
 
-@app.route("/ShareSchedule/<int:id>")
+@app.route("/messages/send", methods=["POST"])
 @login_required
-def view_shared_schedule(id):
-    post = Sharedschedule.query.get_or_404(id)
-    return render_template("ShareSchedule.html", post=post)
+def send_message():
+    receiver_id = request.form.get("receiver_id")
+    if not receiver_id:
+        flash("Please select a recipient.", "danger")
+        return redirect(url_for("messages"))
+    receiver = User.query.get(int(receiver_id))
+    if not receiver or receiver.id == current_user.id:
+        flash("Invalid recipient.", "danger")
+        return redirect(url_for("messages"))
 
-def ShareSchedule(id):
-    # Get the shared schedule by ID
-    post = Sharedschedule.query.get_or_404(id)
-    return render_template("ShareSchedule.html", post=post)
+    schedule_id = request.form.get("schedule_id")
+    schedule = None
+    if schedule_id:
+        schedule = Schedule.query.filter_by(
+            id=int(schedule_id),
+            user_id=current_user.id
+        ).first()
+        if not schedule:
+            flash("Invalid schedule selected.", "danger")
+            return redirect(url_for("messages"))
 
-@app.route("/blog")
-def blog():
-    schedules = Sharedschedule.query.order_by(Sharedschedule.created_at.desc()).all()
-    return render_template("blog.html", schedules=schedules, name=current_user.username)
+    # 3) Message content
+    content = request.form.get("content", "").strip()
+    if not content:
+        flash("Message content cannot be empty.", "danger")
+        return redirect(url_for("messages"))
+
+    
+    # Create new message
+    new_message = Message(
+        sender_id=current_user.id,
+        receiver_id=receiver.id,
+        content=content,
+        schedule_id=schedule.id if schedule else None,
+        created_at=datetime.utcnow()
+    )
+    db.session.add(new_message)
+    db.session.commit()
+
+    flash("Sent successfully！", "success")
+    return redirect(url_for("messages"))
 
 app.register_blueprint(unit_bp, url_prefix="/unit")
-
-app.register_blueprint(myschedule_bp, url_prefix='/myschedule')
-
 app.register_blueprint(myschedule_bp, url_prefix='/myschedule')
 
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
-        # insert_sample_data(db)
     app.run(debug=True)
