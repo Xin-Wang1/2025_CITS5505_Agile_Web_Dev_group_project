@@ -15,13 +15,20 @@ main.container {
     background: rgba(255, 255, 255, 0.75);
     backdrop-filter: blur(12px);
     padding: 20px;
- 
-  
 }
 
+/* 让课表容器和表格背景透明 */
+.schedule-container {
+    background-color: transparent !important;
+}
+.table, .table thead, .table tbody, .table th, .table td {
+    background-color: transparent !important;
+}
+
+/* 表头字体颜色和背景 */
 .table th {
-    background-color: #0d6efd;
-    color: #fff;
+    background-color: #0d6efd !important;
+    color: #fff !important;
 }
 
 .table td, .table th {
@@ -40,7 +47,6 @@ main.container {
     background-color: #0d6efd;
 }
 
- 
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .navbar {
