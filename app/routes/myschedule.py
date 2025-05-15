@@ -8,48 +8,53 @@ from io import TextIOWrapper
 myschedule_bp = Blueprint("myschedule", __name__)
 
 
-@myschedule_bp.route("/")
-# @login_required
-def my_schedules():
-    # Fetch all schedules created by the current user
-    schedules = (
-        Schedule.query.filter_by(user_id=current_user.id)
-        .order_by(Schedule.created_at.desc())
-        .all()
-    )
-    print(f"Schedules: {schedules}")
-    # Prepare the data to pass to the template
+@myschedule_bp.route("/My_Schedule/")
+@login_required
+def My_Schedule():
+    print(f"Request path: {request.path}")
+    # Find all schedules for the current user
+    schedules = Schedule.query.filter_by(user_id=current_user.id).all()
+
+    # Transform schedules data for rendering
     schedules_data = []
     for schedule in schedules:
-        schedule_entry = {
-            "id": schedule.id,
-            "name": schedule.name,
-            "created_at": (
-                schedule.created_at.strftime("%Y-%m-%d %H:%M:%S")
-                if schedule.created_at
-                else "Unknown"
-            ),
-            "classtimes": [],
-        }
+        classtimes = []
         for classtime in schedule.classtimes:
-            schedule_entry["classtimes"].append(
+            classtimes.append(
                 {
-                    "unit_name": classtime.unit.name or "Unknown Unit",
-                    "day_of_week": classtime.day_of_week or "Unknown Day",
+                    "id": classtime.id,
+                    "unit_id": classtime.unit_id,
+                    "unit_name": (
+                        classtime.unit.name if classtime.unit else "Unknown Unit"
+                    ),
+                    "type": classtime.type,
+                    "day_of_week": classtime.day_of_week,
                     "start_time": (
                         classtime.start_time.strftime("%H:%M")
                         if classtime.start_time
-                        else "00:00"
+                        else None
                     ),
                     "end_time": (
                         classtime.end_time.strftime("%H:%M")
                         if classtime.end_time
-                        else "00:00"
+                        else None
                     ),
-                    "type": classtime.type or "Unknown Type",
+                    "created_at": (
+                        classtime.created_at.isoformat()
+                        if classtime.created_at
+                        else None
+                    ),
                 }
             )
-        schedules_data.append(schedule_entry)
+        schedules_data.append(
+            {
+                "id": schedule.id,
+                "name": schedule.name,
+                "created_at": (
+                    schedule.created_at.isoformat() if schedule.created_at else None
+                ),
+                "classtimes": classtimes,
+            }
+        )
 
-    print(f"Schedules data: {schedules_data}")
     return render_template("My_Schedule.html", schedules=schedules_data)
