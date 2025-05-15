@@ -1,5 +1,5 @@
 {% extends "base.html" %} {% block title %}My Schedule{% endblock %} {% block
-head %} {{ super()}}
+head %} {{ super() }}
 <link
   href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
   rel="stylesheet"
@@ -12,14 +12,21 @@ head %} {{ super()}}
   href="{{ url_for('static', filename='css/myschedule.css') }}"
   rel="stylesheet"
 />
-
 {% endblock %} {% block content %}
 <main class="container flex-grow-1 my-4">
   <h1 class="mb-4">My Schedules</h1>
 
   {% for schedule in schedules %}
-  <div class="schedule-container mb-5">
-    <h2>{{ schedule.name }}</h2>
+  <div class="schedule-container mb-5" id="schedule-{{ schedule.id }}">
+    <div class="d-flex justify-content-between align-items-center">
+      <h2>{{ schedule.name }}</h2>
+      <button
+        class="btn btn-danger btn-sm delete-schedule-btn"
+        data-id="{{ schedule.id }}"
+      >
+        Delete
+      </button>
+    </div>
     <p><strong>Created At:</strong> {{ schedule.created_at }}</p>
 
     <div class="table-responsive">
@@ -50,5 +57,28 @@ head %} {{ super()}}
 <script src="{{ url_for('static', filename='js/myschedule.js') }}"></script>
 <script>
   const scheduleData = {{ schedules | tojson | safe }};
+
+  document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.delete-schedule-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        if (!confirm('Are you sure you want to delete this schedule?')) return;
+        const scheduleId = this.getAttribute('data-id');
+        fetch(`/schedule/delete/${scheduleId}`, {
+          method: 'POST',
+          headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            document.getElementById(`schedule-${scheduleId}`).remove();
+          } else {
+            alert(data.message || 'Delete failed.');
+          }
+        });
+      });
+    });
+  });
 </script>
 {% endblock %}

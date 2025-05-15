@@ -1,5 +1,3 @@
- 
-
 function generateTimetableStructure(scheduleId) {
   const times = [...Array(13)].map((_, i) => 8 + i); // Hours from 8:00 to 20:00
   const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
@@ -37,20 +35,30 @@ function renderTimetable(schedule) {
 
 $(document).ready(function () {
   // Iterate over all schedules and generate their timetables
-  scheduleData.forEach((schedule) => {
-    generateTimetableStructure(schedule.id);
-    renderTimetable(schedule);
-  });
+  if (typeof scheduleData !== "undefined") {
+    scheduleData.forEach((schedule) => {
+      generateTimetableStructure(schedule.id);
+      renderTimetable(schedule);
+    });
+  }
+  // Optionally, you can add more event listeners or features here
 });
+
+/* 
+  The following functions are for optional features like list view, search, and export.
+  If you don't use these features, you can remove them.
+*/
 
 function renderListView() {
   const listViewContent = $('#listViewContent');
   listViewContent.empty();
-  timetableData.forEach(slot => {
-    listViewContent.append(
-      `<li class="list-group-item">${slot.course} - ${slot.type} (${slot.day.charAt(0).toUpperCase() + slot.day.slice(1)} ${slot.time}:00, ${slot.location})</li>`
-    );
-  });
+  if (typeof timetableData !== "undefined") {
+    timetableData.forEach(slot => {
+      listViewContent.append(
+        `<li class="list-group-item">${slot.course} - ${slot.type} (${slot.day.charAt(0).toUpperCase() + slot.day.slice(1)} ${slot.time}:00, ${slot.location})</li>`
+      );
+    });
+  }
 }
 
 $('#toggleView').click(function () {
@@ -74,14 +82,11 @@ $('#exportPDF').click(function () {
   const doc = new jsPDF();
   doc.text('My Schedule', 10, 10);
   let y = 20;
-  timetableData.forEach(slot => {
-    doc.text(`${slot.course} - ${slot.type} (${slot.day.charAt(0).toUpperCase() + slot.day.slice(1)} ${slot.time}:00, ${slot.location})`, 10, y);
-    y += 10;
-  });
+  if (typeof timetableData !== "undefined") {
+    timetableData.forEach(slot => {
+      doc.text(`${slot.course} - ${slot.type} (${slot.day.charAt(0).toUpperCase() + slot.day.slice(1)} ${slot.time}:00, ${slot.location})`, 10, y);
+      y += 10;
+    });
+  }
   doc.save('timetable.pdf');
-});
-
-$(document).ready(function () {
-  generateTimetableStructure();
-  renderTimetable();
 });
