@@ -1,73 +1,155 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
-from flask_login import login_required, current_user
+from flask import Blueprint, render_template, request, redirect, url_for, flash,jsonify
 from app.models import Unit, Classtime, Schedule, db
 from datetime import datetime
 import csv
 from io import TextIOWrapper
 import json
-
+from flask_login import (
+    login_required,
+    current_user,
+)
 schedule_bp = Blueprint("schedule", __name__)
 
-
-@schedule_bp.route("/", methods=["POST"])
+@schedule_bp.route("/schedule/delete/<int:schedule_id>", methods=["POST"])
 @login_required
-def generation():
-    if request.method == "POST":
-        # Get selected unit IDs from the form
-        selected_unit_ids = request.form.get("selected_units")
-        selected_unit_ids = json.loads(
-            selected_unit_ids
-        )  # Parse JSON string into a Python list
-        print(f"Selected unit IDs: {selected_unit_ids}")
-
-        # Query the database for the selected units and their class times
-        selected_units = Unit.query.filter(Unit.id.in_(selected_unit_ids)).all()
-        print(f"Selected units: {selected_units}")
-        # Pass the selected units to the schedule page
-        # Prepare the data to pass to the schedule page
-        schedule_data = []
-        total_credits = 0
-        for unit in selected_units:
-            total_credits += unit.credit_points
-            for timeslot in unit.class_times:
-                schedule_data.append(
-                    {
-                        "unit_name": unit.name,
-                        "day_of_week": timeslot.day_of_week,
-                        "start_time": timeslot.start_time.strftime("%H:%M"),
-                        "end_time": timeslot.end_time.strftime("%H:%M"),
-                        "type": timeslot.type,
-                    }
-                )
-        print(f"Schedule data: {schedule_data}")
-        return render_template(
-            "schedule.html",
-            selected_units=selected_units,
-            schedule_data=schedule_data,
-            total_credits=total_credits,
+def delete_schedule(schedule_id):
+    schedule = Schedule.query.get_or_404(schedule_id)
+    if schedule.user_id != current_user.id:
+        return (
+            jsonify(
+                {"success": False, "message": "No permission to delete this schedule!"}
+            ),
+            403,
         )
 
+    try:
+        db.session.delete(schedule)
+        db.session.commit()
+        return jsonify({"success": True})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"success": False, "message": str(e)}), 500
 
-@schedule_bp.route("/generate_schedule", methods=["POST"])
-# @login_required
-def generate_schedule():
-    # 1) Pull the JSON arrays you sent from the front end
-    selected_classtime_ids = json.loads(
-        request.form.get("selected_classtime_ids", "[]")
+@schedule_bp.route("/schedule/generation", methods=["POST"])
+@login_required
+def schedule_generation():
+    # Get selected unit IDs from the request
+    selected_unit_ids = request.form.get("selected_units")
+
+    # Check if selected_unit_ids is None or empty
+    if not selected_unit_ids:
+        flash("Please select at least one unit!", "danger")
+        return redirect(url_for("unit.upload_unit"))
+
+    try:
+        # Try to parse the JSON string into a Python list
+        selected_unit_ids = json.loads(selected_unit_ids)
+        # Check if the list is empty
+        if not selected_unit_ids:
+            flash("Please select at least one unit!", "danger")
+            return redirect(url_for("unit.upload_unit"))
+    except json.JSONDecodeError:
+        # Catch JSON parsing errors
+        flash("Please try again, invalid selection!", "danger")
+        return redirect(url_for("unit.upload_unit"))
+
+    # Create a new schedule
+    new_schedule = Schedule(
+        user_id=current_user.id,
+        name=f"Schedule {current_user.username} {len(current_user.schedules) + 1}",
+        created_at=datetime.utcnow(),
     )
-    unavailable_slots = json.loads(request.form.get("unavailable_slots", "[]"))
-    print(f"Selected classtime IDs: {selected_classtime_ids}")
-    print(f"Unavailable slots: {unavailable_slots}")
-    # 2) Create and persist the Schedule
-    sched = Schedule(user_id=current_user.id, name="Auto-Generated")
-    db.session.add(sched)
 
-    # 3) For each selected class-timeslot, look up its Classtime record
-    classtimes = Classtime.query.filter(Classtime.id.in_(selected_classtime_ids)).all()
-    print(f"Selected classtimes: {classtimes}")
-    sched.classtimes.extend(classtimes)
-    db.session.add(sched)
-    db.session.commit()
+    # Link selected units to the new schedule
+    for unit_id in selected_unit_ids:
+        classtimes = Classtime.query.filter_by(unit_id=unit_id).all()
+        for classtime in classtimes:
+            new_schedule.classtimes.append(classtime)
+
     flash("Schedule generated successfully!", "success")
+    # Redirect with selected_unit_ids as query parameter
+    return redirect(
+        url_for("schedule.generate_schedule", unit_ids=",".join(map(str, selected_unit_ids)))
+    )
 
-    return redirect(url_for("myschedule.my_schedules"))
+
+
+# Upload unit
+
+
+@schedule_bp.route("/schedule/generate_schedule", methods=["GET", "POST"])
+@login_required
+def generate_schedule():
+    if request.method == "POST":
+        selected_classtime_ids = json.loads(
+            request.form.get("selected_classtime_ids", "[]")
+        )
+        unit_ids = request.form.getlist("unit_ids")
+
+        # Create or update schedule
+        new_schedule = Schedule(
+            user_id=current_user.id,
+            name=f"Schedule {current_user.username} {len(current_user.schedules) + 1}",
+            created_at=datetime.utcnow(),
+        )
+        db.session.add(new_schedule)
+
+        # Link selected classtimes
+        for classtime_id in selected_classtime_ids:
+            classtime = Classtime.query.get(classtime_id)
+            if classtime:
+                new_schedule.classtimes.append(classtime)
+
+        db.session.commit()
+        flash("Schedule saved successfully!", "success")
+        return redirect(url_for("My_Schedule"))
+
+    # GET request: Render Schedule.html with selected units
+    selected_unit_ids = (
+        request.args.get("unit_ids", "").split(",")
+        if request.args.get("unit_ids")
+        else []
+    )
+    selected_units = (
+        Unit.query.filter(Unit.id.in_(selected_unit_ids)).all()
+        if selected_unit_ids
+        else []
+    )
+    total_credits = sum(unit.credit_points for unit in selected_units)
+
+    # Transform selected_units to a serializable format
+    serialized_units = []
+    for unit in selected_units:
+        # Convert class_times to a list of dictionaries
+        class_times = [
+            {
+                "id": classtime.id,
+                "unit_id": classtime.unit_id,
+                "type": classtime.type,
+                "day_of_week": classtime.day_of_week,
+                "start_time": (
+                    classtime.start_time.strftime("%H:%M")
+                    if classtime.start_time
+                    else None
+                ),
+                "end_time": (
+                    classtime.end_time.strftime("%H:%M") if classtime.end_time else None
+                ),
+                "created_at": (
+                    classtime.created_at.isoformat() if classtime.created_at else None
+                ),
+            }
+            for classtime in unit.class_times
+        ]
+        serialized_units.append(
+            {
+                "id": unit.id,
+                "name": unit.name,
+                "credit_points": unit.credit_points,
+                "class_times": class_times,
+            }
+        )
+
+    return render_template(
+        "Schedule.html", selected_units=serialized_units, total_credits=total_credits
+    )

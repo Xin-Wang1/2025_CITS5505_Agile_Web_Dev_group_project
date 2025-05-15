@@ -1,7 +1,61 @@
+let selectedSlots    = [];
+let unavailableSlots = [];
+document.getElementById('apply-preferences-btn').addEventListener('click', () => {
+  // Get selected preferred days
+  const preferredDays = [];
+  document.querySelectorAll('#preferred-days .form-check-input:checked').forEach(cb => {
+    preferredDays.push(cb.value);
+  });
+
+  if (preferredDays.length === 0) {
+    alert('Please select at least one preferred day.');
+    return;
+  }
+
+  // Clear previous selections
+  document.querySelectorAll('.timeslot-checkbox').forEach(cb => {
+    cb.checked = false;
+    cb.dispatchEvent(new Event('change'));
+  });
+
+  // Auto-schedule classes based on preferred days
+  autoScheduleClasses(preferredDays);
+});
+
+function autoScheduleClasses(preferredDays) {
+  const fallbackSlots = [];
+
+  document.querySelectorAll('.timeslot-checkbox').forEach(cb => {
+    const day  = cb.dataset.day;
+    const type = cb.dataset.classType;
+
+    if (type === 'Lecture') {
+      // always schedule lectures
+      cb.checked = true;
+      cb.dispatchEvent(new Event('change'));
+
+    } else if (preferredDays.includes(day)) {
+      // schedule non-lectures on your preferred days
+      cb.checked = true;
+      cb.dispatchEvent(new Event('change'));
+
+    } else {
+      // collect all the non-lecture slots on non-preferred days
+      fallbackSlots.push(cb);
+    }
+  });
+
+  // if there are any non-preferred-day slots, pick one at random
+  if (fallbackSlots.length > 0) {
+    const randomIndex = Math.floor(Math.random() * fallbackSlots.length);
+    const randomCb    = fallbackSlots[randomIndex];
+    randomCb.checked = true;
+    randomCb.dispatchEvent(new Event('change'));
+  }
+}
 
 document.addEventListener('DOMContentLoaded', () => {
-  const selectedSlots    = [];
-  const unavailableSlots = [];
+ 
 
   // simple [aStart,aEnd) vs [bStart,bEnd) overlap test
   function overlaps(aStart, aEnd, bStart, bEnd) {
@@ -22,27 +76,47 @@ document.addEventListener('DOMContentLoaded', () => {
       const name      = cb.dataset.unitName;
       const type      = cb.dataset.classType;
       const classtimeId = cb.dataset.classtimeId;
+      const unitId = cb.dataset.unitId;
       const firstCell = document.querySelector(`.slot-cell[data-day="${day}"][data-hour="${s}"]`);
-
+      
       if (cb.checked) {
         // 1a) block conflict?
         if (hasOverlap(unavailableSlots, day, s, e)) {
-          alert('⛔ That time is marked unavailable.');
           cb.checked = false;
           return;
         }
         // 1b) class conflict?
         if (hasOverlap(selectedSlots, day, s, e)) {
-          alert('⚠️ This class overlaps one you already selected.');
+
+          cb.checked = false;
+          return;
+        }
+        const existingSelection = selectedSlots.find(
+        slot => slot.unitId === unitId && slot.type === type
+        );
+        if (existingSelection) {
           cb.checked = false;
           return;
         }
 
         // record & render
-        selectedSlots.push({ classtimeId }); 
+        selectedSlots.push({ classtimeId, unitId, type, day, startHour: s, endHour: e }); 
         firstCell.setAttribute('rowspan', span);
         firstCell.classList.add('selected');
-        firstCell.textContent = `${name} (${type}) ${s}–${e}`;
+       
+        //firstCell.textContent = `${name} (${type}) ${s}–${e}`;
+        const listItem = document.createElement('li');
+        listItem.className = 'list-group-item';
+        listItem.innerHTML = `
+        <strong>${name}</strong> - ${type} 
+        (${day.charAt(0).toUpperCase() + day.slice(1)} ${s}:00–${e}:00)`;
+
+        const listContainer = document.createElement('ul');
+        listContainer.className = 'list-group';
+        listContainer.appendChild(listItem);
+
+        firstCell.innerHTML = ''; // Clear any existing content
+        firstCell.appendChild(listContainer);
         for (let h = s+1; h < e; h++) {
           document.querySelector(`.slot-cell[data-day="${day}"][data-hour="${h}"]`)
                   .style.display = 'none';
@@ -66,34 +140,80 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 2) ADD UNAVAILABLE handler
   document.getElementById('add-unavailable-btn').addEventListener('click', () => {
-    const day       = document.getElementById('unavailable-day').value;
-    const [startStr,endStr] = document.getElementById('unavailable-time').value
-                             .split('-').map(s=>s.trim());
-    const s         = parseInt(startStr.split(':')[0],10);
-    const e         = parseInt(endStr.split(':')[0],10);
-    const span      = e - s;
-    const firstCell = document.querySelector(`.slot-cell[data-day="${day}"][data-hour="${s}"]`);
+    const day = document.getElementById('unavailable-day').value;
+    const timeRange = document.getElementById('unavailable-time').value;
 
-    // record & render
-    unavailableSlots.push({ day, startHour: s, endHour: e });
-    firstCell.setAttribute('rowspan', span);
-    firstCell.classList.add('unavailable');
-    firstCell.textContent = `Unavailable ${startStr}–${endStr}`;
-    for (let h = s+1; h < e; h++) {
-      document.querySelector(`.slot-cell[data-day="${day}"][data-hour="${h}"]`)
-              .style.display = 'none';
+  // Validate inputs
+    if (!day || !timeRange) {
+      alert('Please select a day and time range.');
+      return;
     }
 
-    // remove any conflicting classes
-    document.querySelectorAll('.timeslot-checkbox:checked').forEach(cb => {
-      const d = cb.dataset.day;
-      const cs = parseInt(cb.dataset.startHour,10);
-      const ce = parseInt(cb.dataset.endHour,  10);
-      if (d===day && overlaps(s, e, cs, ce)) {
-        cb.checked = false;
-        cb.dispatchEvent(new Event('change'));
+    const [startStr, endStr] = timeRange.split('-').map(s => s.trim());
+    const s = parseInt(startStr.split(':')[0], 10);
+    const e = parseInt(endStr.split(':')[0], 10);
+
+    if (isNaN(s) || isNaN(e) || s >= e) {
+      alert('Invalid time range. Please enter a valid range like "10:00-12:00".');
+      return;
+    }
+
+    const span = e - s;
+    const firstCell = document.querySelector(`.slot-cell[data-day="${day}"][data-hour="${s}"]`);
+
+    if (!firstCell) {
+      alert('Invalid time slot. Please ensure the selected time range is within the schedule.');
+      return;
+    }
+    // record & render
+    unavailableSlots.push({ day, startHour: s, endHour: e });
+    const listItem = document.createElement('li');
+    listItem.className = 'list-group-item';
+    listItem.innerHTML = `
+    <strong>Unavailable</strong> 
+    (${day.charAt(0).toUpperCase() + day.slice(1)} ${startStr}–${endStr})
+    <button class="btn btn-sm btn-danger float-end remove-unavailable-btn">Remove</button>
+    `;
+
+    const listContainer = document.createElement('ul');
+    listContainer.className = 'list-group';
+    listContainer.appendChild(listItem);
+
+    firstCell.setAttribute('rowspan', span);
+    firstCell.classList.add('unavailable');
+    firstCell.innerHTML = ''; // Clear any existing content
+    firstCell.appendChild(listContainer);
+
+  // Hide subsequent cells in the same column
+    for (let h = s + 1; h < e; h++) {
+      const nextCell = document.querySelector(`.slot-cell[data-day="${day}"][data-hour="${h}"]`);
+      if (nextCell) {
+        nextCell.style.display = 'none';
       }
-    });
+    }
+
+  // Add event listener to the "Remove" button
+    const removeButton = listItem.querySelector('.remove-unavailable-btn');
+    if (removeButton) {
+      removeButton.addEventListener('click', () => {
+      // Remove the unavailable slot from the array
+        const idx = unavailableSlots.findIndex(slot => slot.day === day && slot.startHour === s && slot.endHour === e);
+        if (idx > -1) unavailableSlots.splice(idx, 1);
+
+      // Restore the cell
+        firstCell.removeAttribute('rowspan');
+        firstCell.classList.remove('unavailable');
+        firstCell.innerHTML = '';
+
+      // Restore the hidden cells
+        for (let h = s + 1; h < e; h++) {
+          const nextCell = document.querySelector(`.slot-cell[data-day="${day}"][data-hour="${h}"]`);
+          if (nextCell) {
+            nextCell.style.display = '';
+          }
+        }
+      });
+    }
   });
 
   // 3) GENERATE SCHEDULE → inject arrays as JSON

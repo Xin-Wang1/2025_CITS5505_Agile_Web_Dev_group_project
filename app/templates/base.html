@@ -62,7 +62,7 @@
           </li>
           <li>
             <a
-              href="{{ url_for('My_Schedule') }}"
+              href="{{ url_for('myschedule.My_Schedule') }}"
               class="nav-link px-2 {% if request.path == '/My_Schedule' %}link-secondary{% else %}link-primary{% endif %}"
               >My Schedule</a
             >
@@ -97,7 +97,7 @@
             </a>
             <ul class="dropdown-menu">
               <li>
-                <a class="dropdown-item" href="{{ url_for('My_Schedule') }}"
+                <a class="dropdown-item" href="{{ url_for('myschedule.My_Schedule') }}"
                   ><i class="bi bi-calendar me-2"></i>My Schedule</a
                 >
               </li>
