@@ -34,6 +34,13 @@
 
         <div class="content">
           <div class="login-card">
+            {% with messages = get_flashed_messages(with_categories=True) %}
+            {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert alert-{{ 'success' if category == 'success' else 'danger' }}">{{ message }}</div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
             <h2 class="text-center mb-4">Reset password for {{ username }}</h2>
 
             <!-- <div class="alert alert-info" style="display: none;"></div> -->

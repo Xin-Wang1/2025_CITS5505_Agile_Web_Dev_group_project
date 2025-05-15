@@ -1,9 +1,6 @@
 {% extends "base.html" %} {% block title %}Schedule{% endblock %} {% block head
 %} {{ super() }}
-<link
-  href="{{ url_for('static', filename='css/unit.css') }}"
-  rel="stylesheet"
-/>
+<link href="{{ url_for('static', filename='css/unit.css') }}" rel="stylesheet" />
 
 {% endblock %} {% block content %}
 
@@ -11,34 +8,15 @@
   <h2 class="mb-4">Upload Unit Details</h2>
   {% with messages = get_flashed_messages(with_categories=true) %} {% if
   messages %} {% for category, message in messages %}
-  <div
-    class="alert alert-{{ category }} alert-dismissible fade show"
-    role="alert"
-  >
+  <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
     {{ message }}
-    <button
-      type="button"
-      class="btn-close"
-      data-bs-dismiss="alert"
-      aria-label="Close"
-    ></button>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
   </div>
   {% endfor %} {% endif %} {% endwith %}
-  <form
-    method="POST"
-    action="{{ url_for('unit.upload_unit') }}"
-    enctype="multipart/form-data"
-  >
+  <form method="POST" action="{{ url_for('unit.upload_unit') }}" enctype="multipart/form-data">
     <div class="mb-3">
       <label for="file" class="form-label">Upload CSV/Excel File</label>
-      <input
-        type="file"
-        class="form-control"
-        id="file"
-        name="file"
-        accept=".csv, .xlsx"
-        required
-      />
+      <input type="file" class="form-control" id="file" name="file" accept=".csv, .xlsx" required />
     </div>
     <button type="submit" class="btn btn-primary">Upload</button>
   </form>
@@ -50,19 +28,9 @@
     <label for="unit-search" class="form-label">Filter Units</label>
     <div class="input-group">
       <span class="input-group-text"> 🔍 </span>
-      <input
-        type="text"
-        class="form-control"
-        id="unit-search"
-        placeholder="Type to filter by unit name…"
-        aria-label="Search units"
-      />
-      <button
-        class="btn btn-outline-secondary"
-        type="button"
-        id="clear-search"
-        aria-label="Clear search"
-      >
+      <input type="text" class="form-control" id="unit-search" placeholder="Type to filter by unit name…"
+        aria-label="Search units" />
+      <button class="btn btn-outline-secondary" type="button" id="clear-search" aria-label="Clear search">
         ✖️
       </button>
     </div>
@@ -75,10 +43,7 @@
           <strong class="unit-name">{{ unit.name }}</strong> ({{
           unit.credit_points }} credits)
         </span>
-        <button
-          class="btn btn-sm btn-secondary"
-          onclick="selectUnit('{{ unit.name|escape }}', '{{ unit.id }}')"
-        >
+        <button class="btn btn-sm btn-secondary" onclick="selectUnit('{{ unit.name|escape }}', '{{ unit.id }}')">
           Select
         </button>
       </div>
