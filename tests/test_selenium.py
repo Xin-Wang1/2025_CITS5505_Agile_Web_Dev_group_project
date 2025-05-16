@@ -42,7 +42,7 @@ class RegisterUITest(unittest.TestCase):
             print(stderr)
             raise RuntimeError("Flask server did not respond.")
 
-        # 启动 Chrome 浏览器
+        # open Chrome browser
         cls.driver = webdriver.Chrome()
         cls.driver.implicitly_wait(5)
 
@@ -55,7 +55,7 @@ class RegisterUITest(unittest.TestCase):
         WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.NAME, "username"))
         )
-        # 填写注册表单
+        # register a new user
         driver.find_element(By.NAME, "username").send_keys(self.__class__.username)
         driver.find_element(By.NAME, "password").send_keys("123456")
         driver.find_element(By.NAME, "confirm_password").send_keys("123456")
@@ -65,7 +65,7 @@ class RegisterUITest(unittest.TestCase):
     )
         driver.find_element(By.XPATH, "//input[@type='submit']").click()
 
-        # 等待页面跳转
+        # wait for the page to load
         time.sleep(1)
 
         self.assertIn("Login", driver.page_source)
@@ -81,13 +81,13 @@ class RegisterUITest(unittest.TestCase):
         driver.find_element(By.NAME, "username").send_keys(self.__class__.username)
         driver.find_element(By.NAME, "password").send_keys("123456")
 
-        # 等待并点击登录按钮
+        # wait for the submit button to be clickable
         WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.XPATH, "//input[@type='submit']"))
         )
         driver.find_element(By.XPATH, "//input[@type='submit']").click()
 
-        # 可选断言（检查是否跳转成功，比如显示用户名或“Logout”按钮）
+        # once logged in, check if the page contains "My Schedule"
         WebDriverWait(driver, 5).until(
             EC.url_to_be("http://127.0.0.1:5000/")
         )
@@ -97,19 +97,19 @@ class RegisterUITest(unittest.TestCase):
         driver = self.driver
         driver.get("http://127.0.0.1:5000/unit/")
 
-        # 等待文件上传输入框出现
+        # wait for the page to load
         WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.ID, "file"))
         )
 
-        # 上传测试 CSV 文件（请确保文件路径正确）
+        # upload a CSV file
         test_csv_path = os.path.abspath("tests/test_units.csv")
         driver.find_element(By.ID, "file").send_keys(test_csv_path)
 
-        # 提交上传
+           
         driver.find_element(By.CSS_SELECTOR, "button[type='submit']").click()
 
-        # 判断上传是否成功（可通过提示消息或新增 unit 名称）
+        # check if the upload was successful
         WebDriverWait(driver, 5).until(
             EC.text_to_be_present_in_element((By.TAG_NAME, "body"), "Upload")
         )
@@ -118,24 +118,24 @@ class RegisterUITest(unittest.TestCase):
         driver = self.driver
         driver.get("http://127.0.0.1:5000/messages/")
 
-        # 等待页面加载“发送消息”表单
+        # wait for the page to load
         WebDriverWait(driver, 5).until(
             EC.presence_of_element_located((By.NAME, "receiver_id"))
         )
 
-        # 准备发送消息的内容（唯一标识，避免断言冲突）
+        # prepare a message to send
         sent_message = f"This is a Selenium message {uuid.uuid4().hex[:6]}"
 
-        # 向用户 ID 2 发送消息（你需要确保 ID=2 的用户存在）
+        # select a receiver and send a message
         Select(driver.find_element(By.NAME, "receiver_id")).select_by_value("2")
         driver.find_element(By.NAME, "content").send_keys(sent_message)
 
-        # 点击“发送”按钮
+        # submit the form
         WebDriverWait(driver, 5).until(
             EC.element_to_be_clickable((By.CSS_SELECTOR, "button[type='submit']"))
         ).click()
 
-        # 等待“Sent”区域出现刚才发送的内容
+        # wait for the message to be sent
         WebDriverWait(driver, 5).until(
             EC.presence_of_element_located((
                 By.XPATH,
@@ -143,7 +143,7 @@ class RegisterUITest(unittest.TestCase):
             ))
         )
 
-        # 严格断言消息内容确实出现在页面中
+        # wait for the page to load
         self.assertIn(sent_message, driver.page_source)
 
 
@@ -152,21 +152,21 @@ class RegisterUITest(unittest.TestCase):
         driver = self.driver
         driver.get("http://127.0.0.1:5000/")
 
-        # 点击头像 → Logout
+        # logout
         WebDriverWait(driver, 5).until(
             EC.element_to_be_clickable((By.LINK_TEXT, "Logout"))
         ).click()
 
-        # 确认跳转回首页
+        # redirect to home page
         WebDriverWait(driver, 5).until(
             EC.url_to_be("http://127.0.0.1:5000/")
         )
         self.assertIn("Smart Course Selection Tool", driver.page_source)
 
-        # 尝试访问受限页
+        # try to access a protected page
         driver.get("http://127.0.0.1:5000/myschedule/My_Schedule/")
 
-        # 应跳转回登录页或提示未授权
+        # should redirect to login page
         WebDriverWait(driver, 5).until(
             EC.url_contains("/auth/login")
         )
