@@ -21,8 +21,8 @@ The application prioritizes usability and responsiveness, providing a Bootstrap-
 ## 3. How to Launch the Application
 1. Clone the private repository
 ```
- git clone [https://github.com/your-private-repo.git](https://github.com/Xin-Wang1/2025_CITS5505_Agile_Web_Dev_group_project.git)
-   cd ./2025_CITS5505_Agile_Web_Dev_group_project
+git clone https://github.com/Xin-Wang1/2025_CITS5505_Agile_Web_Dev_group_project.git  
+cd .\2025_CITS5505_Agile_Web_Dev_group_project\
 ```
 2. Request the `.env` file from your project administrator.
 This file contains environment-specific settings such as secret keys and database configuration.
