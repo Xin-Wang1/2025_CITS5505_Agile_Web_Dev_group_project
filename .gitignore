@@ -8,4 +8,5 @@ __pycache__/
 
 # ignore virtual environment
 venv/
-.env
+.env.venv/
+.vscode/
