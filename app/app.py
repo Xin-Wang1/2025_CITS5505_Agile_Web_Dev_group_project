@@ -104,19 +104,19 @@ def messages():
     #     schedules_data.append(
     #         {"id": schedule.id, "name": schedule.name, "classtimes": class_list}
     #     )
-    # 获取当前用户自己的课表
+    # 
     own_schedules = Schedule.query.filter_by(user_id=current_user.id).all()
 
-    # 获取所有消息中用到的 schedule_id
+    # schedule_id
     message_schedule_ids = {
         msg.schedule_id for msg in received_messages + sent_messages if msg.schedule_id
     }
     attached_schedules = Schedule.query.filter(Schedule.id.in_(message_schedule_ids)).all()
 
-    # 合并两者去重（以 ID 为键去重）
+  
     all_schedules = {s.id: s for s in own_schedules + attached_schedules}.values()
 
-    # 构建 scheduleData
+    # scheduleData
     schedules_data = []
     for schedule in all_schedules:
         class_list = []
@@ -141,8 +141,8 @@ def messages():
     sent_messages=sent_messages,
     received_messages=received_messages,
     users=users,
-    attachable_schedules=own_schedules,  # ✅ dropdown 只用这个
-    schedules=schedules_data,            # ✅ inbox 用这个 scheduleData 渲染课表
+    attachable_schedules=own_schedules,  
+    schedules=schedules_data,            
 )
 
 @app.route("/messages/send", methods=["POST"])

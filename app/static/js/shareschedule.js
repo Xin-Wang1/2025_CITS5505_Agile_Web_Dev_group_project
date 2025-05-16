@@ -3,7 +3,7 @@ function generateTimetableStructure(scheduleId) {
   const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
   const tbody = document.getElementById(`timetable-body-${scheduleId}`);
   if (!tbody) return;
-  tbody.innerHTML = ""; // 清空旧表格，避免重复
+  tbody.innerHTML = ""; 
 
   times.forEach((hour) => {
     const row = document.createElement("tr");
@@ -43,8 +43,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const sched = scheduleDataMap[entry.scheduleId];
     if (!sched) return;
 
-    const clonedSchedule = JSON.parse(JSON.stringify(sched)); // 深拷贝防止引用复用
-    clonedSchedule.id = `message-${entry.messageId}`; // 重定义 id 以确保唯一性
+    const clonedSchedule = JSON.parse(JSON.stringify(sched)); 
+    clonedSchedule.id = `message-${entry.messageId}`; 
 
     generateTimetableStructure(clonedSchedule.id);
     renderTimetable(clonedSchedule);
