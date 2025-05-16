@@ -2,12 +2,18 @@
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
-    padding-top: 70px; /* Ensure content starts below the fixed header */
+    padding-top: 70px;
+    /* Ensure content starts below the fixed header */
+    background: linear-gradient(145deg, #e8f0ff, #f8f9fa);
+    color: #2c3e50;
 }
+
 /* Main content padding */
 main.container {
-    padding-top: 70px; /* Push content below the fixed header */
-    margin-top: 20px; /* Optional: Add spacing above the main content */
+    padding-top: 70px;
+    /* Push content below the fixed header */
+    margin-top: 20px;
+    /* Optional: Add spacing above the main content */
 }
 
 /* Timetable styling */
@@ -15,8 +21,8 @@ main.container {
     background: rgba(255, 255, 255, 0.75);
     backdrop-filter: blur(12px);
     padding: 20px;
- 
-  
+
+
 }
 
 .table th {
@@ -24,7 +30,8 @@ main.container {
     color: #fff;
 }
 
-.table td, .table th {
+.table td,
+.table th {
     text-align: center;
     vertical-align: middle;
 }
@@ -40,7 +47,7 @@ main.container {
     background-color: #0d6efd;
 }
 
- 
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .navbar {
@@ -54,4 +61,60 @@ main.container {
     .slot {
         font-size: 0.8em;
     }
+}
+
+/* Enhanced heading styles */
+h1 {
+    font-weight: 700;
+    font-size: 2.5rem;
+    color: #003087;
+    border-left: 5px solid #003087;
+    padding-left: 15px;
+    margin-bottom: 1.5rem;
+}
+
+/* Enhanced alert style */
+.alert {
+    border-left: 6px solid #0d6efd;
+    background-color: #eaf4ff;
+    color: #003366;
+    font-size: 1rem;
+    padding: 1rem 1.5rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Schedule container enhancements */
+.schedule-container {
+    background-color: rgba(255, 255, 255, 0.85);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    transition: all 0.3s ease;
+}
+
+.schedule-container:hover {
+    transform: scale(1.02);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Button enhancements */
+.btn-outline-primary {
+    border-radius: 20px;
+    font-weight: 500;
+}
+
+.btn-danger {
+    border-radius: 20px;
+}
+
+/* Enhanced table head and cell styles */
+table th {
+    background-color: #003087 !important;
+    color: #ffffff;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+}
+
+table td {
+    background-color: #f8fbff;
 }
