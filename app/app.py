@@ -1,7 +1,6 @@
 from flask import Flask, render_template, redirect, url_for, request, flash, jsonify
 from app.models import User, Unit, Classtime, Schedule, Message
 from app.config import Config
-from app.models import User, Unit, Classtime, Schedule, Message
 from app.config import Config
 from flask_login import (
     LoginManager,
@@ -22,7 +21,6 @@ from datetime import datetime
 import json
 import os
 from werkzeug.utils import secure_filename
-from app.forms import LoginForm, RegisterForm, ResetPasswordForm
 from app.forms import LoginForm, RegisterForm, ResetPasswordForm
 from flask_wtf.csrf import CSRFProtect
 
