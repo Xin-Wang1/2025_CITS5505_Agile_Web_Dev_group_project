@@ -97,12 +97,12 @@ CITS5505,Agile Web Dev,6,Test unit,Lecture,Monday,09:00,11:00
                 db.session.commit()
                 unit_id = unit.id
 
-            # ✅ 提交课程 ID
+            # ✅ select the unit to generate a schedule
             response = self.client.post('/schedule/schedule/generation', data={
                 'selected_units': f'[{unit_id}]'
             }, follow_redirects=True)
 
-            # ✅ 检查课程名是否出现在最终渲染页面中
+            # ✅ check if the schedule was generated successfully
             self.assertIn(b'Data Mining', response.data)
             self.assertIn(b'10:00', response.data)
 

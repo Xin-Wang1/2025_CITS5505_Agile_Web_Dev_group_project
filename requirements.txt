@@ -6,4 +6,3 @@ Flask-WTF
 python-dotenv
 selenium
 requests
-flask-login
