@@ -90,3 +90,40 @@ python -m unittest app/tests/test_selenium.py
 ├── LICENSE
 └── units.csv
 ```
+## 6.  Web page instructions
+
+##Upload Unit Details
+1. Click choose file and select units.csv
+2. Click the upload button
+
+##Select units
+1. Click the select button for the unit you want to enrol in
+2. Click the Schedule Generate button to direct you to the generation page
+
+##Generated Schedule page
+Function 1: You can click the checkboxes to select the lecture, lab, and tutorial.
+Function 2: Select a day and enter a time range (10:00-15:00) to add your unavailable time range
+Function 3: select one or more preferred days, and the algorithm will auto-generate a schedule for you
+(Please note: if two timeslot clash or there is no timeslot for the preferred day you selected, your click or auto select won't work, if you create an unavailable time that clashes with your current timeslot, the unavailable time will overwrite your timeslot)
+
+Click the Generate Schedule button to save the schedule.
+
+##My Schedules
+
+Go to the My Schedule page, where you can view all schedules you generated.
+
+
+##Share
+
+Go to the Share page, where you can select a user as the recipient, optionally select one of your schedules, and enter message content to send your message.
+
+Inbox: You can see the messages you have received
+Sent: You can see the message you have sent
+
+
+
+
+
+
+
+
