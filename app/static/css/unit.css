@@ -159,11 +159,10 @@ ul li span {
   }
 }
 
-/* 强制 input-group 内部高度一致 */
 .input-group .form-control,
 .input-group .input-group-text,
 .input-group .btn {
-  height: 40px;           /* 可调整为你想要的高度 */
+  height: 40px;         
   padding: 0.375rem 0.75rem;
   line-height: 1.5;
   box-sizing: border-box;

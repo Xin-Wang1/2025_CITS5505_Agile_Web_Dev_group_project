@@ -1,0 +1,4 @@
+FLASK_APP=app.app
+FLASK_ENV=development
+SECRET_KEY=my-dev-secret
+DATABASE_URL=sqlite:///app.db

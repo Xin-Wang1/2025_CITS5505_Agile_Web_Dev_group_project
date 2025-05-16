@@ -2,7 +2,7 @@
 import os
 from dotenv import load_dotenv
 
-load_dotenv()  # 自动加载 .env 文件中的变量
+load_dotenv()  
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
