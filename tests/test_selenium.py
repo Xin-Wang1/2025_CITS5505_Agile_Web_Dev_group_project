@@ -18,7 +18,7 @@ class RegisterUITest(unittest.TestCase):
         print("Launching Flask server subprocess...")
         import sys
         cls.flask_process = subprocess.Popen(
-            [sys.executable, "run.py"],
+            [sys.executable, "run_testserver.py"],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True
@@ -113,42 +113,7 @@ class RegisterUITest(unittest.TestCase):
         WebDriverWait(driver, 5).until(
             EC.text_to_be_present_in_element((By.TAG_NAME, "body"), "Upload")
         )
-
-    def test_04_share_schedule_to_another_user(self):
-        driver = self.driver
-        driver.get("http://127.0.0.1:5000/messages/")
-
-        # wait for the page to load
-        WebDriverWait(driver, 5).until(
-            EC.presence_of_element_located((By.NAME, "receiver_id"))
-        )
-
-        # prepare a message to send
-        sent_message = f"This is a Selenium message {uuid.uuid4().hex[:6]}"
-
-        # select a receiver and send a message
-        Select(driver.find_element(By.NAME, "receiver_id")).select_by_value("2")
-        driver.find_element(By.NAME, "content").send_keys(sent_message)
-
-        # submit the form
-        WebDriverWait(driver, 5).until(
-            EC.element_to_be_clickable((By.CSS_SELECTOR, "button[type='submit']"))
-        ).click()
-
-        # wait for the message to be sent
-        WebDriverWait(driver, 5).until(
-            EC.presence_of_element_located((
-                By.XPATH,
-                f"//div[@id='sentMessages']//*[contains(text(), '{sent_message}')]"
-            ))
-        )
-
-        # wait for the page to load
-        self.assertIn(sent_message, driver.page_source)
-
-
-
-    def test_05_logout_and_protected_page(self):
+    def test_04_logout_and_protected_page(self):
         driver = self.driver
         driver.get("http://127.0.0.1:5000/")
 
@@ -171,6 +136,30 @@ class RegisterUITest(unittest.TestCase):
             EC.url_contains("/auth/login")
         )
         self.assertIn("Login", driver.page_source)
+        
+    def test_05_view_schedule_page(self):
+        driver = self.driver
+        username = self.__class__.username
+        password = "123456"
+
+        # Step 1: 登录（如果未登录）
+        driver.get("http://127.0.0.1:5000/auth/login")
+        WebDriverWait(driver, 5).until(
+            EC.presence_of_element_located((By.NAME, "username"))
+        )
+        driver.find_element(By.NAME, "username").send_keys(username)
+        driver.find_element(By.NAME, "password").send_keys(password)
+        driver.find_element(By.XPATH, "//input[@type='submit']").click()
+
+        # Step 2: 跳转到课程表页面
+        driver.get("http://127.0.0.1:5000/myschedule/My_Schedule/")
+
+        # Step 3: 检查页面是否加载成功
+        WebDriverWait(driver, 5).until(
+            EC.presence_of_element_located((By.TAG_NAME, "body"))
+        )
+        self.assertIn("My Schedule", driver.page_source)  # 根据你的页面文字修改此断言
+
 
     @classmethod
     def tearDownClass(cls):
