@@ -3,8 +3,8 @@
 function generateTimetableStructure(scheduleId) {
   const times = [...Array(13)].map((_, i) => 8 + i); // Hours from 8:00 to 20:00
   const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
-  // const tbody = document.getElementById(`timetable-body-${scheduleId}`);
-  const tbody = document.getElementById(`timetable-body-message-${scheduleId}`);
+  const tbody = document.getElementById(`timetable-body-${scheduleId}`);
+  // const tbody = document.getElementById(`timetable-body-message-${scheduleId}`);
 
   times.forEach((hour) => {
     const row = document.createElement("tr");
@@ -81,11 +81,6 @@ $('#exportPDF').click(function () {
     y += 10;
   });
   doc.save('timetable.pdf');
-});
-
-$(document).ready(function () {
-  generateTimetableStructure();
-  renderTimetable();
 });
 
 function showRenamePrompt(button) {
