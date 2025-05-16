@@ -31,12 +31,16 @@ Installs all required dependencies listed in the requirements.txt file. This ens
 ```
 pip install -r requirements.txt
 ```
+Set the Flask application environment variable (for macOS/Linux):
+```bash
+export FLASK_APP=app.app
 flask run
-(You may need to enable script running if using Windows)
 ```
+For Windows (PowerShell):
+```powershell
+$env:FLASK_APP = "app.app"
 flask run
 ```
-
 ## 4. How to run test
 
 #### Unit Tests  
