@@ -13,6 +13,50 @@ body {
     padding: 0 15px;
 }
 
+/* ======= Messages Layout ======= */
+/* ======= Messages Layout ======= */
+.messages-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: start;
+    margin-top: 2rem;
+}
+
+.message-column {
+    background: #ffffff;
+    border: 1px solid #dcdcdc;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.inbox-section h3,
+.sent-section h3 {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+}
+
+.inbox-section .card,
+.sent-section .card {
+    margin-bottom: 1rem;
+}
+
+.message-form-column {
+    grid-column: 1;
+}
+
+.message-inbox-column {
+    grid-column: 2;
+}
+
+@media (max-width: 768px) {
+    .messages-layout {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
 h2,
 h3 {
     color: #1a237e;
@@ -21,16 +65,17 @@ h3 {
 }
 
 .card {
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.06);
+    border: 1px solid #e0e0e0;
+    background-color: #fff;
+    border-radius: 6px;
+    transition: box-shadow 0.3s ease;
     margin-bottom: 2rem;
     overflow: hidden;
-    transition: transform 0.2s ease;
 }
 
 .card:hover {
-    transform: scale(1.01);
+    transform: none;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
 }
 
 .card-body {
@@ -42,6 +87,12 @@ h3 {
     color: #0d47a1;
     margin-bottom: 1rem;
     font-weight: 600;
+}
+
+.card-body .card-text strong {
+    color: #333;
+    display: block;
+    margin-bottom: 0.25rem;
 }
 
 /* ======= Form Styling ======= */
@@ -117,6 +168,11 @@ textarea.form-control {
     font-size: 0.85rem;
     color: #6c757d;
     margin-top: 1rem;
+}
+
+.inbox-section,
+.sent-section {
+    margin-top: 2rem;
 }
 
 /* Table Styling */
@@ -239,4 +295,88 @@ thead {
 h3 {
     border-bottom: 2px solid #cfd8dc;
     padding-bottom: 0.5rem;
+}
+
+
+/* === Additional Enhancements === */
+.form-group select,
+.form-group textarea {
+    background-color: #fefefe;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-group select:focus,
+.form-group textarea:focus {
+    background-color: #ffffff;
+    box-shadow: 0 0 8px rgba(26, 115, 232, 0.15);
+}
+
+.btn-primary:active {
+    transform: scale(0.98);
+}
+
+.card-title::before {
+    content: "📨 ";
+}
+
+.card {
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.06);
+}
+
+.schedule-container table tr:nth-child(even) {
+    background-color: #f0f4f8;
+}
+
+.schedule-container table tr:hover {
+    background-color: #e6f0ff;
+}
+
+.schedule-container th,
+.schedule-container td {
+    transition: background-color 0.2s ease;
+}
+
+.message-column {
+    transition: box-shadow 0.3s ease;
+}
+
+.message-column:hover {
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+#receivedMessages .card,
+#sentMessages .card {
+    transition: transform 0.3s ease;
+}
+
+#receivedMessages .card:hover,
+#sentMessages .card:hover {
+    transform: scale(1.01);
+}
+
+.form-group label::after {
+    content: ":";
+    margin-left: 4px;
+    color: #1a237e;
+}
+
+.alert-dismissible .close {
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    line-height: 1;
+    color: #333;
+}
+
+.schedule-container h3 {
+    font-size: 1.2rem;
+    color: #1a237e;
+    margin-bottom: 1rem;
+    border-left: 4px solid #1a73e8;
+    padding-left: 0.5rem;
 }
