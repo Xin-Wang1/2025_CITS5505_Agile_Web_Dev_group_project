@@ -1,21 +1,50 @@
 html {
-      scroll-behavior: smooth;
-    }
+  scroll-behavior: smooth;
+}
 
-    @keyframes flow {
-      0% {
-        background-position: 0% 50%;
-      }
-      50% {
-        background-position: 100% 50%;
-      }
-      100% {
-        background-position: 0% 50%;
-      }
-    }
+@keyframes flow {
+  0% {
+    background-position: 0% 50%;
+  }
 
-    #main-header.scrolled {
-      background-color: rgba(0, 0, 0, 0.8);
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-      backdrop-filter: blur(10px);
-    }
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+#main-header.scrolled {
+  background-color: rgba(0, 0, 0, 0.8);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+}
+
+.card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 1rem;
+}
+
+.card:hover {
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+}
+
+.card-body i {
+  transition: transform 0.3s ease;
+}
+
+.card:hover .card-body i {
+  transform: scale(1.2) rotate(5deg);
+}
+
+.card-title {
+  transition: color 0.3s ease;
+}
+
+.card:hover .card-title {
+  color: #0056b3;
+}

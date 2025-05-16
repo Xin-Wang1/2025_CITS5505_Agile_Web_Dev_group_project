@@ -1,5 +1,6 @@
 /* 页面背景渐变和字体设置 */
-html, body {
+html,
+body {
   height: 100%;
   margin: 0;
   background: linear-gradient(135deg, #d0e6ff, #a1c4fd, #f3e5f5, #c5cae9);
@@ -9,14 +10,22 @@ html, body {
 }
 
 @keyframes gradientMove {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 
 .glass-container {
-  background: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(12px);
   border-radius: 15px;
   min-height: 100vh;
@@ -71,9 +80,11 @@ html, body {
   width: 100%;
   max-width: 400px;
   background: rgba(255, 255, 255, 0.3);
-  border-radius: 10px;
+  border-radius: 0;
+  border: 1px solid #ddd;
   padding: 2rem;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  margin-top: 2rem;
 }
 
 
@@ -81,6 +92,7 @@ html, body {
   background-color: #003087;
   border: none;
   color: #fff;
+  transition: background-color 0.3s ease;
 }
 
 .btn-primary-custom:hover {
