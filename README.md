@@ -1,11 +1,15 @@
-# 2025_CITS5505_Agile_Web_Dev_group_project [project name]
-## 1. Purpose and Design
-  This web application is designed to help students select an optimal combination of university courses based on their preferences. Users can upload course details including times, duration, and credit hours, and the system will generate plausible schedules using scheduling algorithms.
-### Key Features
-- Upload course details via structured forms or CSV
-- Automatically generate valid timetable combinations that avoid conflicts
-- Display visual weekly schedule of selected course combinations
-- Option to share suggested schedules with classmates
+# 2025_CITS5505_Agile_Web_Dev_group_project
+## Application Overview
+The **Smart Course Selection Tool** is a web application designed to help university students optimize and share their course schedules efficiently. It allows users to:
+
+- Register and log into a secure account
+- Upload unit/course information via CSV
+- Visually select and customize preferred class times
+- Automatically generate conflict-free weekly schedules
+- Share their schedules with classmates through an in-app messaging system
+- View and manage their personalized schedule history
+
+The application prioritizes usability and responsiveness, providing a Bootstrap-based interface enhanced with AJAX and JavaScript for dynamic interaction.
 ## 2. Group Members
 | UWA ID   | Name         | GitHub Username |
 |----------|--------------|-----------------|
@@ -15,7 +19,15 @@
 | 24201533 | Xin Wang     | *Xin-Wang1* |
 
 ## 3. How to Launch the Application
-Creates a virtual environment named venv in the current directory. 
+1. Clone the private repository
+```
+ git clone [https://github.com/your-private-repo.git](https://github.com/Xin-Wang1/2025_CITS5505_Agile_Web_Dev_group_project.git)
+   cd ./2025_CITS5505_Agile_Web_Dev_group_project
+```
+2. Request the `.env` file from your project administrator.
+This file contains environment-specific settings such as secret keys and database configuration.
+Once received, place it into the root directory of the project.
+3. Create virtual environment and install dependencies:
 ``` 
 python -m venv venv
 ```
@@ -25,38 +37,33 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
 ```
 Activates the virtual environment on Windows. After activation, any Python or pip commands will use the virtual environment instead of the system-wide Python.
 ```
-venv\Scripts\activate  
+venv\Scripts\activate  # on Mac: source venv/bin/activate
 ```
 Installs all required dependencies listed in the requirements.txt file. This ensures your project has the correct packages to run properly.
 ```
 pip install -r requirements.txt
 ```
-Set the Flask application environment variable (for macOS/Linux):
+4. Initialize the database
+```
+python init_db.py
+```
+5. Run the application
 ```bash
-export FLASK_APP=app.app
 flask run
 ```
-For Windows (PowerShell):
-```powershell
-$env:FLASK_APP = "app.app"
-flask run
-```
+Then visit http://127.0.0.1:5000 in your browser.
+
 ## 4. How to run test
 
 #### Unit Tests  
-Run backend Flask route and logic tests using Python’s built-in `unittest`:
-
+To run unit tests for registration, login, upload, and scheduling:
 ```bash
-python -m unittest app/tests/test_routes.py
+python -m unittest tests.test_unit
 ```
 #### Selenium Tests
-Start the Flask server in one terminal:
+Make sure you have Google Chrome and ChromeDriver installed. Then run:
 ```bash
-flask run
-```
-In another terminal, run the Selenium suite:
-```bash
-python -m unittest app/tests/test_selenium.py
+python tests/test_selenium.py
 ```
 ## 5.  Project Structure Overview
 ```
@@ -86,25 +93,28 @@ python -m unittest app/tests/test_selenium.py
 │   │   └── (various .html files)
 │   └── tests/
 │       ├── __init__.py
-│       ├── test_routes.py
+│       ├── config_test.py
 │       ├── test_selenium.py
+│       ├── test_units.csv
 │       └── test_unit.py
 ├── requirements.txt
 ├── README.md
-├── LICENSE
+├── run.py
+├── run_testserve.py
+├── init_db.py
 └── units.csv
 ```
 ## 6.  Web page instructions
 
-##Upload Unit Details
+#### Upload Unit Details
 1. Click choose file and select units.csv
 2. Click the upload button
 
-##Select units
+#### Select units
 1. Click the select button for the unit you want to enrol in
 2. Click the Schedule Generate button to direct you to the generation page
 
-##Generated Schedule page
+#### Generated Schedule page
 Function 1: You can click the checkboxes to select the lecture, lab, and tutorial.
 Function 2: Select a day and enter a time range (10:00-15:00) to add your unavailable time range
 Function 3: select one or more preferred days, and the algorithm will auto-generate a schedule for you
@@ -112,12 +122,12 @@ Function 3: select one or more preferred days, and the algorithm will auto-gener
 
 Click the Generate Schedule button to save the schedule.
 
-##My Schedules
+#### My Schedules
 
 Go to the My Schedule page, where you can view all schedules you generated.
 
 
-##Share
+#### Share
 
 Go to the Share page, where you can select a user as the recipient, optionally select one of your schedules, and enter message content to send your message.
 
