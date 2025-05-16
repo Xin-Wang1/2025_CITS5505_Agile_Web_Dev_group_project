@@ -3,7 +3,9 @@
 function generateTimetableStructure(scheduleId) {
   const times = [...Array(13)].map((_, i) => 8 + i); // Hours from 8:00 to 20:00
   const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
-  const tbody = document.getElementById(`timetable-body-${scheduleId}`);
+  // const tbody = document.getElementById(`timetable-body-${scheduleId}`);
+  const tbody = document.getElementById(`timetable-body-message-${scheduleId}`);
+
   times.forEach((hour) => {
     const row = document.createElement("tr");
     const timeCell = document.createElement("td");
@@ -85,3 +87,37 @@ $(document).ready(function () {
   generateTimetableStructure();
   renderTimetable();
 });
+
+function showRenamePrompt(button) {
+  const scheduleId = button.getAttribute("data-id");
+  const currentName = button.getAttribute("data-name");
+
+  const newName = prompt("Enter new name for the schedule:", currentName);
+  if (newName && newName.trim() !== "" && newName !== currentName) {
+    renameSchedule(scheduleId, newName.trim());
+  }
+}
+
+function renameSchedule(scheduleId, newName) {
+  fetch(`/schedule/rename/${scheduleId}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Requested-With': 'XMLHttpRequest'
+    },
+    body: JSON.stringify({ new_name: newName })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      document.getElementById(`schedule-name-${scheduleId}`).textContent = newName;
+      alert("Schedule renamed successfully.");
+    } else {
+      alert("Rename failed: " + (data.message || "Unknown error."));
+    }
+  })
+  .catch(err => {
+    console.error("Rename error:", err);
+    alert("Error occurred while renaming.");
+  });
+}

@@ -1,7 +1,10 @@
 function generateTimetableStructure(scheduleId) {
-  const times = [...Array(13)].map((_, i) => 8 + i); // Hours from 8:00 to 20:00
+  const times = [...Array(13)].map((_, i) => 8 + i); // 8:00 to 20:00
   const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
   const tbody = document.getElementById(`timetable-body-${scheduleId}`);
+  if (!tbody) return;
+  tbody.innerHTML = ""; // 清空旧表格，避免重复
+
   times.forEach((hour) => {
     const row = document.createElement("tr");
     const timeCell = document.createElement("td");
@@ -33,16 +36,17 @@ function renderTimetable(schedule) {
   });
 }
 
-$(document).ready(function () {
-  // Iterate over all schedules and generate their timetables
-  scheduleData.forEach((schedule) => {
-    generateTimetableStructure(schedule.id);
-    renderTimetable(schedule);
-    
-  });
-});
+document.addEventListener("DOMContentLoaded", function () {
+  if (typeof scheduleDataMap === "undefined") return;
 
-$(document).ready(function () {
-  generateTimetableStructure();
-  renderTimetable();
+  messageScheduleMap.forEach(entry => {
+    const sched = scheduleDataMap[entry.scheduleId];
+    if (!sched) return;
+
+    const clonedSchedule = JSON.parse(JSON.stringify(sched)); // 深拷贝防止引用复用
+    clonedSchedule.id = `message-${entry.messageId}`; // 重定义 id 以确保唯一性
+
+    generateTimetableStructure(clonedSchedule.id);
+    renderTimetable(clonedSchedule);
+  });
 });

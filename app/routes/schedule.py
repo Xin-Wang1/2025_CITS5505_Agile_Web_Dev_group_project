@@ -10,7 +10,7 @@ from flask_login import (
 )
 schedule_bp = Blueprint("schedule", __name__)
 
-@schedule_bp.route("/schedule/delete/<int:schedule_id>", methods=["POST"])
+@schedule_bp.route("/delete/<int:schedule_id>", methods=["POST"])
 @login_required
 def delete_schedule(schedule_id):
     schedule = Schedule.query.get_or_404(schedule_id)
@@ -102,7 +102,7 @@ def generate_schedule():
 
         db.session.commit()
         flash("Schedule saved successfully!", "success")
-        return redirect(url_for("My_Schedule"))
+        return redirect(url_for("myschedule.My_Schedule"))
 
     # GET request: Render Schedule.html with selected units
     selected_unit_ids = (
@@ -153,3 +153,21 @@ def generate_schedule():
     return render_template(
         "Schedule.html", selected_units=serialized_units, total_credits=total_credits
     )
+
+
+@schedule_bp.route("/rename/<int:schedule_id>", methods=["POST"])
+@login_required
+def rename_schedule(schedule_id):
+    schedule = Schedule.query.get_or_404(schedule_id)
+    if schedule.user_id != current_user.id:
+        return jsonify({"success": False, "message": "Permission denied"}), 403
+
+    data = request.get_json()
+    new_name = data.get("new_name", "").strip()
+
+    if not new_name:
+        return jsonify({"success": False, "message": "New name cannot be empty"}), 400
+
+    schedule.name = new_name
+    db.session.commit()
+    return jsonify({"success": True})
