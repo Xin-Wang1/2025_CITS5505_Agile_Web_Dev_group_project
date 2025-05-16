@@ -40,21 +40,21 @@
       <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
         <li>
           <a href="{{ url_for('home') }}"
-            class="nav-link px-2 {% if request.path == '/' %}link-secondary{% else %}link-primary{% endif %}">Home</a>
+            class="nav-link px-2 {% if request.path == url_for('home') %}link-secondary{% else %}link-primary{% endif %}">Home</a>
         </li>
         <li>
           <a href="{{ url_for('unit.unit') }}"
-            class="nav-link px-2 {% if request.path.startswith('/unit') %}link-secondary{% else %}link-primary{% endif %}">Upload
+            class="nav-link px-2 {% if request.path.startswith(url_for('unit.unit')) %}link-secondary{% else %}link-primary{% endif %}">Upload
             Units</a>
         </li>
         <li>
           <a href="{{ url_for('myschedule.My_Schedule') }}"
-            class="nav-link px-2 {% if request.path == '/My_Schedule' %}link-secondary{% else %}link-primary{% endif %}">My
+            class="nav-link px-2 {% if request.path == url_for('myschedule.My_Schedule') %}link-secondary{% else %}link-primary{% endif %}">My
             Schedule</a>
         </li>
         <li>
           <a href="{{ url_for('messages') }}"
-            class="nav-link px-2 {% if request.path == '/messages' %}link-secondary{% else %}link-primary{% endif %}">Share</a>
+            class="nav-link px-2 {% if request.path == url_for('messages') %}link-secondary{% else %}link-primary{% endif %}">Share</a>
         </li>
       </ul>
       <div class="col-md-3 text-end d-flex align-items-center justify-content-start gap-3">

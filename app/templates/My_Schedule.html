@@ -1,26 +1,36 @@
 {% extends "base.html" %} {% block title %}My Schedule{% endblock %} {% block
 head %} {{ super()}}
-<link
-  href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-  rel="stylesheet"
-/>
-<link
-  href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"
-  rel="stylesheet"
-/>
-<link
-  href="{{ url_for('static', filename='css/myschedule.css') }}"
-  rel="stylesheet"
-/>
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+<link href="{{ url_for('static', filename='css/myschedule.css') }}" rel="stylesheet" />
 
 {% endblock %} {% block content %}
 <main class="container flex-grow-1 my-4">
   <h1 class="mb-4">My Schedules</h1>
+  {% if schedules|length == 0 %}
+  <div class="alert alert-info mt-4" role="alert">
+    You have no schedules yet. Please <a href="{{ url_for('unit.unit') }}" class="alert-link">upload unit and generate a
+      schedule</a> to
+    get started!
+  </div>
+  {% endif %}
 
   {% for schedule in schedules %}
   <div class="schedule-container mb-5">
-    <h2>{{ schedule.name }}</h2>
-    <p><strong>Created At:</strong> {{ schedule.created_at }}</p>
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <h2 id="schedule-name-{{ schedule.id }}">{{ schedule.name }}</h2>
+        <p><strong>Created At:</strong> {{ schedule.created_at }}</p>
+      </div>
+      <div>
+        <button class="btn btn-sm btn-outline-primary" data-id="{{ schedule.id }}" data-name="{{ schedule.name }}"
+          onclick="showRenamePrompt(this)">
+          Rename
+        </button>
+
+        <button class="btn btn-danger btn-sm" onclick="deleteSchedule('{{ schedule.id }}')">Delete</button>
+      </div>
+    </div>
 
     <div class="table-responsive">
       <h3 class="mb-4">Class Times</h3>
